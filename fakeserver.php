@@ -11,4 +11,3 @@
     echo($callback.'(');
     readfile('objects.json');
     echo(');');
-?>
