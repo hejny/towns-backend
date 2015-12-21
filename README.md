@@ -25,6 +25,14 @@
 	
 * * *
 
+## Requirements
+
+- Linux Server
+- Node.js (with npm)
+- mongoDB
+
+* * *
+
 ## Inštalácia
 
 Predpokladám že node aj npm už máte nainštalované globálne.
