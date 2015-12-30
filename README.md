@@ -41,9 +41,13 @@ Predpokladám že node aj npm už máte nainštalované globálne.
 
 
 	npm install
-		
-* * *	
+			
 
+2. Migrovanie databazovych suborov
+
+    node mongo-migrate -runmm
+    
+* * *
 
 ## Spustenie
 
@@ -53,6 +57,8 @@ Towns 5 Api server je node.js aplikácia a spúšťa sa jednoduchým príkazom:
 	DEBUG=api:* npm start
 	# alebo na Windowse takto
 	set DEBUG=myapp & npm start
+
+Api bude bezat na http://localhost!3000
 
 * * *
 	
