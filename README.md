@@ -43,9 +43,9 @@ Predpokladám že node aj npm už máte nainštalované globálne.
 	npm install
 			
 
-2. Migrovanie databazovych suborov
+2. Instalovanie zmien schem z migracnych suborov do mongoDB 
 
-    node mongo-migrate -runmm
+    npm run mongo-migrate
     
 * * *
 
