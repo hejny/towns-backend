@@ -19,12 +19,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// route for index page
 var routes = require('./routes/index');
 app.use('/', routes);
 
+// route for objects API
 var objects = require('./routes/objects');
 app.use('/objects', objects);
 
+//route for users API
 var users = require('./routes/users');
 app.use('/users', users);
 

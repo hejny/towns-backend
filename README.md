@@ -4,24 +4,31 @@
 
 ## Struktura
 
-
-	[towns5api]                 <- root adresár
-    ├── app.js                  <- spúšťač - kontrollér
-    ├── [bin]/
-    │   └── www                 <- nastavnia pre node
-    ├── package.json            <- npm balíkovač
-    ├── [public]/               <- verejný adresár pre node server 
-    │   ├── [images]/
-    │   ├── [javascripts]/
-    │   └── [stylesheets]/
-    │       └── style.css
-    ├── [routes]/               <- router
-    │   ├── index.js           
-    │   └── users.js
-    └── [views]/                <- views
-        ├── error.jade
-        ├── index.jade
-        └── layout.jade
+[..]
+├──	[api]                       <- root adresár
+│   ├── app.js                  <- spúšťač - kontrollér
+│   ├── [bin]/
+│   │   └── www                 <- nastavnia pre node server
+│   ├── package.json            <- npm balíkovač
+│   ├── [migrations]/           <- schémy a seedy pre kolekcie v mongoDb    
+│   │   └── 0005-objects.js     
+│   ├── [models]/               <- modely kolekcií
+│   │   └── objects.js          
+│   ├── [public]/               <- verejný prístupný adresár pre node server 
+│   │   ├── [images]/
+│   │   ├── [javascripts]/
+│   │   └── [stylesheets]/
+│   │       └── style.css
+│   ├── [routes]/               <- router
+│   │   ├── index.js           
+│   │   └── users.js
+│   └── [views]/                <- views pre HTML stránky
+│       ├── error.jade
+│       ├── index.jade
+│       └── layout.jade
+│
+└──	[config]                   <- centrálny adresár s configuráciou
+    └── mongo.js               <- nastavenie pre mongoDb
 	
 * * *
 
