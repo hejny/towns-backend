@@ -2,33 +2,33 @@
 
 * * *
 
-## Struktura
+## Folder Structure
 
-[..]
-├──	[api]                       <- root adresár
-│   ├── app.js                  <- spúšťač - kontrollér
-│   ├── [bin]/
-│   │   └── www                 <- nastavnia pre node server
-│   ├── package.json            <- npm balíkovač
-│   ├── [migrations]/           <- schémy a seedy pre kolekcie v mongoDb    
-│   │   └── 0005-objects.js     
-│   ├── [models]/               <- modely kolekcií
-│   │   └── objects.js          
-│   ├── [public]/               <- verejný prístupný adresár pre node server 
-│   │   ├── [images]/
-│   │   ├── [javascripts]/
-│   │   └── [stylesheets]/
-│   │       └── style.css
-│   ├── [routes]/               <- router
-│   │   ├── index.js           
-│   │   └── users.js
-│   └── [views]/                <- views pre HTML stránky
-│       ├── error.jade
-│       ├── index.jade
-│       └── layout.jade
-│
-└──	[config]                   <- centrálny adresár s configuráciou
-    └── mongo.js               <- nastavenie pre mongoDb
+    [..]
+    ├──	[api]                       <- root folder
+    │   ├── app.js                  <- controller
+    │   ├── [bin]/
+    │   │   └── www                 <- shell settings for node server
+    │   ├── package.json            <- npm packages
+    │   ├── [migrations]/           <- schemas and seeds for mongoDB collections    
+    │   │   └── 0005-objects.js     
+    │   ├── [models]/               <- collection models for mongoose
+    │   │   └── objects.js          
+    │   ├── [public]/               <- publicly accessible folder for node server 
+    │   │   ├── [images]/
+    │   │   ├── [javascripts]/
+    │   │   └── [stylesheets]/
+    │   │       └── style.css
+    │   ├── [routes]/               <- router
+    │   │   ├── index.js           
+    │   │   └── users.js
+    │   └── [views]/                <- views for HTML responses
+    │       ├── error.jade
+    │       ├── index.jade
+    │       └── layout.jade
+    │
+    └──	[config]                   <- central folder with all configurations
+        └── mongo.js               <- settings for mongoDb connection
 	
 * * *
 
@@ -40,35 +40,41 @@
 
 * * *
 
-## Inštalácia
+## Installation
 
-Predpokladám že node aj npm už máte nainštalované globálne.
+We will assume that you already have installed globaly node and npm.
 
-1. Doinštalovať potrebné balíky (express framework, atď) cez npm balíkovač
+1. Go into api folder and install the necessary node modules (express framework, etc) with npm:
 
 
 	npm install
 			
 
-2. Instalovanie zmien schem z migracnych suborov do mongoDB 
+2. Run changes in mongoDB schemas and seed new migrations (if necessary) by: 
 
     npm run mongo-migrate
     
 * * *
 
-## Spustenie
+## Launching
 
-Towns 5 Api server je node.js aplikácia a spúšťa sa jednoduchým príkazom:
+Towns 5 Api server is node.js aplication and can be launched with command:
 
-	# na Linuxe a Macu takto
+On develop environments:
+
+	# for Linux and Mac use this
 	DEBUG=api:* npm start
-	# alebo na Windowse takto
+	# for Windows use this
 	set DEBUG=myapp & npm start
 
-Api bude bezat na http://localhost!3000
+On production environments launch API simply without debug information
+
+    npm start
+
+Api wil be accessible on http://localhost!3000
 
 * * *
 	
-## Testovanie
+## Testing
 
 //todo
