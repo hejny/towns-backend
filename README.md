@@ -46,13 +46,11 @@ We will assume that you already have installed globaly node and npm.
 
 1. Go into api folder and install the necessary node modules (express framework, etc) with npm:
 
-
-	npm install
+	`npm install`
 			
-
 2. Run changes in mongoDB schemas and seed new migrations (if necessary) by: 
 
-    npm run mongo-migrate
+    `npm run mongo-migrate`
     
 * * *
 

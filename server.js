@@ -1,152 +1,66 @@
-
-
-
-
-var fs = require('fs');
-var url = require('url') ;
-var http=require('http');
-
-http.globalAgent.maxSockets = Infinity;
-
-
-var i=0;
-
-
-
-
-
-var mapdata=[];
-
-
-
-function addGraph(periode,amplitude,rotation,startX,startY){
-
-	if(rotation==false)rotation=Math.random()*31415;
-
-	mapdata.push([periode,amplitude,rotation,startX,startY]);
-
-}
-
-
-addGraph(5,4,40,1,1);
-
-
-function getZ(x,y){
-
-	var z=0;
-
-	
-	var i=0;
-	while(mapdata[i]){
-
-
-		
-		var periode=mapdata[i][0];
-		var amplitude=mapdata[i][1];
-		var rotation=mapdata[i][2];
-		var startX=mapdata[i][3];
-		var startY=mapdata[i][4];
-
-		z+=
-		 Math.sin((x+startX)*3.14/periode)*amplitude*Math.cos(rotation/180*3.14)
-		//+Math.sin((y+startY)*3.14/periode)*amplitude*Math.sin(rotation/180*3.14)
-		;
-
-		i++;
-	}
-
-	return(z);
-		
-}
-
-/*function getMap(startX,startY,zoom){
-
-	var map=[];
-
-	for(var y=startY;y<=startY+zoom;y++){
-	
-		map[startY-zoom]=[];
-
-		for(var x=startX;x<=startX+zoom;x++){
-
-			map[startY-zoom][startX-zoom]=getZ(x,y);
-
-		}
-	}
-	return(map);
-
-}*/
-
-
-function renderMap(startX,startY,zoom){
-
-	var html='<table cellpadding="0" cellspacing="0">';
-
-
-	for(var y=startY;y<=startY+zoom;y++){
-
-		//console.log(y);	
-
-		html+='<tr>';
-		for(var x=startX;x<=startX+zoom;x++){
-
-			//console.log(x+','+y);
-			var z=getZ(x,y);
-			//z=Math.round(z);
-
-			//html+='<td>'+z+'</td>';
-
-			if(z>0)
-				html+='<td width="4" height="4" bgcolor="000000"></td>';
-			else
-				html+='<td width="4" height="4" bgcolor="3366ff"></td>';
-
-		}
-		html+='</tr>';
-	}
-
-
-	
-	html+='</table>';
-	//console.log(html);	
-
-	return(html);
-}
-
-//console.log(renderMap(1,1,5));
-
-
-var server=http.createServer(function(req,res){
-
-	i++;
-
- 	res.writeHead(200);
-	res.writeHead({'Content-Type': 'text/html'});
-
-
-	var q = url.parse(req.url,true).query;
-	console.log(q);
-
-
-	if(!q.zoom)q.zoom=5;
-
-	
-	res.end(renderMap(parseInt(q.x),parseInt(q.y),parseInt(q.zoom)));
-
-    res.end('Ahoj tohle je '+i+'. navsteva!<br>' + req.url);
-	console.log('muhaha from '+req.connection.remoteAddress);
-
-
-	
-
-
-
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+
+var app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// route for index page
+var routes = require('./routes/index');
+app.use('/', routes);
+
+// route for objects API
+var objects = require('./routes/objects');
+app.use('/objects', objects);
+
+//route for users API
+var users = require('./routes/users');
+app.use('/users', users);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Nenájdené');
+  err.status = 404;
+  next(err);
 });
 
-server.on('listening',function(){
-    console.log('ok, server is running');
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
 });
 
-server.listen(80);
 
-
+module.exports = app;
