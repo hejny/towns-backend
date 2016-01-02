@@ -7,5 +7,5 @@ var schema = new db.Schema({
     date: {type: Date, required: true, default: Date.now()}
 });
 
-var Object = db.model('Object', schema);
-module.exports = Object;
+var object = db.model('objects', schema);
+module.exports = object;

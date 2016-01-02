@@ -7,7 +7,7 @@ var object = require('../models/object');
  * vrati vsetky objekty
  */
 router.get('/', function(req, res, next) {
-    Object.find(function(err, objects) {
+    object.find(function(err, objects) {
         if (err) { return next()}
         res.json(objects)
     });
