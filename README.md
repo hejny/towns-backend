@@ -62,6 +62,8 @@ On develop environments:
 
 	# for Linux and Mac use this
 	DEBUG=api:* npm start
+	# or with node monitor which will restart nodejs everytime API files are changed
+	DEBUG=api:* npm run nodemonitor
 	# for Windows use this
 	set DEBUG=myapp & npm start
 
