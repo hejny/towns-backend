@@ -71,7 +71,7 @@ On production environments launch API simply without debug information
 
     npm start
 
-Api wil be accessible on http://localhost!3000
+Api will be accessible on http://localhost!3000
 
 * * *
 	
