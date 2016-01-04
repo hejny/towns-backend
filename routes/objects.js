@@ -12,7 +12,6 @@ router.get('/', function(req, res, next) {
         if (err) { return next()}
         res.json(objects)
     });
-    //res.json({ GET: 'Vypytaj vsetky objekty' });
 });
 
 /**
@@ -20,16 +19,16 @@ router.get('/', function(req, res, next) {
  * Vytvor odoslany objekt
  */
 router.post('/', function(req, res, next) {
-    var newObject = {};
+    var newObject = {},
+        json = req.body;
     //console.log(req.body);
 
     // check that mandatory values are set
-    if(!req.body.hasOwnProperty('prototypeId') || !req.body.hasOwnProperty('x') || !req.body.hasOwnProperty('y')) {
+    if(!json.hasOwnProperty('prototypeId') || !json.hasOwnProperty('x') || !json.hasOwnProperty('y')) {
         // mandatory validation failed
     }
 
     // find the Prototype
-    //console.log(req.body.prototypeId);
     ObjectsPrototype.findOne({type: "building"}, function(err, objectsPrototype) {
         if (err) { return next() }
         //console.log(objectsPrototype);
@@ -41,13 +40,15 @@ router.post('/', function(req, res, next) {
 
         // set the other values
         newObject.version = 1;
-        newObject.x = req.body.x;
-        newObject.y = req.body.y;
+        newObject.x = json.x;
+        newObject.y = json.y;
         newObject.start_time = Date.now();
-        if(req.body.hasOwnProperty('content') && req.body.content.hasOwnProperty('type') && req.body.content.hasOwnProperty('data') ) {
+        if(json.hasOwnProperty('content') ) {
+            type = json.content.hasOwnProperty('type') ? json.content.type : "";
+            data = json.content.hasOwnProperty('data') ? json.content.data : "";
             newObject.content = {
-                type: req.body.content.type,
-                data: req.body.content.data
+                type: type,
+                data: data
             };
         }
         newObject.owner = "admin";
@@ -85,27 +86,28 @@ router.get('/prototypes', function(req, res, next) {
 router.post('/prototypes', function(req, res, next) {
     var newPrototype = {},
         json = req.body;
-    //console.log(json.type);
 
     // check that mandatory values are set
-    if(json.hasOwnProperty('type')) {
+    if(!json.hasOwnProperty('type')) {
+        // mandatory validation has failed
     }
 
-    newPrototype.name = req.body.hasOwnProperty('name') ? req.body.name : "";
-    newPrototype.type = req.body.hasOwnProperty('type') ? req.body.type : "";
-    newPrototype.subtype = req.body.hasOwnProperty('subtype') ? req.body.subtype : "";
-    newPrototype.locale = req.body.hasOwnProperty('locale') ? req.body.locale : "";
-    if(req.body.hasOwnProperty('design') ) {
-        type = req.body.design.hasOwnProperty('type') ? req.body.design.type : "";
-        data = req.body.design.hasOwnProperty('data') ? req.body.design.data : "";
+
+    newPrototype.name = json.hasOwnProperty('name') ? json.name : "";
+    newPrototype.type = json.hasOwnProperty('type') ? json.type : "";
+    newPrototype.subtype = json.hasOwnProperty('subtype') ? json.subtype : "";
+    newPrototype.locale = json.hasOwnProperty('locale') ? json.locale : "";
+    if(json.hasOwnProperty('design') ) {
+        type = json.design.hasOwnProperty('type') ? json.design.type : "";
+        data = json.design.hasOwnProperty('data') ? json.design.data : "";
         newPrototype.design = {
             type: type,
             data: data
         };
     }
-    if(req.body.hasOwnProperty('content') ) {
-        type = req.body.content.hasOwnProperty('type') ? req.body.content.type : "";
-        data = req.body.content.hasOwnProperty('data') ? req.body.content.data : "";
+    if(json.hasOwnProperty('content') ) {
+        type = json.content.hasOwnProperty('type') ? json.content.type : "";
+        data = json.content.hasOwnProperty('data') ? json.content.data : "";
         newPrototype.content = {
             type: type,
             data: data
@@ -122,12 +124,9 @@ router.post('/prototypes', function(req, res, next) {
             }
         }
     }
-    newPrototype.actions = req.body.hasOwnProperty('actions') ? req.body.actions : "";
-
-
+    newPrototype.actions = json.hasOwnProperty('actions') ? json.actions : "";
     newPrototype.owner = "admin";
     //console.log(newPrototype);
-
     var prototype = new ObjectsPrototype(newPrototype);
 
     // save the newly created prototype of object to DB
@@ -147,15 +146,40 @@ router.post('/prototypes', function(req, res, next) {
  * Vypytaj len objekt s id
  */
 router.get('/:id', function(req, res) {
-    res.json({ GET: 'Vypytaj len objekt s id '+ req.params.id });
+    Object.findOne({"_id": req.params.id}, function(err, object) {
+        if (err) { return next()}
+        res.json(object)
+    })
 });
 
 /**
- * PUT /objects/:id
- * Updatni objekt s danym id
+ * POST /objects/:id
+ * Update object with id, according to json sent in body
  */
-router.put('/', function (req, res) {
-    res.send({ PUT: 'Updatni objekt s id ' + req.params.id});
+router.post('/:id', function (req, res) {
+    Object.findOne({"_id": req.params.id}, function(err, object) {
+        if (err) { return next()}
+
+        var objectHistory = {},
+            json = req.body;
+
+        // todo: create copy of current object in Objects history
+
+        // todo: increase version by 1 of current object
+
+        // todo: make changes on object from json
+
+        // save the updated object to DB
+        object.save(function (err, object) {
+            if (err) { return next(err) }
+            res.status(200).json({
+                "status": "ok",
+                "objectId": object._id,
+                "version": object.version
+            })
+        });
+
+    })
 });
 
 /**
