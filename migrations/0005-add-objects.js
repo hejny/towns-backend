@@ -1,4 +1,3 @@
-
 var mongodb = require('mongodb');
 
 exports.up = function (db, next) {
@@ -8,8 +7,9 @@ exports.up = function (db, next) {
         version: 1,
         x: 1,
         y: 1,
-        objectType: 1,
-        date: 1
+        type: 1,
+        start_time: 1,
+        owner: 1
     });
     objects.insert({
                 "version": "2",
@@ -19,7 +19,6 @@ exports.up = function (db, next) {
                 "x": "12.34",
                 "y": "-55.05",
                 "start_time": "1449572794",
-                "stop_time": "",
                 "locale": "cs",
                 "design": {
                     type: "model",

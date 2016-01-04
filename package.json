@@ -7,6 +7,7 @@
     "rebuild": "node-gyp rebuild",
     "mongo-migrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./../config/mongo.json -dbn mongoDb up",
     "start": "node ./bin/www",
+    "nodemonitor": "nodemon ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stefan Kecskes <mr.kecskes@gmail.com> (https://skey.uk)",
@@ -22,5 +23,8 @@
     "mongoose": "~4.2.5",
     "mongodb-migrate": "~1.2.3",
     "mongodb": "~2.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "~1.8.1"
   }
 }
