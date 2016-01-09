@@ -45,14 +45,23 @@ router.post('/', function(req, res, next) {
         newObject.name = json.name;
         newObject.start_time = Date.now();
         if(json.hasOwnProperty('content') ) {
-            type = json.content.hasOwnProperty('type') ? json.content.type : "";
-            data = json.content.hasOwnProperty('data') ? json.content.data : "";
+            var type = json.content.hasOwnProperty('type') ? json.content.type : "";
+            var data = json.content.hasOwnProperty('data') ? json.content.data : "";
             newObject.content = {
                 type: type,
                 data: data
             };
         }
+        if(json.hasOwnProperty('design') ) {
+            var type = json.design.hasOwnProperty('type') ? json.design.type : "";
+            var data = json.design.hasOwnProperty('data') ? json.design.data : "";
+            newObject.design = {
+                type: type,
+                data: data
+            };
+        }
         newObject.owner = "admin";
+
         var object = new Object(newObject);
 
         console.log(newObject);
