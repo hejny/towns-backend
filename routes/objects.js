@@ -42,6 +42,7 @@ router.post('/', function(req, res, next) {
         newObject.version = 1;
         newObject.x = json.x;
         newObject.y = json.y;
+        newObject.name = json.name;
         newObject.start_time = Date.now();
         if(json.hasOwnProperty('content') ) {
             type = json.content.hasOwnProperty('type') ? json.content.type : "";
