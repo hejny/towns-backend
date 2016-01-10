@@ -11,11 +11,12 @@ var schema = new db.Schema({
     locale: {type: String, default: "cs"},
     design: {
         type: {type: String, default: "model"},
-        data: {
-            particles: Array,//[PH] This is specification for only one type of data - model. In future there will be other types with different specifications.
+        data: db.Schema.Types.Mixed
+        /*{//[PH] This is specification for only one type of data - model. In future there will be other types with different specifications.
+            particles: Array,
             rotation: {type: Number, default: 0},
             size: {type: Number, default: 1}
-        }
+        }*/
     },
     content: {
         type: {type: String, default: "markdown"},
