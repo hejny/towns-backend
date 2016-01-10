@@ -6,18 +6,23 @@ exports.up = function (db, next) {
     objectsPrototypes.createIndex({
         type: 1
     });
+
+    objectsPrototypes.insert({
+        "type": "terrain",
+        "design": {
+            "type": "terrain",
+            "data": 0
+        }
+    }, next);
+
     objectsPrototypes.insert({
         "name": "Ambasada",
         "type": "building",
-        "subtype": "passive",
+        "subtype": "main",
         "locale": "cs",
         "design": {
             "type": "model",
-            "data": "12,3453,654,234,..."
-        },
-        "content": {
-            "type": "markdown",
-            "data": "Kde bolo tam bolo"
+            "data": {}
         },
         "properties": {
             "strength": 5,
@@ -26,6 +31,17 @@ exports.up = function (db, next) {
         },
         "actions": ["attack", "defense", "dismantle"]
     }, next);
+
+    objectsPrototypes.insert({
+        "name": "Příběh",
+        "type": "story",
+        "locale": "cs",
+        "content": {
+            "type": "markdown",
+            "data": "Kde bolo tam bolo"
+        }
+    }, next);
+
 };
 
 exports.down = function (db, next) {
