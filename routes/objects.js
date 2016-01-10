@@ -29,9 +29,11 @@ router.post('/', function(req, res, next) {
     }
 
     // find the Prototype
-    ObjectsPrototype.findOne({type: "building"}, function(err, objectsPrototype) {
+    ObjectsPrototype.findOne({_id: json.prototypeId}, function(err, objectsPrototype) {
         if (err) { return next() }
         //console.log(objectsPrototype);
+
+        if(objectsPrototype!=null)
         for (var key in objectsPrototype._doc) {
             if (objectsPrototype._doc.hasOwnProperty(key) && key !== "_id") {
                 newObject[key] = objectsPrototype["_doc"][key];
@@ -43,6 +45,8 @@ router.post('/', function(req, res, next) {
         newObject.x = json.x;
         newObject.y = json.y;
         newObject.name = json.name;
+        newObject.type = json.type;//todo should it be here?
+        newObject.subtype = json.subtype;//todo should it be here?
         newObject.start_time = Date.now();
         if(json.hasOwnProperty('content') ) {
             var type = json.content.hasOwnProperty('type') ? json.content.type : "";
