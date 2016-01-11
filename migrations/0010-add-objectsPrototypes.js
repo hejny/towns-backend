@@ -7,44 +7,42 @@ exports.up = function (db, next) {
         type: 1
     });
 
-    objectsPrototypes.insert({
-        "type": "terrain",
-        "design": {
+    objectsPrototypes.insert([
+        {
             "type": "terrain",
-            "data": 0
+            "design": {
+                "type": "terrain",
+                "data": 0
+            }
+        }, {
+            "name": "Ambasada",
+            "type": "building",
+            "subtype": "main",
+            "locale": "cs",
+            "design": {
+                "type": "model",
+                "data": {}
+            },
+            "properties": {
+                "strength": 5,
+                "defense": 3,
+                "speed": 10
+            },
+            "actions": ["attack", "defense", "dismantle"]
+        }, {
+            "name": "Příběh",
+            "type": "story",
+            "locale": "cs",
+            "content": {
+                "type": "markdown",
+                "data": "Kde bolo tam bolo"
+            }
         }
-    }, next);
-
-    objectsPrototypes.insert({
-        "name": "Ambasada",
-        "type": "building",
-        "subtype": "main",
-        "locale": "cs",
-        "design": {
-            "type": "model",
-            "data": {}
-        },
-        "properties": {
-            "strength": 5,
-            "defense": 3,
-            "speed": 10
-        },
-        "actions": ["attack", "defense", "dismantle"]
-    }, next);
-
-    objectsPrototypes.insert({
-        "name": "Příběh",
-        "type": "story",
-        "locale": "cs",
-        "content": {
-            "type": "markdown",
-            "data": "Kde bolo tam bolo"
-        }
-    }, next);
+    ], next);
 
 };
 
 exports.down = function (db, next) {
     var objectsPrototypes = db.collection('objectsPrototypes');
-    objectsPrototypes.findOneAndUpdate({name:'Ambasada'}, [], {}, { remove: true }, next);
+    objectsPrototypes.findOneAndUpdate({name: 'Ambasada'}, [], {}, {remove: true}, next);
 };
