@@ -10,15 +10,26 @@ var ObjectsPrototype = require('../models/objectsPrototype');
 router.get('/', function (req, res, next) {
     Object.find(function (err, objects) {
         if (err) {
-            return next()
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting your prototype"
+            });
         }
-        res.json(objects)
+
+        //console.log(objects);
+        if(objects == null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There are no objects"
+            });
+        }
+        res.json(objects);
     });
 });
 
 /**
  * POST /objects
- * Vytvor odoslany objekt
+ * Vytvor odoslany objekt (toto je create, nie update)
  */
 router.post('/', function (req, res, next) {
     var newObject = {},
@@ -40,7 +51,7 @@ router.post('/', function (req, res, next) {
         if (err) {
             return res.status(500).json({
                 "status": "error",
-                "message": "Problem with prototype"
+                "message": "Problem getting your prototype"
             });
         }
 
@@ -115,8 +126,20 @@ router.post('/', function (req, res, next) {
 router.get('/prototypes', function (req, res, next) {
     ObjectsPrototype.find(function (err, objectsPrototypes) {
         if (err) {
-            return next()
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting prototypes"
+            });
         }
+
+        //console.log(objectsPrototype);
+        if(objectsPrototypes == null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There are no prototypes"
+            });
+        }
+
         res.json(objectsPrototypes)
     });
 });
@@ -190,10 +213,23 @@ router.post('/prototypes', function (req, res, next) {
  * Vypytaj len objekt s id
  */
 router.get('/:id', function (req, res) {
-    Object.findOne({"_id": req.params.id}, function (err, object) {
+    var parameters = req.params;
+    Object.findOne({"_id": parameters.id}, function (err, object) {
         if (err) {
-            return next()
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting your object"
+            });
         }
+
+        //console.log(object);
+        if(object == null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There is no such object"
+            });
+        }
+
         res.json(object)
     })
 });
@@ -201,6 +237,7 @@ router.get('/:id', function (req, res) {
 /**
  * POST /objects/:id
  * Update object with id, according to json sent in body
+ * TODO: finish this
  */
 router.post('/:id', function (req, res) {
     Object.findOne({"_id": req.params.id}, function (err, object) {
@@ -235,8 +272,17 @@ router.post('/:id', function (req, res) {
 /**
  * DELETE /objects/:id
  * Vymaz objekt s danym id
+ * TODO: finish this
  */
 router.delete('/', function (req, res) {
+
+    // todo: get the object
+
+    // todo: copy it to ObjectsHistory
+
+    // todo: remove it from object collection
+
+    // todo: return success json
     res.json({DELETE: 'Vymaz objekt s id' + req.params.id});
 });
 
