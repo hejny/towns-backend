@@ -2,12 +2,13 @@ var express = require('express');
 var router = express.Router();
 var Object = require('../models/object');
 var ObjectsPrototype = require('../models/objectsPrototype');
+var ObjectsHistory = require('../models/objectsHistory');
 
 /**
  * GET /objects
  * vrati vsetky objekty
  */
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     Object.find(function (err, objects) {
         if (err) {
             return res.status(500).json({
@@ -123,7 +124,7 @@ router.post('/', function (req, res, next) {
  * GET /objects/prototypes
  * vrati vsetky prototypu objektov
  */
-router.get('/prototypes', function (req, res, next) {
+router.get('/prototypes', function (req, res) {
     ObjectsPrototype.find(function (err, objectsPrototypes) {
         if (err) {
             return res.status(500).json({
@@ -240,15 +241,45 @@ router.get('/:id', function (req, res) {
  * TODO: finish this
  */
 router.post('/:id', function (req, res) {
-    Object.findOne({"_id": req.params.id}, function (err, object) {
+    var objectId = req.params.id,
+        json = req.body,
+        history = {};
+    Object.findOne({"_id": objectId}, function (err, object) {
         if (err) {
-            return next()
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting your object"
+            });
         }
 
-        var objectHistory = {},
-            json = req.body;
+        //console.log(object);
+        if(object == null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There is no such object"
+            });
+        }
 
-        // todo: create copy of current object in Objects history
+        // create copy of current object in Objects history
+        for (var key in object) {
+            if (object.hasOwnProperty(key) && key != "_id") {
+                history[key] = object[key];
+            }
+        }
+
+        history._currentId = object._id;
+        history.stop_time = new Date();
+
+        var objectHistory = new ObjectsHistory(history);
+        objectHistory.save(function (err) {
+            if (err) {
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
+            }
+            console.log('Version of object was succesfully saved to ObjectsHistory')
+        });
 
         // todo: increase version by 1 of current object
 
