@@ -7,9 +7,11 @@ var ObjectsPrototype = require('../models/objectsPrototype');
  * GET /objects
  * vrati vsetky objekty
  */
-router.get('/', function(req, res, next) {
-    Object.find(function(err, objects) {
-        if (err) { return next()}
+router.get('/', function (req, res, next) {
+    Object.find(function (err, objects) {
+        if (err) {
+            return next()
+        }
         res.json(objects)
     });
 });
@@ -18,25 +20,47 @@ router.get('/', function(req, res, next) {
  * POST /objects
  * Vytvor odoslany objekt
  */
-router.post('/', function(req, res, next) {
+router.post('/', function (req, res, next) {
     var newObject = {},
         json = req.body;
-    //console.log(req.body);
+    //console.log(json);
+
+    function hasValidName() {
+            return (json.hasOwnProperty('name')) && (typeof json.name == "string") && (json.name.length > 0)
+    }
 
     // check that mandatory values are set
-    if(!json.hasOwnProperty('prototypeId') || !json.hasOwnProperty('x') || !json.hasOwnProperty('y')) {
+    if (!json.hasOwnProperty('prototypeId') || !json.hasOwnProperty('x') || !json.hasOwnProperty('y')) {
         // mandatory validation failed
     }
 
-    // find the Prototype
-    ObjectsPrototype.findOne({_id: json.prototypeId}, function(err, objectsPrototype) {
-        if (err) { return next() }
-        //console.log(objectsPrototype);
 
-        if(objectsPrototype!=null)
+    // find the Prototype
+    ObjectsPrototype.findOne({_id: json.prototypeId}, function (err, objectsPrototype) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem with prototype"
+            });
+        }
+
+        //console.log(objectsPrototype);
+        if(objectsPrototype == null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There is no such prototype"
+            });
+        }
+
         for (var key in objectsPrototype._doc) {
             if (objectsPrototype._doc.hasOwnProperty(key) && key !== "_id") {
-                newObject[key] = objectsPrototype["_doc"][key];
+                switch (key) {
+                    case "_id":
+                        // we do nothing as we don't want to copy prototypeId into Objects
+                        break;
+                    default:
+                        newObject[key] = objectsPrototype["_doc"][key];
+                }
             }
         }
 
@@ -44,21 +68,21 @@ router.post('/', function(req, res, next) {
         newObject.version = 1;
         newObject.x = json.x;
         newObject.y = json.y;
-        newObject.name = json.name;
-        newObject.type = json.type;//todo should it be here?
-        newObject.subtype = json.subtype;//todo should it be here?
+        if ( hasValidName() ) { newObject["name"] = json.name; }
         newObject.start_time = Date.now();
-        if(json.hasOwnProperty('content') ) {
-            var type = json.content.hasOwnProperty('type') ? json.content.type : "";
-            var data = json.content.hasOwnProperty('data') ? json.content.data : "";
+        var type = "",
+            data = "";
+        if (json.hasOwnProperty('content')) {
+            type = json.content.hasOwnProperty('type') ? json.content.type : "";
+            data = json.content.hasOwnProperty('data') ? json.content.data : "";
             newObject.content = {
                 type: type,
                 data: data
             };
         }
-        if(json.hasOwnProperty('design') ) {
-            var type = json.design.hasOwnProperty('type') ? json.design.type : "";
-            var data = json.design.hasOwnProperty('data') ? json.design.data : "";
+        if (json.hasOwnProperty('design')) {
+            type = json.design.hasOwnProperty('type') ? json.design.type : "";
+            data = json.design.hasOwnProperty('data') ? json.design.data : "";
             newObject.design = {
                 type: type,
                 data: data
@@ -71,14 +95,16 @@ router.post('/', function(req, res, next) {
         console.log(newObject);
         // save the newly created object to DB
         object.save(function (err, object) {
-            if (err) { return next(err) }
+            if (err) {
+                return next(err)
+            }
             res.status(201).json({
                 "status": "ok",
                 "objectId": object._id
             })
         });
 
-    });
+    })
 
 });
 
@@ -86,9 +112,11 @@ router.post('/', function(req, res, next) {
  * GET /objects/prototypes
  * vrati vsetky prototypu objektov
  */
-router.get('/prototypes', function(req, res, next) {
-    ObjectsPrototype.find(function(err, objectsPrototypes) {
-        if (err) { return next()}
+router.get('/prototypes', function (req, res, next) {
+    ObjectsPrototype.find(function (err, objectsPrototypes) {
+        if (err) {
+            return next()
+        }
         res.json(objectsPrototypes)
     });
 });
@@ -97,12 +125,12 @@ router.get('/prototypes', function(req, res, next) {
  * POST /objects/prototypes
  * Vytvor odoslany prototyp objektu
  */
-router.post('/prototypes', function(req, res, next) {
+router.post('/prototypes', function (req, res, next) {
     var newPrototype = {},
         json = req.body;
 
     // check that mandatory values are set
-    if(!json.hasOwnProperty('type')) {
+    if (!json.hasOwnProperty('type')) {
         // mandatory validation has failed
     }
 
@@ -111,7 +139,7 @@ router.post('/prototypes', function(req, res, next) {
     newPrototype.type = json.hasOwnProperty('type') ? json.type : "";
     newPrototype.subtype = json.hasOwnProperty('subtype') ? json.subtype : "";
     newPrototype.locale = json.hasOwnProperty('locale') ? json.locale : "";
-    if(json.hasOwnProperty('design') ) {
+    if (json.hasOwnProperty('design')) {
         type = json.design.hasOwnProperty('type') ? json.design.type : "";
         data = json.design.hasOwnProperty('data') ? json.design.data : "";
         newPrototype.design = {
@@ -119,7 +147,7 @@ router.post('/prototypes', function(req, res, next) {
             data: data
         };
     }
-    if(json.hasOwnProperty('content') ) {
+    if (json.hasOwnProperty('content')) {
         type = json.content.hasOwnProperty('type') ? json.content.type : "";
         data = json.content.hasOwnProperty('data') ? json.content.data : "";
         newPrototype.content = {
@@ -127,11 +155,11 @@ router.post('/prototypes', function(req, res, next) {
             data: data
         };
     }
-    if(json.hasOwnProperty('properties')) {
+    if (json.hasOwnProperty('properties')) {
         var properties = json.properties;
         for (var key in properties) {
             if (properties.hasOwnProperty(key)) {
-                if(!newPrototype.hasOwnProperty("properties")){
+                if (!newPrototype.hasOwnProperty("properties")) {
                     newPrototype.properties = {};
                 }
                 newPrototype["properties"][key] = properties[key];
@@ -145,7 +173,9 @@ router.post('/prototypes', function(req, res, next) {
 
     // save the newly created prototype of object to DB
     prototype.save(function (err, object) {
-        if (err) { return next(err) }
+        if (err) {
+            return next(err)
+        }
         res.status(201).json({
             "status": "ok",
             "objectId": object._id
@@ -159,9 +189,11 @@ router.post('/prototypes', function(req, res, next) {
  * GET /objects/:id
  * Vypytaj len objekt s id
  */
-router.get('/:id', function(req, res) {
-    Object.findOne({"_id": req.params.id}, function(err, object) {
-        if (err) { return next()}
+router.get('/:id', function (req, res) {
+    Object.findOne({"_id": req.params.id}, function (err, object) {
+        if (err) {
+            return next()
+        }
         res.json(object)
     })
 });
@@ -171,8 +203,10 @@ router.get('/:id', function(req, res) {
  * Update object with id, according to json sent in body
  */
 router.post('/:id', function (req, res) {
-    Object.findOne({"_id": req.params.id}, function(err, object) {
-        if (err) { return next()}
+    Object.findOne({"_id": req.params.id}, function (err, object) {
+        if (err) {
+            return next()
+        }
 
         var objectHistory = {},
             json = req.body;
@@ -185,7 +219,9 @@ router.post('/:id', function (req, res) {
 
         // save the updated object to DB
         object.save(function (err, object) {
-            if (err) { return next(err) }
+            if (err) {
+                return next(err)
+            }
             res.status(200).json({
                 "status": "ok",
                 "objectId": object._id,
@@ -201,7 +237,7 @@ router.post('/:id', function (req, res) {
  * Vymaz objekt s danym id
  */
 router.delete('/', function (req, res) {
-    res.json({ DELETE: 'Vymaz objekt s id' + req.params.id});
+    res.json({DELETE: 'Vymaz objekt s id' + req.params.id});
 });
 
 
