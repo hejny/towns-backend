@@ -5,12 +5,16 @@ exports.up = function(db, next){
 
     var objectsHistory = db.collection('objectsHistory');
     objectsHistory.createIndex({
-        type: 1
+        type: 1,
+        _currentId: 1,
+        x: 1,
+        y: 1,
+        owner: 1
     });
 
     objectsHistory.insert([
         {
-            "current_id": "507f1f77bcf86cd799439011",
+            "_currentId": "507f1f77bcf86cd799439011",
             "version": "1",
             "name": "Die ambasadasen",
             "type": "building",
