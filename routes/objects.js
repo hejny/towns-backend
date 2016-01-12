@@ -252,7 +252,7 @@ router.post('/:id', function (req, res) {
             });
         }
 
-        //console.log(object);
+        console.log(object._doc);
         if(object == null) {
             return res.status(500).json({
                 "status": "error",
@@ -261,15 +261,16 @@ router.post('/:id', function (req, res) {
         }
 
         // create copy of current object in Objects history
-        for (var key in object) {
-            if (object.hasOwnProperty(key) && key != "_id") {
-                history[key] = object[key];
+        for (var key in object._doc) {
+            if (object._doc.hasOwnProperty(key) && key != "_id") {
+                history[key] = object._doc[key];
             }
         }
 
         history._currentId = object._id;
         history.stop_time = new Date();
 
+        //console.log(history);
         var objectHistory = new ObjectsHistory(history);
         objectHistory.save(function (err) {
             if (err) {
@@ -281,15 +282,27 @@ router.post('/:id', function (req, res) {
             console.log('Version of object was succesfully saved to ObjectsHistory')
         });
 
-        // todo: increase version by 1 of current object
+        // increase version by 1 of current object & and set new start_time
+        object.version++;
+        object.start_time = new Date();
 
-        // todo: make changes on object from json
+        // make changes on object from json
+        for (var key in json) {
+            if (json.hasOwnProperty(key) && key != "_id") {
+                //todo: make some validation of input from json
+                object[key] = json[key];
+            }
+        }
 
         // save the updated object to DB
         object.save(function (err, object) {
             if (err) {
-                return next(err)
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
             }
+            console.log(object);
             res.status(200).json({
                 "status": "ok",
                 "objectId": object._id,
