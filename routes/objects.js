@@ -13,7 +13,7 @@ router.get('/', function (req, res) {
         if (err) {
             return res.status(500).json({
                 "status": "error",
-                "message": "Problem getting your prototype"
+                "message": "Problem getting your objects"
             });
         }
 
@@ -65,13 +65,15 @@ router.post('/', function (req, res, next) {
         }
 
         for (var key in objectsPrototype._doc) {
-            if (objectsPrototype._doc.hasOwnProperty(key) && key !== "_id") {
+            if (objectsPrototype._doc.hasOwnProperty(key)) {
                 switch (key) {
                     case "_id":
-                        // we do nothing as we don't want to copy prototypeId into Objects
+                        newObject._prototypeId = objectsPrototype._doc._id;
+                    case "owner":
+                        // we do nothing as we don't want to owner of prototype to be owner of new Objects
                         break;
                     default:
-                        newObject[key] = objectsPrototype["_doc"][key];
+                        newObject[key] = objectsPrototype._doc[key];
                 }
             }
         }
@@ -100,7 +102,7 @@ router.post('/', function (req, res, next) {
                 data: data
             };
         }
-        newObject.owner = "admin";
+        newObject.owner = "admin"; // todo: later here will go current user (find him from token used)
 
         var object = new Object(newObject);
 
@@ -191,7 +193,7 @@ router.post('/prototypes', function (req, res, next) {
         }
     }
     newPrototype.actions = json.hasOwnProperty('actions') ? json.actions : "";
-    newPrototype.owner = "admin";
+    newPrototype.owner = "admin"; // todo: later here will go current user (find him from token used)
     //console.log(newPrototype);
     var prototype = new ObjectsPrototype(newPrototype);
 

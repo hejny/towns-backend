@@ -15,6 +15,7 @@ var db = require('./db');
 
  */
 var historySchema = new db.Schema({
+    _prototypeId: { type: String, required:true },
     _currentId: { type: String, required:true },
     version: {type: Number, required: true, default: 1},
     name: String,
