@@ -16,6 +16,7 @@ ObjectsHistory
 
 */
 var schema = new db.Schema({
+    _prototypeId: { type: String, required:true },
     version: {type: Number, required: true, default: 1},
     name: String,
     type: {type: String},

@@ -7,6 +7,7 @@ exports.up = function(db, next){
     objectsHistory.createIndex({
         type: 1,
         _currentId: 1,
+        _prototypeId: 1,
         x: 1,
         y: 1,
         owner: 1
@@ -15,6 +16,7 @@ exports.up = function(db, next){
     objectsHistory.insert([
         {
             "_currentId": "507f1f77bcf86cd799439011",
+            "_prototypeId": "507f1f77bcf86cd799439011",
             "version": "1",
             "name": "Die ambasadasen",
             "type": "building",
