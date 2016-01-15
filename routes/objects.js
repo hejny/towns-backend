@@ -292,9 +292,18 @@ router.post('/:id', function (req, res) {
 
         // make changes on object from json
         for (var key in json) {
-            if (json.hasOwnProperty(key) && key != "_id") {
+            if (json.hasOwnProperty(key)) {
                 //todo: make some validation of input from json
-                object[key] = json[key];
+                switch(key) {
+                    case "_id":
+                    case "version":
+                    case "start_time":
+                    case "owner":
+                        // do not overwrite these properties
+                        break;
+                    default:
+                        object[key] = json[key];
+                }
             }
         }
 
