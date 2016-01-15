@@ -32,7 +32,8 @@ var prototypeSchema = new db.Schema({
         defense: {type: Number},
         speed: {type: Number}
     },
-    actions: Array
+    actions: Array,
+    owner: {type: String, required: true, default: "admin"}
 }, {
     collection: 'objectsPrototypes'
 });
