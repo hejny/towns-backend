@@ -4,6 +4,7 @@ exports.up = function (db, next) {
 
     var objects = db.collection('objects');
     objects.createIndex({
+        _prototypeId: 1,
         version: 1,
         x: 1,
         y: 1,
@@ -13,6 +14,7 @@ exports.up = function (db, next) {
     });
     objects.insert([
         {
+            "_prototypeId": "507f1f77bcf86cd799439011",
             "version": "2",
             "name": "Ambasada",
             "type": "building",

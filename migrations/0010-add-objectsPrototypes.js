@@ -4,7 +4,8 @@ exports.up = function (db, next) {
 
     var objectsPrototypes = db.collection('objectsPrototypes');
     objectsPrototypes.createIndex({
-        type: 1
+        type: 1,
+        owner: 1
     });
 
     objectsPrototypes.insert([
@@ -13,7 +14,8 @@ exports.up = function (db, next) {
             "design": {
                 "type": "terrain",
                 "data": 0
-            }
+            },
+            "owner": "5126bc054aed4daf9e2ab772"
         }, {
             "name": "Ambasada",
             "type": "building",
@@ -28,7 +30,8 @@ exports.up = function (db, next) {
                 "defense": 3,
                 "speed": 10
             },
-            "actions": ["attack", "defense", "dismantle"]
+            "actions": ["attack", "defense", "dismantle"],
+            "owner": "5126bc054aed4daf9e2ab772"
         }, {
             "name": "Příběh",
             "type": "story",
@@ -36,7 +39,8 @@ exports.up = function (db, next) {
             "content": {
                 "type": "markdown",
                 "data": "Kde bolo tam bolo"
-            }
+            },
+            "owner": "5126bc054aed4daf9e2ab772"
         }
     ], next);
 

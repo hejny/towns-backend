@@ -13,12 +13,12 @@ router.get('/', function (req, res) {
         if (err) {
             return res.status(500).json({
                 "status": "error",
-                "message": "Problem getting your prototype"
+                "message": "Problem getting your objects"
             });
         }
 
         //console.log(objects);
-        if(objects == null) {
+        if (objects == null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There are no objects"
@@ -38,7 +38,7 @@ router.post('/', function (req, res, next) {
     //console.log(json);
 
     function hasValidName() {
-            return (json.hasOwnProperty('name')) && (typeof json.name == "string") && (json.name.length > 0)
+        return (json.hasOwnProperty('name')) && (typeof json.name == "string") && (json.name.length > 0)
     }
 
     // check that mandatory values are set
@@ -57,7 +57,7 @@ router.post('/', function (req, res, next) {
         }
 
         //console.log(objectsPrototype);
-        if(objectsPrototype == null) {
+        if (objectsPrototype == null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There is no such prototype"
@@ -65,13 +65,15 @@ router.post('/', function (req, res, next) {
         }
 
         for (var key in objectsPrototype._doc) {
-            if (objectsPrototype._doc.hasOwnProperty(key) && key !== "_id") {
+            if (objectsPrototype._doc.hasOwnProperty(key)) {
                 switch (key) {
                     case "_id":
-                        // we do nothing as we don't want to copy prototypeId into Objects
+                        newObject._prototypeId = objectsPrototype._doc._id;
+                    case "owner":
+                        // we do nothing as we don't want to owner of prototype to be owner of new Objects
                         break;
                     default:
-                        newObject[key] = objectsPrototype["_doc"][key];
+                        newObject[key] = objectsPrototype._doc[key];
                 }
             }
         }
@@ -80,7 +82,9 @@ router.post('/', function (req, res, next) {
         newObject.version = 1;
         newObject.x = json.x;
         newObject.y = json.y;
-        if ( hasValidName() ) { newObject["name"] = json.name; }
+        if (hasValidName()) {
+            newObject["name"] = json.name;
+        }
         newObject.start_time = Date.now();
         var type = "",
             data = "";
@@ -100,7 +104,7 @@ router.post('/', function (req, res, next) {
                 data: data
             };
         }
-        newObject.owner = "admin";
+        newObject.owner = "admin"; // todo: later here will go current user (find him from token used)
 
         var object = new Object(newObject);
 
@@ -134,7 +138,7 @@ router.get('/prototypes', function (req, res) {
         }
 
         //console.log(objectsPrototype);
-        if(objectsPrototypes == null) {
+        if (objectsPrototypes == null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There are no prototypes"
@@ -191,7 +195,7 @@ router.post('/prototypes', function (req, res, next) {
         }
     }
     newPrototype.actions = json.hasOwnProperty('actions') ? json.actions : "";
-    newPrototype.owner = "admin";
+    newPrototype.owner = "admin"; // todo: later here will go current user (find him from token used)
     //console.log(newPrototype);
     var prototype = new ObjectsPrototype(newPrototype);
 
@@ -224,7 +228,7 @@ router.get('/:id', function (req, res) {
         }
 
         //console.log(object);
-        if(object == null) {
+        if (object == null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There is no such object"
@@ -253,7 +257,7 @@ router.post('/:id', function (req, res) {
         }
 
         console.log(object._doc);
-        if(object == null) {
+        if (object == null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There is no such object"
@@ -288,9 +292,18 @@ router.post('/:id', function (req, res) {
 
         // make changes on object from json
         for (var key in json) {
-            if (json.hasOwnProperty(key) && key != "_id") {
+            if (json.hasOwnProperty(key)) {
                 //todo: make some validation of input from json
-                object[key] = json[key];
+                switch(key) {
+                    case "_id":
+                    case "version":
+                    case "start_time":
+                    case "owner":
+                        // do not overwrite these properties
+                        break;
+                    default:
+                        object[key] = json[key];
+                }
             }
         }
 
@@ -318,16 +331,59 @@ router.post('/:id', function (req, res) {
  * Vymaz objekt s danym id
  * TODO: finish this
  */
-router.delete('/', function (req, res) {
+router.delete('/:id', function (req, res) {
+    var objectId = req.params.id,
+        history = {};
+    // get the object
+    Object.findOne({"_id": objectId}, function (err, object) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting your object"
+            });
+        }
+        //console.log(object);
+        if (object == null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There is no such object"
+            });
+        }
 
-    // todo: get the object
 
-    // todo: copy it to ObjectsHistory
+        // copy object to ObjectsHistory collection
+        for (var key in object._doc) {
+            if (object._doc.hasOwnProperty(key) && key != "_id") {
+                history[key] = object._doc[key];
+            }
+        }
+        history._currentId = object._doc._id;
+        history.stop_time = new Date();
+        //console.log(history);
+        var objectHistory = new ObjectsHistory(history);
+        objectHistory.save(function (err) {
+            if (err) {
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
+            }
+            console.log('Version of object was succesfully saved to ObjectsHistory')
 
-    // todo: remove it from object collection
+            // remove it from objects collection
+            object.remove();
 
-    // todo: return success json
-    res.json({DELETE: 'Vymaz objekt s id' + req.params.id});
+            // return success json
+            res.status(200).json({
+                "status": "deleted",
+                "objectId": history._currentId,
+                "version": history.version
+            });
+        });
+
+
+    });
+
 });
 
 
