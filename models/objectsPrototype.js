@@ -1,4 +1,7 @@
+'use strict';
+
 var db = require('./db');
+var is = require('./validation');
 
 
 /*
@@ -15,17 +18,34 @@ var db = require('./db');
 
  */
 var prototypeSchema = new db.Schema({
-    name: String,
-    type: {type: String, required: true},
-    subtype: String,
-    locale: {type: String, default: "cs"},
+    name: {
+        type: String,
+        minlength: 1,
+        maxlength: 64,
+        trim: true,
+        validate: is.alphanumeric
+    },
+    type: {
+        type: String,
+        required: true,
+        validate: is.validType
+    },
+    subtype: {
+        type: String
+    },
+    locale: {
+        type: String,
+        trim: true,
+        default: "cs",
+        validate: [ is.validLocale, is.twoCharacters]
+    },
     design: {
         type: {type: String, default: "model"},
         data: db.Schema.Types.Mixed
     },
     content: {
         type: {type: String, default: "markdown"},
-        data:  {type: String}
+        data: {type: String}
     },
     properties: {
         strength: {type: Number},
