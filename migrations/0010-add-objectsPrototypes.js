@@ -47,6 +47,7 @@ exports.up = function (db, next) {
 };
 
 exports.down = function (db, next) {
-    var objectsPrototypes = db.collection('objectsPrototypes');
-    objectsPrototypes.findOneAndUpdate({name: 'Ambasada'}, [], {}, {remove: true}, next);
+    db.dropCollection('objectsPrototypes', next);
+    //var objectsPrototypes = db.collection('objectsPrototypes');
+    //objectsPrototypes.findOneAndUpdate({name: 'Ambasada'}, [], {}, {remove: true}, next);
 };

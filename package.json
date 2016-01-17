@@ -6,6 +6,7 @@
   "scripts": {
     "rebuild": "node-gyp rebuild",
     "mongo-migrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./../config/mongo.json -dbn mongoDb up",
+    "mongo-remigrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./../config/mongo.json -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./../config/mongo.json -dbn mongoDb up",
     "start": "node ./bin/www",
     "nodemonitor": "nodemon ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"

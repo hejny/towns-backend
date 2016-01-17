@@ -43,6 +43,7 @@ exports.up = function (db, next) {
 };
 
 exports.down = function (db, next) {
-    var objects = db.collection('objects');
-    objects.findAndModify({owner: '5126bc054aed4daf9e2ab772'}, [], {}, {remove: true}, next);
+    db.dropCollection('objects', next);
+    //var objects = db.collection('objects');
+    //objects.findAndModify({owner: '5126bc054aed4daf9e2ab772'}, [], {}, {remove: true}, next);
 };

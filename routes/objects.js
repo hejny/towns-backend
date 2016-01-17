@@ -157,12 +157,6 @@ router.post('/prototypes', function (req, res, next) {
     var newPrototype = {},
         json = req.body;
 
-    // check that mandatory values are set
-    if (!json.hasOwnProperty('type')) {
-        // mandatory validation has failed
-    }
-
-
     newPrototype.name = json.hasOwnProperty('name') ? json.name : "";
     newPrototype.type = json.hasOwnProperty('type') ? json.type : "";
     newPrototype.subtype = json.hasOwnProperty('subtype') ? json.subtype : "";
@@ -202,7 +196,10 @@ router.post('/prototypes', function (req, res, next) {
     // save the newly created prototype of object to DB
     prototype.save(function (err, object) {
         if (err) {
-            return next(err)
+            return res.status(500).json({
+                "status": "error",
+                "message": err.errors
+            });
         }
         res.status(201).json({
             "status": "ok",

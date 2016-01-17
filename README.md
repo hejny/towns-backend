@@ -52,6 +52,10 @@ We will assume that you already have installed globaly node and npm.
 
     `npm run mongo-migrate`
     
+    To drop all collections and create them again from migration collection by:
+    
+    `npm run mongo-remigrate`
+    
 * * *
 
 ## Launching
