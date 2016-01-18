@@ -21,9 +21,7 @@ function hasTwoCharacters(value) {
 var validation = {
     alphanumeric: [isAlphanumeric, '{VALUE} is not alphanumeric'],
     validType: [isValidType, '{VALUE} is not valid type!'],
-    validLocale: [{ validator: this.alphabetic, msg: '{VALUE} is not valid locale! Locale must be in ISO 3166-1 alpha-2 format.'}, {validator: this.twoCharacters, msg: '{VALUE} must be 2 characters long'}],
-    alphabetic: [isAlphabetic],
-    twoCharacters: [hasTwoCharacters]
+    validLocale: [{ 'validator': isAlphabetic, msg: '{VALUE} is not valid locale! Locale must be in ISO 3166-1 alpha-2 format.'}, {'validator': hasTwoCharacters, msg: '{VALUE} must be 2 characters long'}]
 };
 
 module.exports = validation;

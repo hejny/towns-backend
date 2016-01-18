@@ -37,7 +37,7 @@ var prototypeSchema = new db.Schema({
         type: String,
         trim: true,
         default: "cs",
-        validate: [ is.validLocale, is.twoCharacters]
+        validate: is.validLocale
     },
     design: {
         type: {type: String, default: "model"},
