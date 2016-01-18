@@ -37,16 +37,6 @@ router.post('/', function (req, res, next) {
         json = req.body;
     //console.log(json);
 
-    function hasValidName() {
-        return (json.hasOwnProperty('name')) && (typeof json.name == "string") && (json.name.length > 0)
-    }
-
-    // check that mandatory values are set
-    if (!json.hasOwnProperty('prototypeId') || !json.hasOwnProperty('x') || !json.hasOwnProperty('y')) {
-        // mandatory validation failed
-    }
-
-
     // find the Prototype
     ObjectsPrototype.findOne({_id: json.prototypeId}, function (err, objectsPrototype) {
         if (err) {
@@ -82,7 +72,7 @@ router.post('/', function (req, res, next) {
         newObject.version = 1;
         newObject.x = json.x;
         newObject.y = json.y;
-        if (hasValidName()) {
+        if ((json.hasOwnProperty('name')) && (typeof json.name == "string") && (json.name.length > 0)) {
             newObject["name"] = json.name;
         }
         newObject.start_time = Date.now();
@@ -112,7 +102,10 @@ router.post('/', function (req, res, next) {
         // save the newly created object to DB
         object.save(function (err, object) {
             if (err) {
-                return next(err)
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
             }
             res.status(201).json({
                 "status": "ok",
@@ -290,7 +283,6 @@ router.post('/:id', function (req, res) {
         // make changes on object from json
         for (var key in json) {
             if (json.hasOwnProperty(key)) {
-                //todo: make some validation of input from json
                 switch(key) {
                     case "_id":
                     case "version":
