@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var mongo = require('../../config/mongo').mongoDb;
+var mongo = require('../config/mongo').mongoDb;
 
 try
 {
