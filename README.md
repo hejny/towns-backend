@@ -1,4 +1,23 @@
-# Towns 5 API
+# Towns backend
+
+* * *
+
+## Organization
+
+https://trello.com/townsgame
+
+https://trello.com/b/beAsHIkG/backend
+
+* * *
+
+## Authors of backend
+
+**[SK] Stefan Kecskes:** https://www.skey.uk
+
+**[PH] Pavol Hejný:** http://pavolhejny.com
+
+
+
 
 * * *
 
