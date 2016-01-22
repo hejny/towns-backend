@@ -40,11 +40,11 @@ var prototypeSchema = new db.Schema({
         validate: is.validLocale
     },
     design: {
-        type: {type: String, default: "model"},
+        type: {type: String, default: "model", trim: true},
         data: db.Schema.Types.Mixed
     },
     content: {
-        type: {type: String, default: "markdown"},
+        type: {type: String, default: "markdown", trim: true},
         data: {type: String}
     },
     properties: {
