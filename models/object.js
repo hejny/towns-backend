@@ -1,4 +1,7 @@
+'use strict';
+
 var db = require('./db');
+var is = require('./validation');
 
 
 
@@ -17,31 +20,43 @@ ObjectsHistory
 */
 var schema = new db.Schema({
     _prototypeId: { type: String, required:true },
-    version: {type: Number, required: true, default: 1},
-    name: String,
-    type: {type: String},
-    subtype: String,
+    version: {type: Number, required: true, default: 0},
+    name: {
+        type: String,
+        minlength: 1,
+        maxlength: 64,
+        trim: true,
+        validate: is.alphanumeric
+    },
+    type: {
+        type: String,
+        required: true,
+        validate: is.validType
+    },
+    subtype: {
+        type: String
+    },
+    locale: {
+        type: String,
+        trim: true,
+        default: "cs",
+        validate: is.validLocale
+    },
     x: {type: Number, required: true},
     y: {type: Number, required: true},
     start_time: {type: Date, required: true, default: Date.now},
-    locale: {type: String, default: "cs"},
     design: {
         type: {type: String, default: "model"},
         data: db.Schema.Types.Mixed
-        /*{//[PH] This is specification for only one type of data - model. In future there will be other types with different specifications.
-            particles: Array,
-            rotation: {type: Number, default: 0},
-            size: {type: Number, default: 1}
-        }*/
     },
     content: {
-        type: {type: String, default: "markdown"},
+        type: {type: String, default: "markdown", trim: true},
         data: String
     },
     properties: {
-        strength: Number,
-        defense: Number,
-        speed: Number
+        strength: {type: Number},
+        defense: {type: Number},
+        speed: {type: Number}
     },
     actions: Array,
     owner: {type: String, required: true, default: "admin"}
