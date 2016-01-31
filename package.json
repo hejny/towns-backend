@@ -23,7 +23,8 @@
     "serve-favicon": "~2.3.0",
     "mongoose": "~4.2.5",
     "mongodb-migrate": "~1.2.3",
-    "mongodb": "~2.1.2"
+    "mongodb": "~2.1.2",
+    "validator": "~4.5.2"
   },
   "devDependencies": {
     "nodemon": "~1.8.1"

@@ -23,12 +23,12 @@ var prototypeSchema = new db.Schema({
         minlength: 1,
         maxlength: 64,
         trim: true,
-        validate: is.alphanumeric
+        validate: is.validObjectName
     },
     type: {
         type: String,
         required: true,
-        validate: is.validType
+        validate: is.validObjectType
     },
     subtype: {
         type: String
@@ -37,7 +37,7 @@ var prototypeSchema = new db.Schema({
         type: String,
         trim: true,
         default: "cs",
-        validate: is.validLocale
+        validate: is.validObjectLocale
     },
     design: {
         type: {type: String, default: "model"},
@@ -53,7 +53,12 @@ var prototypeSchema = new db.Schema({
         speed: {type: Number}
     },
     actions: Array,
-    owner: {type: String, required: true, default: "admin"}
+    owner: {
+        type: String,
+        required: true,
+        default: "admin",
+        validate: is.validOwnerId
+    }
 }, {
     collection: 'objectsPrototypes'
 });
