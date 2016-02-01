@@ -3,10 +3,8 @@
 var db = require('./db');
 var is = require('./validation');
 
-
 /*
  Changes in this db.Schema should be applied in all object schema files!
-
 
  ObjectsPrototypesHistory
  ←
@@ -23,12 +21,12 @@ var prototypeSchema = new db.Schema({
         minlength: 1,
         maxlength: 64,
         trim: true,
-        validate: is.alphanumeric
+        validate: is.validObjectName
     },
     type: {
         type: String,
         required: true,
-        validate: is.validType
+        validate: is.validObjectType
     },
     subtype: {
         type: String
@@ -37,7 +35,7 @@ var prototypeSchema = new db.Schema({
         type: String,
         trim: true,
         default: "cs",
-        validate: is.validLocale
+        validate: is.validObjectLocale
     },
     design: {
         type: {type: String, default: "model", trim: true},
