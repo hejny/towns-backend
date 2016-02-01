@@ -41,9 +41,11 @@ function isValidDate(value) {
 }
 
 function isCurrentDate(value) {
-    // TODO: sort out this bugged Dates comparing
-    return true;
-    //return check.isBefore(check.toDate(value), Date.now(-5)) && check.isAfter(check.toDate(value), Date.now(+5))
+    var beforeDate = new Date();
+    var afterDate = new Date();
+    beforeDate.setSeconds(beforeDate.getSeconds()-5);
+    afterDate.setSeconds(afterDate.getSeconds()+5);
+    return check.isBefore(beforeDate, value) && check.isAfter(afterDate, value);
 }
 
 var is = {
