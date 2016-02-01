@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var Object = require('../models/object');
+var ObjectModel = require('../models/object');
 var ObjectsPrototype = require('../models/objectsPrototype');
 var ObjectsHistory = require('../models/objectsHistory');
 
@@ -9,7 +9,7 @@ var ObjectsHistory = require('../models/objectsHistory');
  * vrati vsetky objekty
  */
 router.get('/', function (req, res) {
-    Object.find(function (err, objects) {
+    ObjectModel.find(function (err, objects) {
         if (err) {
             return res.status(500).json({
                 "status": "error",
@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
         }
 
         //console.log(objects);
-        if (objects == null) {
+        if (objects === null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There are no objects"
@@ -32,7 +32,7 @@ router.get('/', function (req, res) {
  * POST /objects
  * Vytvor odoslany objekt (toto je create, nie update)
  */
-router.post('/', function (req, res, next) {
+router.post('/', function (req, res) {
     var newObject = {},
         json = req.body;
     //console.log(json);
@@ -47,7 +47,7 @@ router.post('/', function (req, res, next) {
         }
 
         //console.log(objectsPrototype);
-        if (objectsPrototype == null) {
+        if (objectsPrototype === null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There is no such prototype"
@@ -59,6 +59,7 @@ router.post('/', function (req, res, next) {
                 switch (key) {
                     case "_id":
                         newObject._prototypeId = objectsPrototype._doc._id;
+                        break;
                     case "owner":
                         // we do nothing as we don't want to owner of prototype to be owner of new Objects
                         break;
@@ -73,7 +74,7 @@ router.post('/', function (req, res, next) {
         newObject.x = json.x;
         newObject.y = json.y;
         if ((json.hasOwnProperty('name')) && (typeof json.name == "string") && (json.name.length > 0)) {
-            newObject["name"] = json.name;
+            newObject.name = json.name;
         }
         newObject.start_time = Date.now();
         var type = "",
@@ -96,7 +97,7 @@ router.post('/', function (req, res, next) {
         }
         newObject.owner = "admin"; // todo: later here will go current user (find him from token used)
 
-        var object = new Object(newObject);
+        var object = new ObjectModel(newObject);
 
         console.log(newObject);
         // save the newly created object to DB
@@ -110,10 +111,10 @@ router.post('/', function (req, res, next) {
             res.status(201).json({
                 "status": "ok",
                 "objectId": object._id
-            })
+            });
         });
 
-    })
+    });
 
 });
 
@@ -131,14 +132,14 @@ router.get('/prototypes', function (req, res) {
         }
 
         //console.log(objectsPrototype);
-        if (objectsPrototypes == null) {
+        if (objectsPrototypes === null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There are no prototypes"
             });
         }
 
-        res.json(objectsPrototypes)
+        res.json(objectsPrototypes);
     });
 });
 
@@ -146,7 +147,7 @@ router.get('/prototypes', function (req, res) {
  * POST /objects/prototypes
  * Vytvor odoslany prototyp objektu
  */
-router.post('/prototypes', function (req, res, next) {
+router.post('/prototypes', function (req, res) {
     var newPrototype = {},
         json = req.body;
 
@@ -177,7 +178,7 @@ router.post('/prototypes', function (req, res, next) {
                 if (!newPrototype.hasOwnProperty("properties")) {
                     newPrototype.properties = {};
                 }
-                newPrototype["properties"][key] = properties[key];
+                newPrototype.properties[key] = properties[key];
             }
         }
     }
@@ -197,7 +198,7 @@ router.post('/prototypes', function (req, res, next) {
         res.status(201).json({
             "status": "ok",
             "objectId": object._id
-        })
+        });
     });
 
 
@@ -209,7 +210,7 @@ router.post('/prototypes', function (req, res, next) {
  */
 router.get('/:id', function (req, res) {
     var parameters = req.params;
-    Object.findOne({"_id": parameters.id}, function (err, object) {
+    ObjectModel.findOne({"_id": parameters.id}, function (err, object) {
         if (err) {
             return res.status(500).json({
                 "status": "error",
@@ -218,15 +219,15 @@ router.get('/:id', function (req, res) {
         }
 
         //console.log(object);
-        if (object == null) {
+        if (object === null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There is no such object"
             });
         }
 
-        res.json(object)
-    })
+        res.json(object);
+    });
 });
 
 /**
@@ -238,7 +239,7 @@ router.post('/:id', function (req, res) {
     var objectId = req.params.id,
         json = req.body,
         history = {};
-    Object.findOne({"_id": objectId}, function (err, object) {
+    ObjectModel.findOne({"_id": objectId}, function (err, object) {
         if (err) {
             return res.status(500).json({
                 "status": "error",
@@ -247,7 +248,7 @@ router.post('/:id', function (req, res) {
         }
 
         console.log(object._doc);
-        if (object == null) {
+        if (object === null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There is no such object"
@@ -273,7 +274,7 @@ router.post('/:id', function (req, res) {
                     "message": err
                 });
             }
-            console.log('Version of object was succesfully saved to ObjectsHistory')
+            console.log('Version of object was succesfully saved to ObjectsHistory');
         });
 
         // increase version by 1 of current object & and set new start_time
@@ -281,7 +282,7 @@ router.post('/:id', function (req, res) {
         object.start_time = new Date();
 
         // make changes on object from json
-        for (var key in json) {
+        for (key in json) {
             if (json.hasOwnProperty(key)) {
                 switch(key) {
                     case "_id":
@@ -309,10 +310,10 @@ router.post('/:id', function (req, res) {
                 "status": "ok",
                 "objectId": object._id,
                 "version": object.version
-            })
+            });
         });
 
-    })
+    });
 });
 
 /**
@@ -324,7 +325,7 @@ router.delete('/:id', function (req, res) {
     var objectId = req.params.id,
         history = {};
     // get the object
-    Object.findOne({"_id": objectId}, function (err, object) {
+    ObjectModel.findOne({"_id": objectId}, function (err, object) {
         if (err) {
             return res.status(500).json({
                 "status": "error",
@@ -332,7 +333,7 @@ router.delete('/:id', function (req, res) {
             });
         }
         //console.log(object);
-        if (object == null) {
+        if (object === null) {
             return res.status(500).json({
                 "status": "error",
                 "message": "There is no such object"
@@ -357,7 +358,7 @@ router.delete('/:id', function (req, res) {
                     "message": err
                 });
             }
-            console.log('Version of object was succesfully saved to ObjectsHistory')
+            console.log('Version of object was succesfully saved to ObjectsHistory');
 
             // remove it from objects collection
             object.remove();

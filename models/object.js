@@ -1,4 +1,3 @@
-'use strict';
 
 var db = require('./db');
 var is = require('./validation');
