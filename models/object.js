@@ -1,4 +1,3 @@
-
 var db = require('./db');
 var is = require('./validation');
 
@@ -19,7 +18,7 @@ var schema = new db.Schema({
         type: String,
         required:true,
         trim: true,
-        validate: is.validObjectName
+        validate: is.validObjectId
     },
     version: {
         type: Number,
@@ -37,10 +36,12 @@ var schema = new db.Schema({
     type: {
         type: String,
         required: true,
+        trim: true,
         validate: is.validObjectType
     },
     subtype: {
-        type: String
+        type: String,
+        trim: true
     },
     x: {
         type: Number,
@@ -65,7 +66,7 @@ var schema = new db.Schema({
         validate: is.validObjectLocale
     },
     design: {
-        type: {type: String, default: "model"},
+        type: {type: String, default: "model", trim: true},
         data: db.Schema.Types.Mixed
         /*{//[PH] This is specification for only one type of data - model. In future there will be other types with different specifications.
             particles: Array,
@@ -74,8 +75,8 @@ var schema = new db.Schema({
         }*/
     },
     content: {
-        type: {type: String, default: "markdown"},
-        data: {type: String}
+        type: {type: String, default: "markdown", trim: true},
+        data: {type: String, trim: true}
     },
     properties: {
         strength: {type: Number},
@@ -86,6 +87,7 @@ var schema = new db.Schema({
     owner: {
         type: String,
         required: true,
+        trim: true,
         default: "admin",
         validate: is.validOwnerId
     }

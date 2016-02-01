@@ -25,10 +25,12 @@ var prototypeSchema = new db.Schema({
     type: {
         type: String,
         required: true,
+        trim: true,
         validate: is.validObjectType
     },
     subtype: {
-        type: String
+        type: String,
+        trim: true
     },
     locale: {
         type: String,
@@ -53,6 +55,7 @@ var prototypeSchema = new db.Schema({
     owner: {
         type: String,
         required: true,
+        trim: true,
         default: "admin",
         validate: is.validOwnerId
     }
