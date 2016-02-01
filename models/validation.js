@@ -2,10 +2,13 @@ var check = require('validator');
 
 // checks alpha numeric strings + space
 function isAlphanumericstring(value) {
-    var valid = value.split(' ').every(function (word) {
-        return check.isAlphanumeric(word);
-    });
-    return valid;
+    // TODO: this doesnt work with accute characters, maybe UNICODE check would be OK
+    // to prevent XSS we check only that it doesn't contain dangerous characters
+    //var valid = value.split(' ').every(function (word) {
+    //    return check.isAlphanumeric(word);
+    //});
+    //return valid;
+    return value === check.escape(value);
 }
 
 // checks valid Type
@@ -33,7 +36,7 @@ function isPositiveInteger(value) {
 }
 
 function isValidCoordinate(value) {
-    return check.isNumeric(value);
+    return check.isInt(value);
 }
 
 function isValidDate(value) {
@@ -52,7 +55,7 @@ var is = {
     validObjectName: [isAlphanumericstring, '{VALUE} is not alphanumeric'],
     validObjectType: [typesOfObjects, '{VALUE} is not valid TYPE!'],
     validObjectVersion: [isPositiveInteger, '{VALUE} needs to be positive integer'],
-    validObjectCoordinate: [isValidCoordinate, '{VALUE} is not valid coordinate'],
+    validObjectCoordinate: [isValidCoordinate, '{VALUE} is not valid coordinate. Coordinate must be integer number.'],
     validDate:[
         { 'validator': isValidDate, msg: '{VALUE} is not a date in correct format'},
         { 'validator': isCurrentDate, msg: '{VALUE} is not current date'}
