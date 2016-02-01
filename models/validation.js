@@ -51,6 +51,10 @@ function isCurrentDate(value) {
     return check.isBefore(beforeDate, value) && check.isAfter(afterDate, value);
 }
 
+function isObjectId(value) {
+    return check.isMongoId(value);
+}
+
 var is = {
     validObjectName: [isAlphanumericstring, '{VALUE} is not alphanumeric'],
     validObjectType: [typesOfObjects, '{VALUE} is not valid TYPE!'],
@@ -64,7 +68,8 @@ var is = {
         { 'validator': isAlphabetic, msg: '{VALUE} is not valid locale! Locale must be in ISO 3166-1 alpha-2 format.'},
         {'validator': hasTwoCharacters, msg: '{VALUE} must be 2 characters long'}
     ],
-    validOwnerId: [isMongoId, '{VALUE} is not a valid Owner Id']
+    validOwnerId: [isMongoId, '{VALUE} is not a valid Owner Id'],
+    validObjectId: [isObjectId, '{VALUE} is not a valid Object Id']
 };
 
 module.exports = is;
