@@ -20,7 +20,7 @@ function isAlphabetic(value) {
 
 // checks that value has two characters
 function hasTwoCharacters(value) {
-    return value.length == 2 || value.length == 0;
+    return value.length === 2 || value.length === 0;
 }
 
 function isMongoId(value) {
@@ -33,7 +33,7 @@ function isPositiveInteger(value) {
 }
 
 function isValidCoordinate(value) {
-    return check.isNumeric(value)
+    return check.isNumeric(value);
 }
 
 function isValidDate(value) {
@@ -42,7 +42,7 @@ function isValidDate(value) {
 
 function isCurrentDate(value) {
     // TODO: sort out this bugged Dates comparing
-    return true
+    return true;
     //return check.isBefore(check.toDate(value), Date.now(-5)) && check.isAfter(check.toDate(value), Date.now(+5))
 }
 

@@ -90,14 +90,17 @@ The code has also some default objects, which should be migrated into new mongoD
 
 Run changes in mongoDB schemas and seed new migrations (if necessary) by: 
 
-    `npm run mongo-migrate`
+    npm run mongo-migrate
     
 DEVELOPERS ONLY: In case you want to drop all collections and create them again from migration collection use:
     
-    `npm run mongo-remigrate`
+    npm run mongo-remigrate
 
 * * *
 	
 ## Testing
 
-//todo
+You can test for javascript syntax errors with linter, just run
+
+	gulp test
+
