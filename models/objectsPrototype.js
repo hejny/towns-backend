@@ -51,7 +51,12 @@ var prototypeSchema = new db.Schema({
         speed: {type: Number}
     },
     actions: Array,
-    owner: {type: String, required: true, default: "admin"}
+    owner: {
+        type: String,
+        required: true,
+        default: "admin",
+        validate: is.validOwnerId
+    }
 }, {
     collection: 'objectsPrototypes'
 });
