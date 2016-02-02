@@ -6,7 +6,8 @@ var ObjectsHistory = require('../models/objectsHistory');
 
 /**
  * GET /objects
- * vrati vsetky objekty
+ * return all objects
+ * //TODO: finish granularity in searching objects /objects?x=x&y=y&radius=radius¬=not&type=type&subtype=subtype&keys=keys
  */
 router.get('/', function (req, res) {
     ObjectModel.find(function (err, objects) {
@@ -30,7 +31,7 @@ router.get('/', function (req, res) {
 
 /**
  * POST /objects
- * Vytvor odoslany objekt (toto je create, nie update)
+ * Create received resource
  */
 router.post('/', function (req, res) {
     var newObject = {},
@@ -233,7 +234,6 @@ router.get('/:id', function (req, res) {
 /**
  * POST /objects/:id
  * Update object with id, according to json sent in body
- * TODO: finish this
  */
 router.post('/:id', function (req, res) {
     var objectId = req.params.id,
@@ -284,7 +284,7 @@ router.post('/:id', function (req, res) {
         // make changes on object from json
         for (key in json) {
             if (json.hasOwnProperty(key)) {
-                switch(key) {
+                switch (key) {
                     case "_id":
                     case "version":
                     case "start_time":
@@ -319,7 +319,6 @@ router.post('/:id', function (req, res) {
 /**
  * DELETE /objects/:id
  * Vymaz objekt s danym id
- * TODO: finish this
  */
 router.delete('/:id', function (req, res) {
     var objectId = req.params.id,
@@ -376,5 +375,46 @@ router.delete('/:id', function (req, res) {
 
 });
 
+/**
+ * GET /objects/prototypes/:id
+ * Returning requested prototype
+ */
+router.get('/prototypes/:id', function (req, res) {
+    var parameters = req.params;
+    ObjectsPrototype.findOne({"_id": parameters.id}, function (err, object) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting your objectPrototype"
+            });
+        }
+
+        //console.log(object);
+        if (object === null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There is no such objectPrototype"
+            });
+        }
+
+        res.json(object);
+    });
+});
+
+/**
+ * POST /objects/prototypes/:id
+ * Update prototype with given id, according to json sent in body
+ */
+router.post('/prototypes/:id', function (req, res) {
+
+});
+
+/**
+ * DELETE /objects/prototypes/:id
+ * Delete prototype with given id
+ */
+router.delete('prototypes/:id', function (req, res) {
+
+});
 
 module.exports = router;
