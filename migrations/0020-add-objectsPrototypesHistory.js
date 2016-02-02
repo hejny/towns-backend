@@ -13,7 +13,6 @@ exports.up = function(db, next){
     objectsPrototypesHistory.insert([
         {
             "_prototypeId": "507f1f77bcf86cd799439011",
-            "_currentId": "507f1f77bcf86cd799439011",
             name: "Kamenný domek",
             type: "building",
             subtype: "main",
