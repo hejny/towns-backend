@@ -21,12 +21,6 @@ var prototypesHistorySchema = new db.Schema({
         trim: true,
         validate: is.validObjectId
     },
-    _currentId: {
-        type: String,
-        required:true,
-        trim: true,
-        validate: is.validObjectId
-    },
     name: {
         type: String,
         minlength: 1,
