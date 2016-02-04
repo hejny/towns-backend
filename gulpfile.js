@@ -21,10 +21,12 @@ gulp.task('default', function() {
 gulp.task("test", function() {
     gulp.src([
         "migrations/*.js",
-        "confi/*.json",
+        "config/*.json",
+        "handlers/*.js",
         "models/*.js",
         "routes/*.js"
     ])
         .pipe(jshint())
         .pipe(jshint.reporter("default"));
+    console.log("Tests have finished");
 });
