@@ -9,7 +9,7 @@
     "mongo-remigrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/mongo.json -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./config/mongo.json -dbn mongoDb up",
     "start": "node ./bin/www",
     "nodemonitor": "nodemon ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test"
   },
   "author": "Stefan Kecskes <mr.kecskes@gmail.com> (https://skey.uk)",
   "license": "MIT",
@@ -30,6 +30,9 @@
     "gulp": "^3.9.0",
     "gulp-jshint": "^2.0.0",
     "jshint": "^2.9.1",
-    "nodemon": "~1.8.1"
+    "mocha": "^2.4.5",
+    "nodemon": "~1.8.1",
+    "should": "^8.2.1",
+    "supertest": "^1.1.0"
   }
 }
