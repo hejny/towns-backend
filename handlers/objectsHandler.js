@@ -1,5 +1,6 @@
 var ObjectModel = require('../models/object');
 var ObjectsPrototype = require('../models/objectsPrototype');
+var ObjectsHistory = require('../models/objectsHistory');
 
 /**
  * Handler for working with Objects
@@ -35,11 +36,38 @@ objectsHandler.getAll = function (req, res) {
 };
 
 /**
+ * Returns object with given id
+ * @param req
+ * @param res
+ */
+objectsHandler.getOne = function (req, res) {
+    var parameters = req.params;
+    ObjectModel.findOne({"_id": parameters.id}, function (err, object) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting your object"
+            });
+        }
+
+        //console.log(object);
+        if (object === null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There is no such object"
+            });
+        }
+
+        res.json(object);
+    });
+};
+
+/**
  * Creates object
  * @param req
  * @param res
  */
-objectsHandler.createObject = function (req, res) {
+objectsHandler.createOne = function (req, res) {
     var newObject = {},
         json = req.body;
     //console.log(json);
@@ -120,6 +148,152 @@ objectsHandler.createObject = function (req, res) {
                 "objectId": object._id
             });
         });
+
+    });
+
+};
+
+/**
+ * Update object with given id, according to json sent in request
+ * @param req
+ * @param res
+ */
+objectsHandler.updateOne = function (req, res) {
+    var objectId = req.params.id,
+        json = req.body,
+        history = {};
+    ObjectModel.findOne({"_id": objectId}, function (err, object) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting your object"
+            });
+        }
+
+        console.log(object._doc);
+        if (object === null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There is no such object"
+            });
+        }
+
+        // create copy of current object in Objects history
+        for (var key in object._doc) {
+            if (object._doc.hasOwnProperty(key) && key != "_id") {
+                history[key] = object._doc[key];
+            }
+        }
+
+        history._currentId = object._id;
+        history.stop_time = new Date();
+
+        //console.log(history);
+        var objectHistory = new ObjectsHistory(history);
+        objectHistory.save(function (err) {
+            if (err) {
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
+            }
+            console.log('Version of object was succesfully saved to ObjectsHistory');
+        });
+
+        // increase version by 1 of current object & and set new start_time
+        object.version++;
+        object.start_time = new Date();
+
+        // make changes on object from json
+        for (key in json) {
+            if (json.hasOwnProperty(key)) {
+                switch (key) {
+                    case "_id":
+                    case "version":
+                    case "start_time":
+                    case "owner":
+                        // do not overwrite these properties
+                        break;
+                    default:
+                        object[key] = json[key];
+                }
+            }
+        }
+
+        // save the updated object to DB
+        object.save(function (err, object) {
+            if (err) {
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
+            }
+            console.log(object);
+            res.status(200).json({
+                "status": "ok",
+                "objectId": object._id,
+                "version": object.version
+            });
+        });
+
+    });
+};
+
+/**
+ * Deletes the object with given id
+ * @param req
+ * @param res
+ */
+objectsHandler.deleteOne = function (req, res) {
+    var objectId = req.params.id,
+        history = {};
+    // get the object
+    ObjectModel.findOne({"_id": objectId}, function (err, object) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting your object"
+            });
+        }
+        //console.log(object);
+        if (object === null) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "There is no such object"
+            });
+        }
+
+
+        // copy object to ObjectsHistory collection
+        for (var key in object._doc) {
+            if (object._doc.hasOwnProperty(key) && key != "_id") {
+                history[key] = object._doc[key];
+            }
+        }
+        history._currentId = object._doc._id;
+        history.stop_time = new Date();
+        //console.log(history);
+        var objectHistory = new ObjectsHistory(history);
+        objectHistory.save(function (err) {
+            if (err) {
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
+            }
+            console.log('Version of object was succesfully saved to ObjectsHistory');
+
+            // remove it from objects collection
+            object.remove();
+
+            // return success json
+            res.status(200).json({
+                "status": "deleted",
+                "objectId": history._currentId,
+                "version": history.version
+            });
+        });
+
 
     });
 
