@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var indexHandler = require('../handlers/indexHandler');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Towns 5 API' });
-});
+router.get('/', indexHandler.home);
 
 module.exports = router;
