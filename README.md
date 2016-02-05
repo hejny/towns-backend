@@ -28,6 +28,7 @@ https://trello.com/b/beAsHIkG/backend
     └── www                     <- shell starter for node server
     [config]/                   <- central folder with all configurations
     └── mongo.json              <- settings for mongoDb connection
+    [handlers]/                 <- handlers/controllers for routes
     [layouts]/                  <- view templates for pages
     [migrations]/               <- schemas and seeds for mongoDB collections    
     └── 0005-objects.js     
@@ -39,9 +40,11 @@ https://trello.com/b/beAsHIkG/backend
     [routes]/                   <- router
         ├── index.js           
         └── users.js
+    [test]/                     <- tests for mochajs
 	.gitignore
+	gulpgile.js                 <- configuration for linter testing
+	Makefile                    
     package.json                <- npm packages
-    app.js                      <- controller
 	server.js
 
 	
@@ -86,7 +89,8 @@ Api will be accessible on http://localhost:3000
 
 ## Migrations
 
-The code has also some default objects, which should be migrated into new mongoDB. This will show you the structure of DB tables and adds you some objects to use with API.
+The code has also some default objects, which should be migrated into new mongoDB. This will show you the structure 
+of DB tables and adds you some objects to use with API.
 
 Run changes in mongoDB schemas and seed new migrations (if necessary) by: 
 
@@ -100,7 +104,20 @@ DEVELOPERS ONLY: In case you want to drop all collections and create them again 
 	
 ## Testing
 
-You can test for javascript syntax errors with linter, just run
+Test files are in test directory.
+
+### Linter
+
+You can run tests for javascript syntax errors with linter, just run
 
 	gulp test
+
+
+### Mocha
+ 
+You can also run [Mocha](https://mochajs.org) testing framework with BDD style 
+[should.js](https://github.com/shouldjs/should.js) assertion library. Basically any assertion which throws error 
+will work. Don't forget that node with API must be running to be able to test.
+
+	npm test
 

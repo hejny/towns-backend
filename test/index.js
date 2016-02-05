@@ -1,28 +1,27 @@
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
+var check = require('validator');
 
 describe('Routing', function () {
 
+    this.timeout(15000);
     var url = 'http://localhost:3000';
 
-    // within before() you can run all the operations that are needed to setup your tests. In this case
-    // I want to create a connection with the database, and when I'm done, I call done().
+    // within before() you can run all the operations that are needed to setup your tests (eg. create DB connection)
     before(function (done) {
         // do something before done
         done();
     });
 
-    // use describe to give a title to your test suite, in this case the tile is "Account"
-    // and then specify a function in which we are going to declare all the tests
-    // we want to run. Each test starts with the function it() and as a first argument
-    // we have to provide a meaningful title for it, whereas as the second argument we
-    // specify a function that takes a single parameter, "done", that we will use
-    // to specify when our test is completed, and that's what makes easy
-    // to perform async test!
-
     describe('Index', function () {
-        it('should respond with HTML homepage', function (done) {
+        this.timeout(15000);
+
+        it('should take less than 500ms', function (done) {
+            setTimeout(done, 300);
+        });
+
+        it('should respond with 200 status code and HTML homepage', function (done) {
             request(url)
                 .get('/')
                 .expect('Content-Type', /html/)
@@ -31,36 +30,34 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
-                    if (!('Towns' in res.body)) return "missing title";
                     done();
                 });
         });
+
+        it('should contain Towns 5 API in title', function (done) {
+            request(url)
+                .get('/')
+                .expect(hasCorrectTitle)
+                .end(done);
+
+            function hasCorrectTitle(res) {
+                //console.log(res.text);
+                if (!check.contains(res.text, "<title>Towns 5 API</title>")) throw new Error("missing correct title in homepage HTML");
+            }
+
+        });
+
+        it('should contain Welcome in header', function (done) {
+            request(url)
+                .get('/')
+                .expect(hasWelcomeInHeader)
+                .end(done);
+
+            function hasWelcomeInHeader(res) {
+                if (!(check.contains(res.text, "welcome"))) throw new Error("missing welcome in homepage HTML");
+            }
+        });
+
+
     });
-
-    //describe('Object', function () {
-    //    it('should correctly update an existing account', function (done) {
-    //        var body = {
-    //            firstName: 'JP',
-    //            lastName: 'Berd'
-    //        };
-    //        request(url)
-    //            .post('/api/profiles/vgheri')
-    //            .send(body)
-    //            .expect('Content-Type', /json/)
-    //            .expect(200) //Status code
-    //            .end(function (err, res) {
-    //                if (err) {
-    //                    throw err;
-    //                }
-    //                // Should.js fluent syntax applied
-    //                res.body.should.have.property('_id');
-    //                res.body.firstName.should.equal('JP');
-    //                res.body.lastName.should.equal('Berd');
-    //                res.body.creationDate.should.not.equal(null);
-    //                done();
-    //            });
-    //    });
-    //});
-
-
 });
