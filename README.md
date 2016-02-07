@@ -42,6 +42,7 @@ https://trello.com/b/beAsHIkG/backend
         └── users.js
     [test]/                     <- tests for mochajs
 	.gitignore
+	apiary.apib                 <- backup of API documentation from apiary 
 	gulpgile.js                 <- configuration for linter testing
 	Makefile                    
     package.json                <- npm packages
@@ -104,16 +105,16 @@ DEVELOPERS ONLY: In case you want to drop all collections and create them again 
 	
 ## Testing
 
-Test files are in test directory.
+Test files are in `test` directory.
 
-### Linter
+### 1. Linter
 
 You can run tests for javascript syntax errors with linter, just run
 
 	gulp test
 
 
-### Mocha
+### 2. Mocha
  
 You can also run [Mocha](https://mochajs.org) testing framework with BDD style 
 [should.js](https://github.com/shouldjs/should.js) assertion library. Basically any assertion which throws error 
