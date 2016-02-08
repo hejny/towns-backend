@@ -4,6 +4,36 @@ var router = express.Router();
 var objectsHandler = require('../handlers/objectsHandler');
 var prototypesHandler = require('../handlers/prototypesHandler');
 
+/**
+ * GET /objects/prototypes
+ * Return all prototypes
+ */
+router.get('/prototypes', prototypesHandler.getAll);
+
+/**
+ * POST /objects/prototypes
+ * Creates given prototype
+ */
+router.post('/prototypes', prototypesHandler.createOne);
+
+/**
+ * GET /objects/prototypes/:id
+ * Returns prototype with given id
+ */
+router.get('/prototypes/:id', prototypesHandler.getOne);
+
+/**
+ * POST /objects/prototypes/:id
+ * Update prototype with given id, according to json sent in body
+ */
+router.post('/prototypes/:id', prototypesHandler.updateOne);
+
+/**
+ * DELETE /objects/prototypes/:id
+ * Delete prototype with given id
+ */
+router.delete('/prototypes/:id', prototypesHandler.deleteOne);
+
 
 /**
  * GET /objects
@@ -34,35 +64,5 @@ router.post('/:id', objectsHandler.updateOne);
  * Deletes the object with given id
  */
 router.delete('/:id', objectsHandler.deleteOne);
-
-/**
- * GET /objects/prototypes
- * Return all prototypes
- */
-router.get('/prototypes', prototypesHandler.getAll);
-
-/**
- * POST /objects/prototypes
- * Creates given prototype
- */
-router.post('/prototypes', prototypesHandler.createOne);
-
-/**
- * GET /objects/prototypes/:id
- * Returns prototype with given id
- */
-router.get('/prototypes/:id', prototypesHandler.getOne);
-
-/**
- * POST /objects/prototypes/:id
- * Update prototype with given id, according to json sent in body
- */
-router.post('/prototypes/:id', prototypesHandler.updateOne);
-
-/**
- * DELETE /objects/prototypes/:id
- * Delete prototype with given id
- */
-router.delete('/prototypes/:id', prototypesHandler.deleteOne);
 
 module.exports = router;
