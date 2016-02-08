@@ -18,13 +18,19 @@ describe('Routing', function () {
     describe('Object', function () {
         this.timeout(15000);
 
-        //it('should correctly update an existing account', function (done) {
+        //it('should create an object', function (done) {
         //    var body = {
-        //        firstName: 'JP',
-        //        lastName: 'Berd'
+        //        "prototypeId": "569d1b8279738b32808cd108",
+        //        "x": "12,435",
+        //        "y": "43.123",
+        //        "content": {
+        //            "type": "markdown",
+        //            "data": "Kde bolo tam bolo"
+        //        }
         //    };
+        //
         //    request(url)
-        //        .post('/api/profiles/vgheri')
+        //        .post('/objects')
         //        .send(body)
         //        .expect('Content-Type', /json/)
         //        .expect(200) //Status code

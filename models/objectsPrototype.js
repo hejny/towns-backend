@@ -17,6 +17,7 @@ var is = require('./validation');
 var prototypeSchema = new db.Schema({
     name: {
         type: String,
+        required: true,
         minlength: 1,
         maxlength: 64,
         trim: true,

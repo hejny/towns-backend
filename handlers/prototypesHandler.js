@@ -79,16 +79,20 @@ prototypes.createOne = function (req, res) {
     var prototype = new ObjectsPrototype(newPrototype);
 
     // save the newly created prototype of object to DB
-    prototype.save(function (err, object) {
+    prototype.save(function (err, prototype) {
         if (err) {
-            return res.status(500).json({
+            var errMessage = [];
+            for (var errName in err.errors) {
+                errMessage.push({param: err.errors[errName].path, msg: err.errors[errName].kind, value: err.errors[errName].value});
+            }
+            return res.status(400).json({
                 "status": "error",
-                "message": err.errors
+                "message": errMessage
             });
         }
         res.status(201).json({
             "status": "ok",
-            "objectId": object._id
+            "prototypeId": prototype._id
         });
     });
 };
