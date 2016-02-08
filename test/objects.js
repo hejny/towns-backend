@@ -1,11 +1,13 @@
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
+var config = require('../config/server').server;
+
 
 describe('Routing', function () {
 
     this.timeout(15000);
-    var url = 'http://localhost:3000';
+    var url = config.protocol+'//'+config.hostname+(config.port ? ':'+config.port : '');
 
     // within before() you can run all the operations that are needed to setup your tests (eg. create DB connection)
     before(function (done) {

@@ -1,5 +1,6 @@
 {
   "mongoDb": {
+    "protocol": "mongodb:",
     "host" : "localhost",
     "db"   : "towns",
     "port" : "27017"
