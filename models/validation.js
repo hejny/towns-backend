@@ -65,8 +65,8 @@ var is = {
         { 'validator': isCurrentDate, msg: '{VALUE} is not current date'}
     ],
     validObjectLocale: [
-        { 'validator': isAlphabetic, msg: '{VALUE} is not valid locale! Locale must be in ISO 3166-1 alpha-2 format.'},
-        {'validator': hasTwoCharacters, msg: '{VALUE} must be 2 characters long'}
+        { 'validator': isAlphabetic, msg: '{VALUE} is not valid locale! Locale must be in ISO 3166-1 alpha-2 format.', type: 'ISO 3166-1 alpha-2 format'},
+        {'validator': hasTwoCharacters, msg: '{VALUE} must be 2 characters long', type: 'length'}
     ],
     validOwnerId: [isMongoId, '{VALUE} is not a valid Owner Id'],
     validObjectId: [isObjectId, '{VALUE} is not a valid Object Id']
