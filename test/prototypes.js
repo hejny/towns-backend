@@ -16,6 +16,16 @@ describe('Prototypes', function () {
         done();
     });
 
+    describe('Getting all of mine prototypes from API', function () {
+        this.timeout(15000);
+
+        it('should return a list of prototypes', function (done) {
+            // todo
+        });
+    });
+
+
+
     describe('Creation of new prototype', function () {
         this.timeout(15000);
 
@@ -253,8 +263,21 @@ describe('Prototypes', function () {
                 });
         });
 
+    });
+
+    describe('Getting of One prototype from API', function () {
+        this.timeout(15000);
 
     });
 
+    describe('Updating One prototype from API', function() {
+        this.timeout(15000);
+
+    });
+
+    describe('Deleting One prototype from API', function() {
+        this.timeout(15000);
+
+    });
 
 });
