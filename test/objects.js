@@ -4,7 +4,7 @@ var request = require('supertest');
 var config = require('../config/server').server;
 
 
-describe('Routing', function () {
+describe('Objects', function () {
 
     this.timeout(15000);
     var url = config.protocol+'//'+config.hostname+(config.port ? ':'+config.port : '');
@@ -15,38 +15,33 @@ describe('Routing', function () {
         done();
     });
 
-    describe('Object', function () {
+    describe('Getting objects from API', function () {
         this.timeout(15000);
+        // todo
 
-        //it('should create an object', function (done) {
-        //    var body = {
-        //        "prototypeId": "569d1b8279738b32808cd108",
-        //        "x": "12,435",
-        //        "y": "43.123",
-        //        "content": {
-        //            "type": "markdown",
-        //            "data": "Kde bolo tam bolo"
-        //        }
-        //    };
-        //
-        //    request(url)
-        //        .post('/objects')
-        //        .send(body)
-        //        .expect('Content-Type', /json/)
-        //        .expect(200) //Status code
-        //        .end(function (err, res) {
-        //            if (err) {
-        //                throw err;
-        //            }
-        //            // Should.js fluent syntax applied
-        //            res.body.should.have.property('_id');
-        //            res.body.firstName.should.equal('JP');
-        //            res.body.lastName.should.equal('Berd');
-        //            res.body.creationDate.should.not.equal(null);
-        //            done();
-        //        });
-        //});
     });
 
+    describe('Creation of new object', function () {
+        this.timeout(15000);
+        // todo
 
+    });
+
+    describe('Getting of One object from API', function () {
+        this.timeout(15000);
+        // todo
+
+    });
+
+    describe('Updating One object from API', function() {
+        this.timeout(15000);
+        // todo
+
+    });
+
+    describe('Deleting One object from API', function() {
+        this.timeout(15000);
+        // todo
+
+    });
 });

@@ -16,15 +16,37 @@ describe('Prototypes', function () {
         done();
     });
 
-    describe('Getting all of mine prototypes from API', function () {
+    describe('Getting prototypes from API', function () {
         this.timeout(15000);
 
         it('should return a list of prototypes', function (done) {
-            // todo
+
+            request(url)
+                .get('/objects/prototypes')
+                .expect('Content-Type', /json/)
+                .expect(200) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+
+                    //console.log(res.body);
+                    for(each in res.body) {
+                        res.body[each].should.have.property('name');
+                        res.body[each].name.should.not.equal(null);
+                        res.body[each].name.should.equal('Brana');
+                        res.body[each].should.have.property('type');
+                        res.body[each].should.not.have.property('x');
+                        res.body[each].should.not.have.property('y');
+                        res.body[each].should.not.have.property('start_time');
+
+                    }
+
+                    done();
+                });
         });
     });
-
-
 
     describe('Creation of new prototype', function () {
         this.timeout(15000);
@@ -236,10 +258,16 @@ describe('Prototypes', function () {
 
                     //find the prototype and check its values
                     //console.log(res.body.prototypeId);
-                    ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err) {
+                    ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err, prototype) {
                         if(err) {
                             throw err;
                         }
+                        // remove mocked prototype
+                        prototype.remove( function (err) {
+                            if (err) {
+                                throw err;
+                            }
+                        });
                     });
 
                     //console.log(ObjectsPrototype);
@@ -252,12 +280,7 @@ describe('Prototypes', function () {
                     //    throw new Error("Locale should equal to cs");
                     //}
 
-                    // remove mocked prototype
-                    ObjectsPrototype.remove( function (err) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
+
 
                     done();
                 });
@@ -267,16 +290,19 @@ describe('Prototypes', function () {
 
     describe('Getting of One prototype from API', function () {
         this.timeout(15000);
+        // todo
 
     });
 
     describe('Updating One prototype from API', function() {
         this.timeout(15000);
+        // todo
 
     });
 
     describe('Deleting One prototype from API', function() {
         this.timeout(15000);
+        // todo
 
     });
 
