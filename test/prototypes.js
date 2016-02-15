@@ -32,10 +32,10 @@ describe('Prototypes', function () {
 
 
                     //console.log(res.body);
-                    for(each in res.body) {
+                    for (each in res.body) {
                         res.body[each].should.have.property('name');
                         res.body[each].name.should.not.equal(null);
-                        res.body[each].name.should.equal('Brana');
+                        res.body[each].should.have.property('locale');
                         res.body[each].should.have.property('type');
                         res.body[each].should.not.have.property('x');
                         res.body[each].should.not.have.property('y');
@@ -259,11 +259,11 @@ describe('Prototypes', function () {
                     //find the prototype and check its values
                     //console.log(res.body.prototypeId);
                     ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err, prototype) {
-                        if(err) {
+                        if (err) {
                             throw err;
                         }
                         // remove mocked prototype
-                        prototype.remove( function (err) {
+                        prototype.remove(function (err) {
                             if (err) {
                                 throw err;
                             }
@@ -281,7 +281,6 @@ describe('Prototypes', function () {
                     //}
 
 
-
                     done();
                 });
         });
@@ -290,17 +289,57 @@ describe('Prototypes', function () {
 
     describe('Getting of One prototype from API', function () {
         this.timeout(15000);
-        // todo
+        // create prototype
+
+        newPrototype = {
+            "name": "Ambasada",
+            "type": "building",
+            "locale": "cs"
+
+        };
+        var prototype = new ObjectsPrototype(newPrototype);
+        prototype.save(function (err, prototype) {
+            if (err) {
+                throw err
+            }
+
+            // get it through api
+            request(url)
+                .get('/objects/prototypes/'+prototype._id)
+                .expect('Content-Type', /json/)
+                .expect(200) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('name');
+                    res.body.name.should.not.equal(null);
+                    res.body.name.should.equal('Ambasada');
+                    res.body.should.have.property('type');
+                    res.body.type.should.equal('building');
+
+                    res.body.should.have.property('subtype');
+                    res.body.should.have.property('locale');
+                    res.body.should.have.property('owner');
+
+
+
+                    // remove prototype
+                    prototype.remove();
+                });
+
+        });
 
     });
 
-    describe('Updating One prototype from API', function() {
+    describe('Updating One prototype from API', function () {
         this.timeout(15000);
         // todo
 
     });
 
-    describe('Deleting One prototype from API', function() {
+    describe('Deleting One prototype from API', function () {
         this.timeout(15000);
         // todo
 
