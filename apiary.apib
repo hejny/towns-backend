@@ -1,0 +1,1457 @@
+FORMAT: 1A
+HOST: http://api.towns.cz/
+
+# Towns API
+
+Towns offers simple API, which allows the clients to retrieve from or send to the Towns game server
+
+Allowed HTTP requests:
+
+ * `POST` - To create resource
+ * `POST` - To update resource. Originally should be `PATCH`
+ * `GET` - Get a resource or list of resources
+ * `DELETE` - To delete resource
+
+Description Of Usual Server Responses:
+
+ * 200 `OK` - the request was successful (some API calls may return 201 instead).
+ * 201 `Created` - the request was successful and a resource was created.
+ * 204 `No Content` - the request was successful but there is no representation to return (i.e. the response is empty).
+ * 400 `Bad Request` - the request could not be understood or was missing required parameters.
+ * 401 `Unauthorized` - authentication failed or user doesn't have permissions for requested operation.
+ * 403 `Forbidden` - access denied.
+ * 404 `Not Found` - resource was not found.
+ * 405 `Method Not Allowed` - requested method is not supported for resource.
+ * 422 `Unprocessable Entity` - requested data contain invalid values.
+ * 429 `Too Many Requests` - exceeded Mailtrap API limits. Pause requests, wait up to one minute, and try again.
+
+
+# Group Objects
+
+## objects [/objects{?x,y,radius,not,type,subtype,keys}]
+
+### GET
+
+Retrieve the objects on/around x,y coordinates of map. All of parameeters are optional, each of them has default value
+The example URL is not displayed correctly by APIARY and should look like this:
+/objects?x=45&y=12&radius=10&not[]=5666b8259297ffe7c16c4696&not[]=5666b8259297ffe7c16c4697&not=5666b8259297ffe7c16c4698&type[]=building&subtype[]=main&keys[]=x&keys[]=y&keys[]=design&keys[]=owner
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
++ Parameters
+
+   + x: `45` (optional, integer) - The x coordinate. Default 0.
+   + y: `12` (optional, integer) - The y coordinate. Default 0.
+   + radius: `10` (optional, integer) - The radius is set on server side, to prevent getting to much info in one request.(min = 1, max = 30, default = 10)
+   + not: `[ "5666b8259297ffe7c16c4696", "5666b8259297ffe7c16c4697", "5666b8259297ffe7c16c4698"]` (optional, array) - List of object IDs, not to return. Default is returning all objects in area.
+   + type: `["building"]` (optional, array) - List of types of objects to return. Default is all object types.
+   + subtype: `["main"]` (optional, array) - list of subtypes of objects to return
+   + keys: `['x', 'y', 'design', 'owner']` (optional, array) - List of properties to return. Defaultly all public properties are sent.
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /objects
+
+    + Body
+
+            [{
+                "_id" : ObjectId("5666b8259297ffe7c16c4696"),
+                "version": "2",
+                "name" : "Ambasada",
+                "type" : "building",
+                "subtype": "",
+                "x": "12.34",
+                "y": "-55.05",
+                "start_time": "1449572794",
+                "stop_time": "",
+                "locale": "cs",
+                "design": {
+                    type: "model",
+                    data: "12,3453,654,234,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Kde bolo tam bolo"
+                },
+                "properties": {
+                    strength: "5",
+                    defense: "3",
+                    speed: "10"
+                },
+                "actions": ["attack", "defense", "dismantle"],
+                "owner" : {
+                    "$ref" : "Users",
+                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
+                }
+            },
+            {
+                "_id" : ObjectId("5666b8259297ffe7c16c1212"),
+                "version": "1",
+                "name" : "Veza",
+                "type" : "building",
+                "subtype": "",
+                "x": "12.10",
+                "y": "-55.55",
+                "start_time": "1449572794",
+                "stop_time": "",
+                "locale": "cs",
+                "design": {
+                    type: "model",
+                    data: "12,3453,654,234,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Veza je obranna budova"
+                },
+                "properties": {
+                    strength: "1",
+                    defense: "10",
+                    speed: "1"
+                },
+                "actions": ["defense", "dismantle"],
+                "owner" : {
+                    "$ref" : "Users",
+                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
+                }
+            }]
+
+### POST
+
+You may create new object using this action. It takes a JSON object.
+To create a new object, the client have to send:
+- the x and y coordinates where the new object will be built,
+- the id of prototype
+- content, which is the description or story of object
+
+Everything else of new object will be calculated based on user and prototype.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "prototypeId": "asd123454hg4536yhsd4",
+                "x": "12,435",
+                "y": "43.123",
+                "content": {
+                    "type": "markdown",
+                    "data": "Kde bolo tam bolo"
+                }
+            }
+
+
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /objects
+
+    + Body
+
+            {
+                "status": "ok",
+                "objectId": "asd123454hg4536yhsd4"
+            }
+
+
+## /objects/{object_id}
+
+### GET
+
+Get the details of the object by its Id. There will be optional query parameter for html version. Something like ?format=html which will return html version. Default format of response will be json.
+
+ + Parameters
+    + object_id (number) - ID of object
+
+
+ + Response 200 (application/json)
+
+        {
+          "_id" : ObjectId("5666b8259297ffe7c16c1212"),
+                "version": "1",
+                "name" : "Veza",
+                "type" : "building",
+                "subtype": "",
+                "x": "12.10",
+                "y": "-55.55",
+                "start_time": "1449572794",
+                "stop_time": "",
+                "locale": "cs",
+                "design": {
+                    type: "model",
+                    data: "12,3453,654,234,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Veza je obranna budova"
+                },
+                "properties": {
+                    strength: "1",
+                    defense: "10",
+                    speed: "1"
+                },
+                "actions": ["defense", "dismantle"],
+                "owner" : {
+                    "$ref" : "Users",
+                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
+                }
+        }
+
+### POST
+
+This method should update the object. Users can't update the object directly, instead they can call various actions on objects. Those actions will perform changes on the objects.
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "_id" : ObjectId("5666b8259297ffe7c16c6456"),
+                "version" : "1",
+                "name" : "Brana",
+                "type" : "building",
+                "subtype": "",
+                "x" : "15.23",
+                "y" : "12.85",
+                "locale": "cs",
+                "design": {
+                    type: "model",
+                    data: "54,32,11,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Brana je cast ochrannej steny"
+                },
+                "properties": {
+                    strength: "3",
+                    defense: "7",
+                    speed: "1"
+                },
+                "actions": ["attack","defense", "dismantle"],
+                "owner" : {
+                    "$ref" : "Users",
+                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
+                }
+            }
+
+
+
+ + Response 201 (application/json)
+
+    + Headers
+
+            Location: /objects/5666b8259297ffe7c16c6456
+
+    + Body
+
+            {
+                "status": "ok",
+                "objectId": "5666b8259297ffe7c16c6456"
+            }
+
+
+
+### DELETE
+
+This method deletes object. User can't delete objects directly, instead they can call actions such as dismantle or attack.
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /objects/5666b8259297ffe7c16c6785
+
+    + Body
+
+                {
+                    "status": "ok",
+                    "objectId": "5666b8259297ffe7c16c6456",
+                    "version": "2"
+                }
+
+
+
+
+
+## /objects/{object_id}/{action}
+
+### POST
+
+Do action with Objects. There are many actions
+
+|action|description|parameters|
+|:--:|:--:|:--:|
+|create|||
+|attack|||
+|move|||
+|repair|||
+|dismantle|it will remove the building|x,y|
+|move|||
+|defense||
+|life||
+|repair||
+
+ + Parameters
+    + object_id (number) - ID of object
+    + action (string) - attack, use or dimantle
+
+ + Response 200 (application/json)
+
+
+
+
+
+## /objects/history/{current_id}
+
+### GET
+
+Get History of Object from ObjectHistory. It will return collection of the searched object versions. Each of them have unique version number and same current_id which equals to _id of object from Objects collection.
+
+ + Parameters
+    + current_id (number) - ID of object
+
+ + Response 200 (application/json)
+
+        [{
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "current_id": ObjectId("5666b8259297ffe7c16c1212"),
+                "version": "2",
+                "name" : "Veza",
+                "type" : "building",
+                "subtype": "",
+                "x": "12.30",
+                "y": "-45.55",
+                "start_time": "1449572800",
+                "stop_time": "1449587000",
+                "locale": "cs",
+                "design": {
+                    type: "model",
+                    data: "12,3453,654,234,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Veza je obranna budova"
+                },
+                "properties": {
+                    strength: "1",
+                    defense: "10",
+                    speed: "1"
+                },
+                "actions": ["defense", "dismantle"],
+                "owner" : {
+                    "$ref" : "Users",
+                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
+                }
+            },
+            {
+                "_id" : ObjectId("5666b8259297ffe7c16c25435"),
+                "current_id": ObjectId("5666b8259297ffe7c16c1212"),
+                "version": "1",
+                "name" : "Veza",
+                "type" : "building",
+                "subtype": "",
+                "x": "12.10",
+                "y": "-55.55",
+                "start_time": "1449572794",
+                "stop_time": "1449572800",
+                "locale": "cs",
+                "design": {
+                    type: "model",
+                    data: "12,3453,654,234,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Veza je obranna budova"
+                },
+                "properties": {
+                    strength: "1",
+                    defense: "10",
+                    speed: "1"
+                },
+                "actions": ["defense", "dismantle"],
+                "owner" : {
+                    "$ref" : "Users",
+                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
+                }
+        }]
+
+
+
+
+## /objects/prototypes
+
+### GET
+
+Get all object prototypes, which are available to user. There is no filtering at the moment and clients will get full list of active prototypes.
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /objects/prototypes
+
+    + Body
+
+            [{
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "name" : "Veza",
+                "type" : "building",
+                "subtype": "",
+                "locale": "cs",
+                "design": {
+                    type: "model",
+                    data: "12,3453,654,234,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Veza je obranna budova"
+                },
+                "properties": {
+                    strength: "1",
+                    defense: "10",
+                    speed: "1"
+                },
+                "actions": ["defense", "move", "dismantle"]
+            },{
+                "_id" : ObjectId("5666b8259297ffe7c16c6456"),
+                "name" : "Brana",
+                "type" : "building",
+                "subtype": "",
+                "locale": "cs",
+                "design": {
+                    type: "model",
+                    data: "54,32,11,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Brana je cast ochrannej steny"
+                },
+                "properties": {
+                    strength: "3",
+                    defense: "7",
+                    speed: "1"
+                },
+                "actions": ["attack","defense", "dismantle"]
+            }]
+
+### POST
+
+Create new object prototype. The prototype will be saved and offered to all clients as a prototype.
+Don't send array, but one prototype (Only one prototype can be entered at once.)
+The API will return object id on success, otherwise will return reason with correct error HTTP code.
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "name" : "Brana",
+                "type" : "building",
+                "subtype": "",
+                "locale": "cs",
+                "design": {
+                    "type": "model",
+                    "data": "54,32,11,..."
+                },
+                "content": {
+                    "type": "markdown",
+                    "data": "Brana je cast ochrannej steny"
+                },
+                "properties": {
+                    "strength": 3,
+                    "defense": 7,
+                    "speed": 1
+                },
+                "actions": ["attack","defense", "dismantle"]
+            }
+
+
+
+ + Response 201 (application/json)
+
+    + Headers
+
+            Location: /objects
+
+    + Body
+
+            {
+                "status": "ok",
+                "prototypeId": "5666b8259297ffe7c16c6456"
+            }
+
+
+
+
+
+
+
+
+## /objects/prototypes/{object_id}
+
+### GET
+
+Get requested object prototype
+
+ + Parameters
+    + object_id (number) - ID of object
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /objects/prototypes/5666b8259297ffe7c16c6785
+
+    + Body
+
+            {
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "version": "1",
+                "name" : "Veza",
+                "type" : "building",
+                "subtype": "",
+                "design": {
+                    type: "model",
+                    data: "12,3453,654,234,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Veza je obranna budova"
+                },
+                "properties": {
+                    strength: "1",
+                    defense: "10",
+                    speed: "1"
+                },
+                "actions": ["defense", "move", "dismantle"]
+            }
+
+
+### POST
+
+Update requested object prototype
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+            Location: /objects/prototypes/5666b8259297ffe7c16c6785
+
+    + Body
+
+            {
+                "name" : "Veza",
+                "type" : "building",
+                "subtype": "",
+                "design": {
+                    type: "model",
+                    data: "12,3453,654,234,...",
+                },
+                "content": {
+                    type: "markdown",
+                    data: "Veza je obranna budova"
+                },
+                "properties": {
+                    strength: "1",
+                    defense: "10",
+                    speed: "1"
+                },
+                "actions": ["defense", "move", "dismantle"]
+            }
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /objects/prototypes/5666b8259297ffe7c16c6785
+
+    + Body
+
+                {
+                    "status": "ok",
+                    "prototypeId": "5666b8259297ffe7c16c6456"
+                }
+
+### DELETE
+
+Delete requested object prototype. The object prototype will be moved to objectsPrototypeHistory.
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /objects/prototypes/5666b8259297ffe7c16c6785
+
+    + Body
+
+                {
+                    "status": "deleted",
+                    "prototypeId": "5666b8259297ffe7c16c6456",
+                    "prototypeHistoryId": "56af958fbb2d04ed141a24a7"
+                }
+
+
+# Group Users
+
+## /users
+
+### GET
+
+Get all users
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /users
+
+    + Body
+
+            [{
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "version" : "1",
+                "profile" {
+                    "name": "Janko",
+                    "real_name": "Jano Mrkvicka",
+                    "birth_date": "11.11.1911",
+                    "description": "Som Janko a mam rad mrkvicku",
+                    "image": "cdn.towns.cz/users/profileimages/janko.jpg",
+                    "email": "jano@mrkvicka.cz"
+                }
+            },{
+                "_id" : ObjectId("5666b8259297ffe7c16c5784"),
+                "version" : "3",
+                "profile" {
+                    "name": "Janko",
+                    "real_name": "Janik Hruska",
+                    "birth_date": "12.12.1912",
+                    "description": "Som Janik a mam rad hrusku",
+                    "image": "cdn.towns.cz/users/profileimages/janik.jpg",
+                    "email": "janik@hruska.cz"
+                }
+            }]
+
+
+### POST
+
+Register user
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "profile" {
+                    "name": "Janko",
+                    "real_name": "Jano Mrkvicka",
+                    "birth_date": "11.11.1911",
+                    "description": "Som Janko a mam rad mrkvicku",
+                    "image": "cdn.towns.cz/users/profileimages/janko.jpg",
+                    "email": "jano@mrkvicka.cz"
+                },
+                "login_methods": {
+                    "password": {
+                        "type": "bcrypt",
+                        "data": "$2a$10$vbnPNKPvd1y6mhp44dKjxuTftdZ1bMn/e8F4Vsl9w1d4JJZ7oLM3y"
+                    }
+                },
+                "language" : "cs"
+            }
+
+
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /users
+
+    + Body
+
+            {
+                "status": "ok",
+                "objectId": "5666b8259297ffe7c16c6456"
+            }
+
+
+## /users/{user_id}
+
+### GET
+
+Get requested user
+
+ + Parameters
+    + user_id (number) - ID of user
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /users/5666b8259297ffe7c16c6785
+
+    + Body
+
+            {
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "version" : "1",
+                "profile" {
+                    "name": "Janko",
+                    "real_name": "Jano Mrkvicka",
+                    "birth_date": "11.11.1911",
+                    "description": "Som Janko a mam rad mrkvicku",
+                    "image": "cdn.towns.cz/users/profileimages/janko.jpg",
+                    "email": "jano@mrkvicka.cz"
+                },
+            }
+
+
+### POST
+
+Update requsted user
+
+ + Parameters
+    + user_id (number) - ID of user
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "version" : "1",
+                "profile" {
+                    "name": "Janko",
+                    "real_name": "Jano Mrkvicka",
+                    "birth_date": "11.11.1911",
+                    "description": "Som Janko a mam rad mrkvicku",
+                    "image": "cdn.towns.cz/users/profileimages/janko.jpg",
+                    "email": "jano@mrkvicka.cz"
+                },
+                "login_methods": {
+                    "password": {
+                        "type": "bcrypt",
+                        "data": "$2a$10$vbnPNKPvd1y6mhp44dKjxuTftdZ1bMn/e8F4Vsl9w1d4JJZ7oLM3y"
+                    }
+                },
+                "contacts": [ "user_id1", "user_id2", "user_id3" ]
+                "language" : "cs"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /objects/5666b8259297ffe7c16c6456
+
+    + Body
+
+            {
+                "status": "ok",
+                "objectId": "5666b8259297ffe7c16c6456"
+            }
+
+### DELETE
+
+Delete requested user. Moves user to UsersHistory collection
+
+ + Parameters
+    + user_id (number) - ID of user
+
+ + Response 204 (application/json)
+
+     + Headers
+
+            Location: /users/5666b8259297ffe7c16c6785
+
+
+
+
+## /users/token
+
+### GET
+
+This is used to check the status of token only. User will send this request with own token and if it is valid, then our API will return true, otherwise false will return.
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+            Timestamp: "1300228849"
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /users/token
+
+    + Body
+
+            {
+                "status" : "true",
+                "token" : "Z6eEdO8MOmk394WozF5oKyuAv855l4Mlqo7hhlSLik",
+                "token_secret" : "Kd75W4OQfb2oJTV0vzGzeXftVAwgMnEK9MumzYcM"
+            }
+
+### POST
+
+Create new token. When user wants to get token from API, he must send A) correct username and password B) correct FB token, then our API will create token and send it back to user.
+
+
+ + Request (application/json)
+
+    + Headers
+
+    + Body
+
+            {
+                "login" : "mrkvicka",
+                "password" : "heslo12345"
+            }
+
+
+
+ + Response 201 (application/json)
+
+    + Headers
+
+            Location: /users/token
+
+    + Body
+
+            {
+                "status" : "true",
+                "token" : "Z6eEdO8MOmk394WozF5oKyuAv855l4Mlqo7hhlSLik",
+                "token_secret" : "Kd75W4OQfb2oJTV0vzGzeXftVAwgMnEK9MumzYcM"
+            }
+
+### DELETE
+
+Delete token. The user logged out, so delete his token in API (invalidate or remove)
+
+ + Response 204 (application/json)
+
+
+
+
+# Group User Groups
+
+
+## /user-groups
+
+### GET
+Get all groups
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /user-groups
+
+    + Body
+
+            [{
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "version" : "1",
+                "profile" {
+                    "name": "Skupina",
+                    "real_name": "Machri",
+                    "description": "My sme ti, Pa a Pi z macacej planety",
+                    "image": "cdn.towns.cz/users/profileimages/machri.jpg",
+                },
+                "admins" : [
+                    {
+                        "name": "Janko",
+                        "real_name": "Jano Mrkvicka",
+                        "birth_date": "11.11.1911",
+                        "description": "Som Janko a mam rad mrkvicku",
+                        "image": "cdn.towns.cz/users/profileimages/janko.jpg",
+                        "email": "jano@mrkvicka.cz"
+                    }, {
+                        "name": "Janik",
+                        "real_name": "Janik Hruska",
+                        "birth_date": "12.12.1912",
+                        "description": "Som Janko a mam rad hrusku",
+                        "image": "cdn.towns.cz/users/profileimages/janik.jpg",
+                        "email": "janik@hruska.cz"
+                    }
+                ],
+                "applicants" : [ "name1", "name2" ],
+                "members" : [ "Janko", "Janik" ]
+            }]
+
+### POST
+
+Create new User Group. The owner will become admin and also first member.
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "profile" {
+                    "name": "Skupina",
+                    "real_name": "Machri",
+                    "description": "My sme ti, Pa a Pi z macacej planety",
+                    "image": "cdn.towns.cz/users/profileimages/machri.jpg",
+                },
+
+            }
+
+
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /user-groups
+
+    + Body
+
+            {
+                "status": "ok",
+                "objectId": "5666b8259297ffe7c16c6456"
+            }
+
+
+
+
+## /user-groups/{group_id}
+
+### GET
+
+Get details of given group
+
+
+ + Parameters
+    + group_id (number) - ID of group
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /user-groups/5666b8259297ffe7c16c6785
+
+    + Body
+
+            {
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "version" : "1",
+                "profile" {
+                    "name": "Skupina",
+                    "real_name": "Machri",
+                    "description": "My sme ti, Pa a Pi z macacej planety",
+                    "image": "cdn.towns.cz/users/profileimages/machri.jpg",
+                },
+                "admins" : [
+                    {
+                        "name": "Janko",
+                        "real_name": "Jano Mrkvicka",
+                        "birth_date": "11.11.1911",
+                        "description": "Som Janko a mam rad mrkvicku",
+                        "image": "cdn.towns.cz/users/profileimages/janko.jpg",
+                        "email": "jano@mrkvicka.cz"
+                    }, {
+                        "name": "Janik",
+                        "real_name": "Janik Hruska",
+                        "birth_date": "12.12.1912",
+                        "description": "Som Janko a mam rad hrusku",
+                        "image": "cdn.towns.cz/users/profileimages/janik.jpg",
+                        "email": "janik@hruska.cz"
+                    }
+                ],
+                "applicants" : [ "name1", "name2" ],
+                "members" : [ "Janko", "Janik" ]
+            }
+
+
+### POST
+Update given group
+
+ + Parameters
+    + group_id (number) - ID of group
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "_id" : ObjectId("5666b8259297ffe7c16c6785"),
+                "version" : "1",
+                "profile" {
+                    "name": "Skupina",
+                    "real_name": "Machri",
+                    "description": "My sme ti, Pa a Pi z macacej planety",
+                    "image": "cdn.towns.cz/users/profileimages/machri.jpg",
+                },
+                "admins" : [
+                    {
+                        "name": "Janko",
+                        "real_name": "Jano Mrkvicka",
+                        "birth_date": "11.11.1911",
+                        "description": "Som Janko a mam rad mrkvicku",
+                        "image": "cdn.towns.cz/users/profileimages/janko.jpg",
+                        "email": "jano@mrkvicka.cz"
+                    }, {
+                        "name": "Janik",
+                        "real_name": "Janik Hruska",
+                        "birth_date": "12.12.1912",
+                        "description": "Som Janko a mam rad hrusku",
+                        "image": "cdn.towns.cz/users/profileimages/janik.jpg",
+                        "email": "janik@hruska.cz"
+                    }
+                ],
+                "applicants" : [ "name1", "name2" ],
+                "members" : [ "Janko", "Janik" ]
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /user-groups/5666b8259297ffe7c16c6456
+
+    + Body
+
+            {
+                "status": "ok",
+                "objectId": "5666b8259297ffe7c16c6456"
+            }
+
+### DELETE
+Delete given User Group
+
+
+ + Parameters
+
+    + group_id (number) - ID of group
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+ + Response 204 (application/json)
+
+     + Headers
+
+            Location: /user-groups/5666b8259297ffe7c16c6785
+
+
+## /user-groups/membership/{group_id}
+
+### GET
+
+Get membership status of current user
+
+- no status
+- applied for membership
+- member
+- admin
+- banned
+
+New statuses may be added later.
+
+ + Parameters
+    + group_id (number) - ID of group
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /user-groups/membership/5666b8259297ffe7c16c6785
+
+    + Body
+
+            {
+                "status" : "member",
+            }
+
+
+### POST
+
+Update membership status. Currently only 'apply' request, but this may be extended in future.
+
+ + Parameters
+    + group_id (number) - ID of group
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "action" : "apply"
+            }
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /user-groups/membership/{group_id}
+
+    + Body
+
+            {
+                "status" : "ok",
+                "message" : "Application accepted"
+            }
+
+### DELETE
+Leave given User group
+
+ + Parameters
+
+    + group_id (number) - ID of group
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+ + Response 204 (application/json)
+
+     + Headers
+
+            Location: /user-groups/membership/{group_id}
+
+
+
+# Group Chats
+
+## /chats
+
+### GET
+Get all chat messages
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /chats
+
+    + Body
+
+            [
+                {
+                    "_id" : ObjectId("507f1f77bcf86cd799439011"),
+                    "from" : "pepa",
+                    "to": "Janko",
+                    "body": "Ahoj, ako sa mas?",
+                    "created_at" : "1300056700"
+                },{
+                    "_id" : ObjectId("507f1f77bcf86cd799439012"),
+                    "from" : "Janko",
+                    "to": "pepa",
+                    "body": "Mam sa fajn. A ty?",
+                    "created_at" : "1300056800"
+                },{
+                    "_id" : ObjectId("507f1f77bcf86cd799439013"),
+                    "from" : "pepa",
+                    "to": "Janko",
+                    "body": "Ja tiez",
+                    "created_at" : "1300056900"
+                }
+            ]
+
+### POST
+Send new chat message
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "to": "pepa",
+                "body": "Co ideme dnes robit?",
+
+            }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /chats
+
+    + Body
+
+            {
+              "status" : "ok",
+              "message" : "message sent"
+            }
+
+
+# Group Permalinks
+
+## /permalinks
+
+### GET
+
+Get the list of permalinks
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /permalinks
+
+    + Body
+
+            [
+                {
+                    "_id" : "507f1f77bcf86cd799439011",
+                    "uri" : "pribeh-o-cervene-karkulce",
+                    "reference": "5126bc054aed4daf9e2ab772"
+                },{
+                    "_id" : "507f1f77bcf86cd799439012",
+                    "uri" : "pribeh-o-modrom-koniku",
+                    "reference": "5126bc054aed4daf9e2ab772"
+                },{
+                    "_id" : "507f1f77bcf86cd799439013",
+                    "uri" : "pribeh-o-zltom-trpaslikovi",
+                    "reference": "5126bc054aed4daf9e2ab772"
+                }
+            ]
+
+### POST
+
+Create new permalink. On success it will return status and id of new permalink
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "uri": "pribeh-o-mne",
+                "object": {
+                    "name" : "Pribeh O Mne",
+                    "type" : "story",
+                    "subtype": "",
+                    "x": "12.10",
+                    "y": "-55.55",
+                    "locale": "cs",
+                    "content": {
+                        type: "markdown",
+                        data: "Zacalo to kedysi davno ..."
+                    }
+                }
+
+            }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /permalinks
+
+    + Body
+
+            {
+              "status" : "ok",
+              "_id" : "507f1f77bcf86cd799439011"
+            }
+
+## /permalinks/{permalink_id}
+
+### GET
+Get details of requested permalink
+ + Parameters
+
+    + permalink_id (string) - id of permalink resource
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /permalinks/{permalink_id}
+
+    + Body
+
+            {
+                "_id" : "507f1f77bcf86cd799439011",
+                "uri" : "pribeh-o-cervene-karkulce",
+                "object": {
+                    "_id" : "5666b8259297ffe7c16c1212",
+                    "version": "1",
+                    "name" : "Pribeh o cervenej karkulce",
+                    "type" : "story",
+                    "subtype": "",
+                    "x": "12.10",
+                    "y": "-55.55",
+                    "start_time": "1449572794",
+                    "stop_time": "",
+                    "locale": "cs",
+                    "design": {
+                        type: "model",
+                        data: "12,3453,654,234,...",
+                    },
+                    "content": {
+                        type: "markdown",
+                        data: "Kde bolo tam bolo ..."
+                    },
+                    "properties": {
+                        strength: "0",
+                        defense: "0",
+                        speed: "0"
+                    },
+                    "actions": ["dismantle", "attack_imunity"],
+                    "owner" : {
+                        "$ref" : "Users",
+                        "$id" : ObjectId("5126bc054aed4daf9e2ab772")
+                    }
+                }
+            }
+
+### POST
+Update permalink resource
+
+ + Parameters
+    + permalink_id (string) - id of permalink resource
+
+ + Request (application/json)
+
+    + Headers
+
+            Authorization: Token {access_token}
+
+    + Body
+
+            {
+                "_id" : "507f1f77bcf86cd799439011",
+                "uri" : "pribeh-o-cervene-karkulce",
+                "object": {
+                    "_id" : "5666b8259297ffe7c16c1212",
+                    "version": "1",
+                    "name" : "Pribeh o cervenej karkulce",
+                    "type" : "story",
+                    "subtype": "",
+                    "x": "12.10",
+                    "y": "-55.55",
+                    "start_time": "1449572794",
+                    "stop_time": "",
+                    "locale": "cs",
+                    "design": {
+                        type: "model",
+                        data: "12,3453,654,234,...",
+                    },
+                    "content": {
+                        type: "markdown",
+                        data: "Kde bolo tam bolo ..."
+                    },
+                    "properties": {
+                        strength: "0",
+                        defense: "0",
+                        speed: "0"
+                    },
+                    "actions": ["dismantle", "attack_imunity"],
+                    "owner" : {
+                        "$ref" : "Users",
+                        "$id" : ObjectId("5126bc054aed4daf9e2ab772")
+                    }
+                }
+            }
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /permalinks/{permalink_id}
+
+    + Body
+
+            {
+                "status" : "ok",
+                "message" : "Permalink updated"
+            }
+
+
+### DELETE
+Delete the permalink resource
+
+ + Parameters
+    + id (string) - id of permalink resource
+
+ + Request
+
+    + Headers
+
+                Authorization: Token {access_token}
+
+
+ + Response 204 (application/json)
+
