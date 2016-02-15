@@ -31,7 +31,9 @@ var prototypeSchema = new db.Schema({
     },
     subtype: {
         type: String,
-        trim: true
+        trim: true,
+        default: "",
+        validate: is.validObjectSubType
     },
     locale: {
         type: String,
