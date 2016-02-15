@@ -16,6 +16,11 @@ function typesOfObjects(value) {
     return check.isIn(value, ['building', 'terrain', 'story']);
 }
 
+//checks the valid Subtype
+function subtypesOfObjects(value) {
+    return isAlphabetic(value);
+}
+
 // checks that locale has only alphabet characters
 function isAlphabetic(value) {
     return /^[a-zA-Z]*$/i.test(value);
@@ -58,6 +63,7 @@ function isObjectId(value) {
 var is = {
     validObjectName: [isAlphanumericstring, '{VALUE} is not alphanumeric'],
     validObjectType: [typesOfObjects, '{VALUE} is not valid TYPE!'],
+    validObjectSubType: [subtypesOfObjects, '{VALUE} is not valid SUBTYPE!'],
     validObjectVersion: [isPositiveInteger, '{VALUE} needs to be positive integer'],
     validObjectCoordinate: [isValidCoordinate, '{VALUE} is not valid coordinate. Coordinate must be integer number.'],
     validDate:[

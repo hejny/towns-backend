@@ -289,48 +289,48 @@ describe('Prototypes', function () {
 
     describe('Getting of One prototype from API', function () {
         this.timeout(15000);
-        // create prototype
 
-        newPrototype = {
-            "name": "Ambasada",
-            "type": "building",
-            "locale": "cs"
+        it('should return the prototype', function (done) {
+            // create prototype
+            newPrototype = {
+                "name": "Ambasada",
+                "type": "building",
+                "locale": "cs"
 
-        };
-        var prototype = new ObjectsPrototype(newPrototype);
-        prototype.save(function (err, prototype) {
-            if (err) {
-                throw err
-            }
+            };
+            var prototype = new ObjectsPrototype(newPrototype);
+            prototype.save(function (err, prototype) {
+                if (err) {
+                    throw err
+                }
 
-            // get it through api
-            request(url)
-                .get('/objects/prototypes/'+prototype._id)
-                .expect('Content-Type', /json/)
-                .expect(200) //Status code
-                .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    // Should.js fluent syntax applied
-                    res.body.should.have.property('name');
-                    res.body.name.should.not.equal(null);
-                    res.body.name.should.equal('Ambasada');
-                    res.body.should.have.property('type');
-                    res.body.type.should.equal('building');
+                // get it through api
+                request(url)
+                    .get('/objects/prototypes/' + prototype._id)
+                    .expect('Content-Type', /json/)
+                    .expect(200) //Status code
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.should.have.property('name');
+                        res.body.name.should.not.equal(null);
+                        res.body.name.should.equal('Ambasada');
+                        res.body.should.have.property('type');
+                        res.body.type.should.equal('building');
 
-                    res.body.should.have.property('subtype');
-                    res.body.should.have.property('locale');
-                    res.body.should.have.property('owner');
+                        res.body.should.have.property('subtype');
+                        res.body.should.have.property('locale');
+                        res.body.should.have.property('owner');
 
 
+                        // remove prototype
+                        prototype.remove();
+                    });
 
-                    // remove prototype
-                    prototype.remove();
-                });
-
+            });
         });
-
     });
 
     describe('Updating One prototype from API', function () {
