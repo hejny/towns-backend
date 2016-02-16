@@ -290,7 +290,7 @@ describe('Prototypes', function () {
     describe('Getting of One prototype from API', function () {
         this.timeout(15000);
 
-        it('should return the prototype', function (done) {
+        it('should return the requested prototype', function (done) {
             // create prototype
             newPrototype = {
                 "name": "Ambasada",
@@ -306,7 +306,7 @@ describe('Prototypes', function () {
 
                 // get it through api
                 request(url)
-                    .get('/objects/prototypes/'+prototype._id)
+                    .get('/objects/prototypes/' + prototype._id)
                     .expect('Content-Type', /json/)
                     .expect(200) //Status code
                     .end(function (err, res) {
@@ -331,6 +331,27 @@ describe('Prototypes', function () {
                     });
 
             });
+        });
+
+        it("should return error if the requested prototype doesn't exist", function (done) {
+            // get it through api
+            request(url)
+                .get('/objects/prototypes/12345677890')
+                .expect('Content-Type', /json/)
+                .expect(500) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('Problem getting your prototype');
+
+                    done();
+                });
+
         });
     });
 
