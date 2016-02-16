@@ -18,7 +18,8 @@ function typesOfObjects(value) {
 
 //checks the valid Subtype
 function subtypesOfObjects(value) {
-    return isAlphabetic(value);
+    // todo: define what subtypes are allowed
+    return true;
 }
 
 // checks that locale has only alphabet characters

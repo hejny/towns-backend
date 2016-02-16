@@ -301,12 +301,12 @@ describe('Prototypes', function () {
             var prototype = new ObjectsPrototype(newPrototype);
             prototype.save(function (err, prototype) {
                 if (err) {
-                    throw err
+                    throw err;
                 }
 
                 // get it through api
                 request(url)
-                    .get('/objects/prototypes/' + prototype._id)
+                    .get('/objects/prototypes/'+prototype._id)
                     .expect('Content-Type', /json/)
                     .expect(200) //Status code
                     .end(function (err, res) {
@@ -319,14 +319,15 @@ describe('Prototypes', function () {
                         res.body.name.should.equal('Ambasada');
                         res.body.should.have.property('type');
                         res.body.type.should.equal('building');
-
                         res.body.should.have.property('subtype');
                         res.body.should.have.property('locale');
+                        res.body.locale.should.equal('cs');
                         res.body.should.have.property('owner');
-
 
                         // remove prototype
                         prototype.remove();
+
+                        done();
                     });
 
             });
