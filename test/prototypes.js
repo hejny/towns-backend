@@ -358,7 +358,75 @@ describe('Prototypes', function () {
 
     describe('Updating One prototype from API', function () {
         this.timeout(15000);
-        // todo
+
+        it('should update the requested prototype', function (done) {
+            // create prototype
+            newPrototype = {
+                "name": "Ambasada",
+                "type": "building",
+                "locale": "cs"
+
+            };
+            var prototype = new ObjectsPrototype(newPrototype);
+            prototype.save(function (err, prototype) {
+                if (err) {
+                    throw err;
+                }
+
+                update = {
+                    "name": "Ambasada",
+                    "type": "building",
+                    "locale": "cs",
+                    "subtype": "new value"
+                };
+
+                // update it through api
+                request(url)
+                    .post('/objects/prototypes/' + prototype._id)
+                    .send(update)
+                    .expect('Content-Type', /json/)
+                    .expect(200) //Status code
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+
+                        ObjectsPrototypesHistory.findOneAndRemove({_prototypeId: prototype._id}, function (err) {
+                            if (err) {
+                                throw err;
+                            }
+                        });
+
+                        // Should.js fluent syntax applied
+                        res.body.should.have.property('status');
+                        res.body.status.should.equal('ok');
+                        res.body.should.have.property('prototypeId');
+                        if (res.body.prototypeId == prototype._id) {
+                            throw new Error("New prototype overwrote the previous one");
+                        }
+
+                        //console.log(res.body.prototypeId);
+                        // check that current values are updated
+                        ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err, saved) {
+                            if (err) {
+                                throw err;
+                            }
+
+                            if (saved.name != "Ambasada" && saved.type != "building" && saved.locale != "cs" && saved.subtype != "new value") {
+                                throw new Error("Saved prototype is different than ");
+                            }
+
+                            // remove prototype
+                            saved.remove();
+
+                        });
+
+                        done();
+                    });
+
+            });
+        });
+
 
     });
 
