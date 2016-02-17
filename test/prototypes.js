@@ -334,6 +334,29 @@ describe('Prototypes', function () {
             });
         });
 
+        it("should error when the requested prototype id is not valid", function (done) {
+
+            // get it through api
+            request(url)
+                .get('/objects/prototypes/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(500) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('Problem getting your prototype');
+
+                    done();
+                });
+
+
+        });
+
         it("should return error if the requested prototype doesn't exist", function (done) {
             // get it through api
             request(url)
@@ -358,6 +381,52 @@ describe('Prototypes', function () {
 
     describe('Updating One prototype from API', function () {
         this.timeout(15000);
+
+        it("should error when the requested prototype id is not valid", function (done) {
+
+            // get it through api
+            request(url)
+                .post('/objects/prototypes/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(500) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('Problem getting your prototype');
+
+                    done();
+                });
+
+
+        });
+
+        it("should error when the requested prototype doesn't exist", function (done) {
+
+            // get it through api
+            request(url)
+                .post('/objects/prototypes/56af958fbb2d04ed141a24a7')
+                .expect('Content-Type', /json/)
+                .expect(500) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('There is no such prototype');
+
+                    done();
+                });
+
+
+        });
 
         it('should update the requested prototype', function (done) {
             // create prototype
