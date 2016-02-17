@@ -17,7 +17,36 @@ describe('Objects', function () {
 
     describe('Getting objects from API', function () {
         this.timeout(15000);
-        // todo
+
+        it('should return a list of prototypes', function (done) {
+
+            request(url)
+                .get('/objects')
+                .expect('Content-Type', /json/)
+                .expect(200) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.be.instanceof(Array);
+
+
+                    console.log(res.body);
+                    for (each in res.body) {
+                        //console.log(each);
+                        res.body[each].should.have.property('name');
+                        res.body[each].name.should.not.equal(null);
+                        res.body[each].should.have.property('locale');
+                        res.body[each].should.have.property('type');
+                        res.body[each].should.not.have.property('x');
+                        res.body[each].should.not.have.property('y');
+                        res.body[each].should.not.have.property('start_time');
+                    }
+
+                    done();
+                });
+        });
 
     });
 
