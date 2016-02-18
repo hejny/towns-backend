@@ -44,12 +44,12 @@ var schema = new db.Schema({
         trim: true
     },
     x: {
-        type: Number,
+        type: db.Schema.Types.Double,
         required: true,
         validate: is.validObjectCoordinate
     },
     y: {
-        type: Number,
+        type: db.Schema.Types.Double,
         required: true,
         validate: is.validObjectCoordinate
     },
