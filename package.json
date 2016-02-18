@@ -19,11 +19,12 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "jade": "~1.11.0",
+    "mongodb": "~2.1.2",
+    "mongodb-migrate": "~1.2.3",
+    "mongoose": "~4.2.5",
+    "mongoose-double": "0.0.1",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "mongoose": "~4.2.5",
-    "mongodb-migrate": "~1.2.3",
-    "mongodb": "~2.1.2",
     "validator": "~4.5.2"
   },
   "devDependencies": {

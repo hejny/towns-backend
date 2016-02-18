@@ -19,8 +19,8 @@ exports.up = function (db, next) {
             "name": "Ambasada",
             "type": "building",
             "subtype": "",
-            "x": "12.34",
-            "y": "-55.05",
+            "x": 12.34,
+            "y": -5.05,
             "start_time": "1449572794",
             "locale": "cs",
             "design": {
