@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+require('mongoose-double')(mongoose);
 var mongo = require('../config/mongo').mongoDb;
 
 try
