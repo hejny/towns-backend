@@ -57,7 +57,7 @@ var schema = new db.Schema({
         type: Date,
         required: true,
         default: Date.now,
-        validate: is.validDate
+        validate: is.validCurrentDate
     },
     locale: {
         type: String,

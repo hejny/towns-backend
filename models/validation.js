@@ -67,10 +67,10 @@ var is = {
     validObjectSubType: [subtypesOfObjects, '{VALUE} is not valid SUBTYPE!'],
     validObjectVersion: [isPositiveInteger, '{VALUE} needs to be positive integer'],
     validObjectCoordinate: [isValidCoordinate, '{VALUE} is not valid coordinate. Coordinate must be float number.'],
-    validDate:[
+    validDate: [ isValidDate, '{VALUE} is not a date in correct format' ],
+    validCurrentDate: [
         { 'validator': isValidDate, msg: '{VALUE} is not a date in correct format'},
-        //todo Tahle kontrola dělá problémy, když se maže objekt a přesouvá do objectsHistory, nechci do kodů nějak podstatně hrabat, proto ji jenom zapoznámkovávám.
-        //{ 'validator': isCurrentDate, msg: '{VALUE} is not current date'}
+        { 'validator': isCurrentDate, msg: '{VALUE} is not current date'}
     ],
     validObjectLocale: [
         { 'validator': isAlphabetic, msg: '{VALUE} is not valid locale! Locale must be in ISO 3166-1 alpha-2 format.', type: 'ISO 3166-1 alpha-2 format'},
