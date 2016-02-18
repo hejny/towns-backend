@@ -36,7 +36,7 @@ objectsHandler.getAll = function (req, res) {
     if(typeof q.y !== 'undefined' && q.y && check.isInt(q.y)) {
         values.y = q.y;
     }
-    if(typeof q.radius !== 'undefined' && q.radius && check.isInt(q.radius, {min:1, max:30})) {
+    if(typeof q.radius !== 'undefined' && q.radius && check.isInt(q.radius, {min:1, max:200})) {
         values.radius = q.radius;
     }
     if(typeof q.not !== 'undefined' && q.not && q.not.constructor === Array) {
