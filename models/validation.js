@@ -42,7 +42,7 @@ function isPositiveInteger(value) {
 }
 
 function isValidCoordinate(value) {
-    return check.isInt(value);
+    return check.isFloat(value);
 }
 
 function isValidDate(value) {
@@ -66,7 +66,7 @@ var is = {
     validObjectType: [typesOfObjects, '{VALUE} is not valid TYPE!'],
     validObjectSubType: [subtypesOfObjects, '{VALUE} is not valid SUBTYPE!'],
     validObjectVersion: [isPositiveInteger, '{VALUE} needs to be positive integer'],
-    validObjectCoordinate: [isValidCoordinate, '{VALUE} is not valid coordinate. Coordinate must be integer number.'],
+    validObjectCoordinate: [isValidCoordinate, '{VALUE} is not valid coordinate. Coordinate must be float number.'],
     validDate:[
         { 'validator': isValidDate, msg: '{VALUE} is not a date in correct format'},
         { 'validator': isCurrentDate, msg: '{VALUE} is not current date'}
