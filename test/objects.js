@@ -30,18 +30,17 @@ describe('Objects', function () {
                     }
 
                     res.body.should.be.instanceof(Array);
-
-
-                    console.log(res.body);
+                    //console.log(res.body);
                     for (each in res.body) {
                         //console.log(each);
                         res.body[each].should.have.property('name');
                         res.body[each].name.should.not.equal(null);
                         res.body[each].should.have.property('locale');
                         res.body[each].should.have.property('type');
-                        res.body[each].should.not.have.property('x');
-                        res.body[each].should.not.have.property('y');
-                        res.body[each].should.not.have.property('start_time');
+                        res.body[each].should.have.property('x');
+                        res.body[each].should.have.property('y');
+                        res.body[each].should.have.property('start_time');
+                        res.body[each].should.have.property('owner');
                     }
 
                     done();
