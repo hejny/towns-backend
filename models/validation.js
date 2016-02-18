@@ -42,7 +42,7 @@ function isPositiveInteger(value) {
 }
 
 function isValidCoordinate(value) {
-    return check.isFloat(value);
+    return check.isFloat(value.valueOf());
 }
 
 function isValidDate(value) {
