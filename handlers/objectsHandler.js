@@ -128,17 +128,25 @@ objectsHandler.createOne = function (req, res) {
     // find the Prototype
     ObjectsPrototype.findOne({_id: json.prototypeId}, function (err, objectsPrototype) {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your prototype"
+                "message": [{
+                    param: "prototypeId",
+                    msg: "Problem getting your prototype",
+                    val: json.prototypeId
+                }]
             });
         }
 
         //console.log(objectsPrototype);
         if (objectsPrototype === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such prototype"
+                "message": [{
+                    param: "prototypeId",
+                    msg: "There is no such prototype",
+                    val: ""
+                }]
             });
         }
 
@@ -191,9 +199,13 @@ objectsHandler.createOne = function (req, res) {
         // save the newly created object to DB
         object.save(function (err, object) {
             if (err) {
-                return res.status(500).json({
+                var errMessage = [];
+                for (var errName in err.errors) {
+                    errMessage.push({param: err.errors[errName].path, msg: err.errors[errName].kind, value: err.errors[errName].value});
+                }
+                return res.status(400).json({
                     "status": "error",
-                    "message": err
+                    "message": errMessage
                 });
             }
             res.status(201).json({
