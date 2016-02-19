@@ -244,7 +244,61 @@ describe('Objects', function () {
 
     describe('Getting of One object from API', function () {
         this.timeout(15000);
-        // todo
+
+        it('should return the requested object', function (done) {
+
+            ObjectsPrototype.findOne({}, function (err, prototype) {
+                if (err) {
+                    throw err;
+                }
+                // create object
+                newObject = {
+                    "_prototypeId": prototype._id,
+                    "x": 1.234,
+                    "y": 4.321,
+                    "name": "Domek",
+                    "type": "building"
+
+                };
+                console.log(newObject);
+                var object = new Object(newObject);
+                object.save(function (err, object) {
+                    if (err) {
+                        console.log(err);
+
+                        throw err;
+                    }
+
+                    // get it through api
+                    request(url)
+                        .get('/objects/' + object._id)
+                        .expect('Content-Type', /json/)
+                        .expect(200) //Status code
+                        .end(function (err, res) {
+                            if (err) {
+                                throw err;
+                            }
+                            // Should.js fluent syntax applied
+                            res.body.should.have.property('x');
+                            res.body.x.should.not.equal(null);
+                            res.body.x.should.equal(1.234);
+                            res.body.should.have.property('y');
+                            res.body.y.should.equal(4.321);
+                            res.body.should.have.property('_prototypeId');
+                            res.body._prototypeId.should.equal(prototype._id);
+                            res.body.should.have.property('owner');
+
+                            // remove prototype
+                            object.remove({}, function(err,removed_count) {
+                                done();
+                            });
+
+                        });
+
+                });
+
+            });
+        });
 
     });
 
