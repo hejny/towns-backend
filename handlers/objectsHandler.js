@@ -96,18 +96,27 @@ objectsHandler.getAll = function (req, res) {
 objectsHandler.getOne = function (req, res) {
     var parameters = req.params;
     ObjectModel.findOne({"_id": parameters.id}, function (err, object) {
+
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your object"
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting your object",
+                    val: parameters.id
+                }]
             });
         }
 
         //console.log(object);
         if (object === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such object"
+                "message": [{
+                    param: "id",
+                    msg: "There is no such object",
+                    val: ""+parameters.id
+                }]
             });
         }
 
@@ -195,7 +204,7 @@ objectsHandler.createOne = function (req, res) {
 
         var object = new ObjectModel(newObject);
 
-        console.log(newObject);
+        //console.log(newObject);
         // save the newly created object to DB
         object.save(function (err, object) {
             if (err) {
@@ -235,7 +244,7 @@ objectsHandler.updateOne = function (req, res) {
             });
         }
 
-        console.log(object._doc);
+        //console.log(object._doc);
         if (object === null) {
             return res.status(500).json({
                 "status": "error",
@@ -262,7 +271,7 @@ objectsHandler.updateOne = function (req, res) {
                     "message": err
                 });
             }
-            console.log('Version of object was succesfully saved to ObjectsHistory');
+            //console.log('Version of object was succesfully saved to ObjectsHistory');
         });
 
         // increase version by 1 of current object & and set new start_time
@@ -293,7 +302,7 @@ objectsHandler.updateOne = function (req, res) {
                     "message": err
                 });
             }
-            console.log(object);
+            //console.log(object);
             res.status(200).json({
                 "status": "ok",
                 "objectId": object._id,
@@ -346,7 +355,7 @@ objectsHandler.deleteOne = function (req, res) {
                     "message": err
                 });
             }
-            console.log('Version of object was succesfully saved to ObjectsHistory');
+            //console.log('Version of object was succesfully saved to ObjectsHistory');
 
             // remove it from objects collection
             object.remove();
