@@ -24,7 +24,10 @@ gulp.task("test", function() {
         "config/*.json",
         "handlers/*.js",
         "models/*.js",
-        "routes/*.js"
+        "routes/*.js",
+        "test/*.js",
+        "*.js"
+
     ])
         .pipe(jshint())
         .pipe(jshint.reporter("default"));

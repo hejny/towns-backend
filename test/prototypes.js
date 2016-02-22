@@ -33,7 +33,7 @@ describe('Prototypes', function () {
 
 
                     //console.log(res.body);
-                    for (each in res.body) {
+                    for (var each in res.body) {
                         res.body[each].should.have.property('name');
                         res.body[each].name.should.not.equal(null);
                         res.body[each].should.have.property('locale');
