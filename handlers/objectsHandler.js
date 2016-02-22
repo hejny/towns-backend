@@ -237,7 +237,6 @@ objectsHandler.updateOne = function (req, res) {
         json = req.body,
         history = {};
     ObjectModel.findOne({"_id": objectId}, function (err, object) {
-
         if (err) {
             return res.status(400).json({
                 "status": "error",
@@ -332,16 +331,24 @@ objectsHandler.deleteOne = function (req, res) {
     // get the object
     ObjectModel.findOne({"_id": objectId}, function (err, object) {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your object"
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting your object",
+                    val: objectId
+                }]
             });
         }
-        //console.log(object);
+
         if (object === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such object"
+                "message": [{
+                    param: "id",
+                    msg: "There is no such object",
+                    val: ""+objectId
+                }]
             });
         }
 
