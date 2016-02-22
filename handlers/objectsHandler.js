@@ -175,7 +175,7 @@ objectsHandler.createOne = function (req, res) {
         }
 
         // set the other values
-        newObject.version = 1;
+        newObject.version = 0;
         newObject.x = json.x;
         newObject.y = json.y;
         if ((json.hasOwnProperty('name')) && (typeof json.name == "string") && (json.name.length > 0)) {
@@ -237,18 +237,26 @@ objectsHandler.updateOne = function (req, res) {
         json = req.body,
         history = {};
     ObjectModel.findOne({"_id": objectId}, function (err, object) {
+
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your object"
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting your object",
+                    val: objectId
+                }]
             });
         }
 
-        //console.log(object._doc);
         if (object === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such object"
+                "message": [{
+                    param: "id",
+                    msg: "There is no such object",
+                    val: ""+objectId
+                }]
             });
         }
 
