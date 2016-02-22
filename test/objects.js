@@ -2,7 +2,7 @@ var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
 var config = require('../config/server').server;
-var Object = require('../models/object');
+var ObjectModel = require('../models/object');
 var ObjectsPrototype = require('../models/objectsPrototype');
 var ObjectsHistory = require('../models/objectsHistory');
 
@@ -18,7 +18,7 @@ describe('Objects', function () {
         done();
     });
 
-    describe('Getting objects from API', function () {
+    describe('Getting list of objects from API', function () {
         this.timeout(15000);
 
         it('should return a list of objects', function (done) {
@@ -34,7 +34,7 @@ describe('Objects', function () {
 
                     res.body.should.be.instanceof(Array);
                     //console.log(res.body);
-                    for (each in res.body) {
+                    for (var each in res.body) {
                         //console.log(each);
                         res.body[each].should.have.property('name');
                         res.body[each].name.should.not.equal(null);
@@ -216,7 +216,7 @@ describe('Objects', function () {
 
                         //find the object and check its values
                         //console.log(res.body.objectId);
-                        Object.findOne({_id: res.body.objectId}, function (err, saved) {
+                        ObjectModel.findOne({_id: res.body.objectId}, function (err, saved) {
                             if (err) {
                                 throw err;
                             }
@@ -262,7 +262,7 @@ describe('Objects', function () {
 
                 };
 
-                var object = new Object(createObject);
+                var object = new ObjectModel(createObject);
                 object.save(function (err, newObject) {
                     if (err) {
                         throw err;
@@ -447,7 +447,7 @@ describe('Objects', function () {
                         }
 
                         var objectId = res.body.objectId;
-                        Object.findOne({"_id": objectId}, function (err, newObject) {
+                        ObjectModel.findOne({"_id": objectId}, function (err, newObject) {
                             if (err) {
                                 throw err;
                             }
@@ -478,7 +478,7 @@ describe('Objects', function () {
                                         throw new Error("Id of updated object doesn't match the id of original object");
                                     }
 
-                                    Object.findOne({"_id": updateResponse.body.objectId}, function(err, updatedObject) {
+                                    ObjectModel.findOne({"_id": updateResponse.body.objectId}, function(err, updatedObject) {
                                         if (err) {
                                             throw err;
                                         }
