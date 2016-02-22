@@ -4,6 +4,7 @@ var request = require('supertest');
 var config = require('../config/server').server;
 var Object = require('../models/object');
 var ObjectsPrototype = require('../models/objectsPrototype');
+var ObjectsHistory = require('../models/objectsHistory');
 
 
 describe('Objects', function () {
@@ -292,7 +293,7 @@ describe('Objects', function () {
                             res.body.should.have.property('owner');
 
                             // remove prototype
-                            newObject.remove({}, function(err,removed_count) {
+                            newObject.remove({}, function (err, removed_count) {
                                 done();
                             });
 
@@ -363,7 +364,157 @@ describe('Objects', function () {
 
     describe('Updating One object from API', function () {
         this.timeout(15000);
-        // todo
+
+        it("should error when the requested object id is not valid", function (done) {
+
+            // get it through api
+            request(url)
+                .post('/objects/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('Problem getting your object');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('1234567890');
+
+                    done();
+                });
+
+
+        });
+
+        it("should error when the requested object doesn't exist", function (done) {
+
+            // get it through api
+            request(url)
+                .post('/objects/56af958fbb2d04ed141a24a7')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('There is no such object');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('56af958fbb2d04ed141a24a7');
+
+                    done();
+                });
+
+
+        });
+
+        it('should update the requested object', function (done) {
+
+            // create mocked object
+            ObjectsPrototype.findOne({}, function (err, prototype) {
+                if (err) {
+                    throw err;
+                }
+
+                var createNewObject = {
+                    "prototypeId": prototype._id,
+                    "x": 1.234,
+                    "y": 5.432
+                };
+                request(url)
+                    .post('/objects')
+                    .send(createNewObject)
+                    .expect('Content-Type', /json/)
+                    .expect(201) //Status code
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+
+                        var objectId = res.body.objectId;
+                        Object.findOne({"_id": objectId}, function (err, newObject) {
+                            if (err) {
+                                throw err;
+                            }
+
+                            // call api to make requested update on object
+                            var updatedObjectJson = {
+                                "name": "Tank",
+                                "x": "2",
+                                "y": "3"
+                            };
+                            request(url)
+                                .post('/objects/' + objectId)
+                                .send(updatedObjectJson)
+                                .expect('Content-Type', /json/)
+                                .expect(200)
+                                .end(function (err, updateResponse) {
+                                    if (err) {
+                                        throw err;
+                                    }
+
+                                    // check that values are correctly updated
+                                    updateResponse.body.should.have.property('status');
+                                    updateResponse.body.status.should.not.equal(null);
+                                    updateResponse.body.should.have.property('objectId');
+                                    updateResponse.body.should.have.property('version');
+                                    updateResponse.body.version.should.equal(1);
+                                    if (updateResponse.body.objectId != newObject._id) {
+                                        throw new Error("Id of updated object doesn't match the id of original object");
+                                    }
+
+                                    Object.findOne({"_id": updateResponse.body.objectId}, function(err, updatedObject) {
+                                        if (err) {
+                                            throw err;
+                                        }
+
+                                        if (updatedObject._id != newObject._id && updatedObject.x.valueOf() != 2 && updatedObject.y.valueOf() != 3) {
+                                            throw new Error("Updated object is different than sent changes");
+                                        }
+
+                                        // check that history of object was saved correctly
+                                        ObjectsHistory.findOne({"_currentId": newObject._id, version: 0}, function(err, history) {
+                                            if (err) {
+                                                throw err;
+                                            }
+
+                                            if (history.x.valueOf() != newObject.x.valueOf() && history.y.valueOf() != newObject.y.valueOf() && history.name != newObject.name &&
+                                            history.start_time != newObject.start_time) {
+                                                throw new Error("History object is different than previous object");
+                                            }
+
+                                            // remove mocked object and objectHistory
+                                            history.remove();
+                                            updatedObject.remove();
+
+                                            done();
+                                        });
+
+                                    });
+
+                                });
+                        });
+
+                    });
+
+            });
+
+        });
 
     });
 
