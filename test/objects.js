@@ -520,7 +520,129 @@ describe('Objects', function () {
 
     describe('Deleting One object from API', function () {
         this.timeout(15000);
-        // todo
+
+        it("should error when the requested object id is not valid", function (done) {
+
+            // get it through api
+            request(url)
+                .delete('/objects/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('Problem getting your object');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('1234567890');
+
+                    done();
+                });
+
+
+        });
+
+        it("should error when the requested object doesn't exist", function (done) {
+
+            // get it through api
+            request(url)
+                .delete('/objects/56af958fbb2d04ed141a24a7')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('There is no such object');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('56af958fbb2d04ed141a24a7');
+
+                    done();
+                });
+
+
+        });
+
+        it('should delete the requested object', function (done) {
+
+            // create mocked object
+            ObjectsPrototype.findOne({}, function (err, prototype) {
+                if (err) {
+                    throw err;
+                }
+
+                var createNewObject = {
+                    "prototypeId": prototype._id,
+                    "x": 1.234,
+                    "y": 5.432
+                };
+                request(url)
+                    .post('/objects')
+                    .send(createNewObject)
+                    .expect('Content-Type', /json/)
+                    .expect(201) //Status code
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+
+                        var objectId = res.body.objectId;
+                        // get it through api
+                        request(url)
+                            .delete('/objects/' + objectId)
+                            .expect('Content-Type', /json/)
+                            .expect(200) //Status code
+                            .end(function (err, res) {
+                                if (err) {
+                                    throw err;
+                                }
+                                // Should.js fluent syntax applied
+                                res.body.should.have.property('status');
+                                res.body.status.should.equal('deleted');
+                                res.body.should.have.property('objectId');
+                                if (res.body.objectId != objectId) {
+                                    throw new Error("Different prototype was deleted");
+                                }
+
+                                // delete from objectsHistory
+                                ObjectsHistory.findOne({_currentId: objectId}, function (err, history) {
+                                    if (err) {
+                                        throw err;
+                                    }
+                                    // remove history of object
+                                    history.remove(function (err) {
+                                        if (err) {
+                                            throw err;
+                                        }
+
+                                        done();
+
+                                    });
+                                });
+                            });
+
+
+                    });
+            });
+
+        });
+
 
     });
 });
