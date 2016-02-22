@@ -388,16 +388,22 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes/1234567890')
                 .expect('Content-Type', /json/)
-                .expect(500) //Status code
+                .expect(400) //Status code
                 .end(function (err, res) {
                     if (err) {
                         throw err;
                     }
-                    // Should.js fluent syntax applied
+
                     res.body.should.have.property('status');
                     res.body.status.should.equal('error');
                     res.body.should.have.property('message');
-                    res.body.message.should.equal('Problem getting your prototype');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('Problem getting your prototype');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('1234567890');
 
                     done();
                 });
@@ -411,16 +417,22 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes/56af958fbb2d04ed141a24a7')
                 .expect('Content-Type', /json/)
-                .expect(500) //Status code
+                .expect(400) //Status code
                 .end(function (err, res) {
                     if (err) {
                         throw err;
                     }
-                    // Should.js fluent syntax applied
+
                     res.body.should.have.property('status');
                     res.body.status.should.equal('error');
                     res.body.should.have.property('message');
-                    res.body.message.should.equal('There is no such prototype');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('There is no such prototype');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('56af958fbb2d04ed141a24a7');
 
                     done();
                 });

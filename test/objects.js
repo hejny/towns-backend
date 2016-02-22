@@ -20,7 +20,7 @@ describe('Objects', function () {
     describe('Getting objects from API', function () {
         this.timeout(15000);
 
-        it('should return a list of prototypes', function (done) {
+        it('should return a list of objects', function (done) {
 
             request(url)
                 .get('/objects')
@@ -251,8 +251,8 @@ describe('Objects', function () {
                 if (err) {
                     throw err;
                 }
-                // create object
-                newObject = {
+
+                createObject = {
                     "_prototypeId": prototype._id,
                     "x": 1.234,
                     "y": 4.321,
@@ -260,24 +260,25 @@ describe('Objects', function () {
                     "type": "building"
 
                 };
-                console.log(newObject);
-                var object = new Object(newObject);
-                object.save(function (err, object) {
-                    if (err) {
-                        console.log(err);
 
+                var object = new Object(createObject);
+                object.save(function (err, newObject) {
+                    if (err) {
                         throw err;
                     }
-
+                    //console.log(newObject);
                     // get it through api
                     request(url)
-                        .get('/objects/' + object._id)
+                        .get('/objects/' + newObject._id)
                         .expect('Content-Type', /json/)
                         .expect(200) //Status code
                         .end(function (err, res) {
                             if (err) {
                                 throw err;
                             }
+                            console.log();
+                            console.log();
+
                             // Should.js fluent syntax applied
                             res.body.should.have.property('x');
                             res.body.x.should.not.equal(null);
@@ -285,11 +286,13 @@ describe('Objects', function () {
                             res.body.should.have.property('y');
                             res.body.y.should.equal(4.321);
                             res.body.should.have.property('_prototypeId');
-                            res.body._prototypeId.should.equal(prototype._id);
+                            if (res.body._prototypeId != prototype._id) {
+                                throw new Error("Objects prototypeId doesn't equal.");
+                            }
                             res.body.should.have.property('owner');
 
                             // remove prototype
-                            object.remove({}, function(err,removed_count) {
+                            newObject.remove({}, function(err,removed_count) {
                                 done();
                             });
 
@@ -298,6 +301,62 @@ describe('Objects', function () {
                 });
 
             });
+        });
+
+        it("should error when the requested object id is not valid", function (done) {
+
+            // get it through api
+            request(url)
+                .get('/objects/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('Problem getting your object');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('1234567890');
+
+                    done();
+                });
+
+
+        });
+
+        it("should return error if the requested object doesn't exist", function (done) {
+            // get it through api
+            request(url)
+                .get('/objects/56af958fbb2d04ed141a24a7')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('There is no such object');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('56af958fbb2d04ed141a24a7');
+
+                    done();
+                });
+
         });
 
     });
