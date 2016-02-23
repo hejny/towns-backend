@@ -66,7 +66,11 @@ We will assume that you already have installed **globaly node and npm**.
 1. Go into api folder and install the necessary node modules (express framework, etc) with npm:
 
 	`npm install`
-    
+
+
+2. Create directory or symlink with project towns-shared in root
+
+
 * * *
 
 ## Launching
