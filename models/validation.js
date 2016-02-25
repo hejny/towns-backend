@@ -16,6 +16,12 @@ function typesOfObjects(value) {
     return check.isIn(value, ['building', 'terrain', 'story']);
 }
 
+//checks the valid Subtype
+function subtypesOfObjects(value) {
+    // todo: define what subtypes are allowed
+    return true;
+}
+
 // checks that locale has only alphabet characters
 function isAlphabetic(value) {
     return /^[a-zA-Z]*$/i.test(value);
@@ -36,7 +42,7 @@ function isPositiveInteger(value) {
 }
 
 function isValidCoordinate(value) {
-    return check.isInt(value);
+    return check.isFloat(value.valueOf());
 }
 
 function isValidDate(value) {
@@ -58,9 +64,11 @@ function isObjectId(value) {
 var is = {
     validObjectName: [isAlphanumericstring, '{VALUE} is not alphanumeric'],
     validObjectType: [typesOfObjects, '{VALUE} is not valid TYPE!'],
+    validObjectSubType: [subtypesOfObjects, '{VALUE} is not valid SUBTYPE!'],
     validObjectVersion: [isPositiveInteger, '{VALUE} needs to be positive integer'],
-    validObjectCoordinate: [isValidCoordinate, '{VALUE} is not valid coordinate. Coordinate must be integer number.'],
-    validDate:[
+    validObjectCoordinate: [isValidCoordinate, '{VALUE} is not valid coordinate. Coordinate must be float number.'],
+    validDate: [ isValidDate, '{VALUE} is not a date in correct format' ],
+    validCurrentDate: [
         { 'validator': isValidDate, msg: '{VALUE} is not a date in correct format'},
         { 'validator': isCurrentDate, msg: '{VALUE} is not current date'}
     ],

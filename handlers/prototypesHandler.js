@@ -136,19 +136,28 @@ prototypes.updateOne = function (req, res) {
         newPrototype = {};
     ObjectsPrototype.findOne({"_id": prototypeId}, function (err, prototype) {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your prototype"
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting your prototype",
+                    val: prototypeId
+                }]
             });
         }
 
+        //console.log(object);
         if (prototype === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such prototype"
+                "message": [{
+                    param: "id",
+                    msg: "There is no such prototype",
+                    val: ""+prototypeId
+                }]
             });
         }
-        console.log(prototype._doc);
+        //console.log(prototype._doc);
 
         // create copy of current prototype in Objects Prototype history
         for (var name in prototype._doc) {
@@ -168,7 +177,7 @@ prototypes.updateOne = function (req, res) {
                     "message": err
                 });
             }
-            console.log('Version of prototype was successfully saved to ObjectsPrototypesHistory');
+            //console.log('Version of prototype was successfully saved to ObjectsPrototypesHistory');
         });
 
 

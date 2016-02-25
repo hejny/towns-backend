@@ -3,6 +3,7 @@ var assert = require('assert');
 var request = require('supertest');
 var config = require('../config/server').server;
 var ObjectsPrototype = require('../models/objectsPrototype');
+var ObjectsPrototypesHistory = require('../models/objectsPrototypesHistory');
 
 
 describe('Prototypes', function () {
@@ -14,6 +15,38 @@ describe('Prototypes', function () {
     before(function (done) {
         // do something before done
         done();
+    });
+
+    describe('Getting prototypes from API', function () {
+        this.timeout(15000);
+
+        it('should return a list of prototypes', function (done) {
+
+            request(url)
+                .get('/objects/prototypes')
+                .expect('Content-Type', /json/)
+                .expect(200) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+
+                    //console.log(res.body);
+                    for (var each in res.body) {
+                        res.body[each].should.have.property('name');
+                        res.body[each].name.should.not.equal(null);
+                        res.body[each].should.have.property('locale');
+                        res.body[each].should.have.property('type');
+                        res.body[each].should.not.have.property('x');
+                        res.body[each].should.not.have.property('y');
+                        res.body[each].should.not.have.property('start_time');
+
+                    }
+
+                    done();
+                });
+        });
     });
 
     describe('Creation of new prototype', function () {
@@ -226,10 +259,16 @@ describe('Prototypes', function () {
 
                     //find the prototype and check its values
                     //console.log(res.body.prototypeId);
-                    ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err) {
-                        if(err) {
+                    ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err, prototype) {
+                        if (err) {
                             throw err;
                         }
+                        // remove mocked prototype
+                        prototype.remove(function (err) {
+                            if (err) {
+                                throw err;
+                            }
+                        });
                     });
 
                     //console.log(ObjectsPrototype);
@@ -242,19 +281,336 @@ describe('Prototypes', function () {
                     //    throw new Error("Locale should equal to cs");
                     //}
 
-                    // remove mocked prototype
-                    ObjectsPrototype.remove( function (err) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
 
                     done();
                 });
         });
 
+    });
+
+    describe('Getting of One prototype from API', function () {
+        this.timeout(15000);
+
+        it('should return the requested prototype', function (done) {
+            // create prototype
+            newPrototype = {
+                "name": "Ambasada",
+                "type": "building",
+                "locale": "cs"
+
+            };
+            var prototype = new ObjectsPrototype(newPrototype);
+            prototype.save(function (err, prototype) {
+                if (err) {
+                    throw err;
+                }
+
+                // get it through api
+                request(url)
+                    .get('/objects/prototypes/' + prototype._id)
+                    .expect('Content-Type', /json/)
+                    .expect(200) //Status code
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.should.have.property('name');
+                        res.body.name.should.not.equal(null);
+                        res.body.name.should.equal('Ambasada');
+                        res.body.should.have.property('type');
+                        res.body.type.should.equal('building');
+                        res.body.should.have.property('subtype');
+                        res.body.should.have.property('locale');
+                        res.body.locale.should.equal('cs');
+                        res.body.should.have.property('owner');
+
+                        // remove prototype
+                        prototype.remove();
+
+                        done();
+                    });
+
+            });
+        });
+
+        it("should error when the requested prototype id is not valid", function (done) {
+
+            // get it through api
+            request(url)
+                .get('/objects/prototypes/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(500) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('Problem getting your prototype');
+
+                    done();
+                });
+
+
+        });
+
+        it("should return error if the requested prototype doesn't exist", function (done) {
+            // get it through api
+            request(url)
+                .get('/objects/prototypes/12345677890')
+                .expect('Content-Type', /json/)
+                .expect(500) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('Problem getting your prototype');
+
+                    done();
+                });
+
+        });
+    });
+
+    describe('Updating One prototype from API', function () {
+        this.timeout(15000);
+
+        it("should error when the requested prototype id is not valid", function (done) {
+
+            // get it through api
+            request(url)
+                .post('/objects/prototypes/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('Problem getting your prototype');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('1234567890');
+
+                    done();
+                });
+
+
+        });
+
+        it("should error when the requested prototype doesn't exist", function (done) {
+
+            // get it through api
+            request(url)
+                .post('/objects/prototypes/56af958fbb2d04ed141a24a7')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('There is no such prototype');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('56af958fbb2d04ed141a24a7');
+
+                    done();
+                });
+
+
+        });
+
+        it('should update the requested prototype', function (done) {
+            // create prototype
+            newPrototype = {
+                "name": "Ambasada",
+                "type": "building",
+                "locale": "cs"
+
+            };
+            var prototype = new ObjectsPrototype(newPrototype);
+            prototype.save(function (err, prototype) {
+                if (err) {
+                    throw err;
+                }
+
+                update = {
+                    "name": "Ambasada",
+                    "type": "building",
+                    "locale": "cs",
+                    "subtype": "new value"
+                };
+
+                // update it through api
+                request(url)
+                    .post('/objects/prototypes/' + prototype._id)
+                    .send(update)
+                    .expect('Content-Type', /json/)
+                    .expect(200) //Status code
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+
+                        ObjectsPrototypesHistory.findOneAndRemove({_prototypeId: prototype._id}, function (err) {
+                            if (err) {
+                                throw err;
+                            }
+                        });
+
+                        // Should.js fluent syntax applied
+                        res.body.should.have.property('status');
+                        res.body.status.should.equal('ok');
+                        res.body.should.have.property('prototypeId');
+                        if (res.body.prototypeId == prototype._id) {
+                            throw new Error("New prototype overwrote the previous one");
+                        }
+
+                        //console.log(res.body.prototypeId);
+                        // check that current values are updated
+                        ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err, saved) {
+                            if (err) {
+                                throw err;
+                            }
+
+                            if (saved.name != "Ambasada" && saved.type != "building" && saved.locale != "cs" && saved.subtype != "new value") {
+                                throw new Error("Saved prototype is different than ");
+                            }
+
+                            // remove prototype
+                            saved.remove();
+
+                        });
+
+                        done();
+                    });
+
+            });
+        });
+
 
     });
 
+    describe('Deleting One prototype from API', function () {
+        this.timeout(15000);
+
+        it('should delete the requested prototype', function (done) {
+            // create prototype
+            newPrototype = {
+                "name": "Ambasada",
+                "type": "building",
+                "locale": "cs"
+
+            };
+            var prototype = new ObjectsPrototype(newPrototype);
+            prototype.save(function (err, prototype) {
+                if (err) {
+                    throw err;
+                }
+
+                // get it through api
+                request(url)
+                    .delete('/objects/prototypes/' + prototype._id)
+                    .expect('Content-Type', /json/)
+                    .expect(200) //Status code
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.should.have.property('status');
+                        res.body.status.should.equal('deleted');
+                        res.body.should.have.property('prototypeId');
+                        if (res.body.prototypeId != prototype._id) {
+                            throw new Error("Different prototype was deleted");
+                        }
+
+                        // delete from prototypeHistory
+                        ObjectsPrototypesHistory.findOne({_prototypeId: prototype._id}, function (err, history) {
+                            if (err) {
+                                throw err;
+                            }
+                            // remove history of prototype
+                            history.remove(function (err) {
+                                if (err) {
+                                    throw err;
+                                }
+
+                                done();
+
+                            });
+                        });
+                    });
+
+            });
+        });
+
+        it("should error when the requested prototype id is not valid", function (done) {
+
+            // get it through api
+            request(url)
+                .delete('/objects/prototypes/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(500) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('Problem getting your prototype');
+
+                    done();
+                });
+
+
+        });
+
+        it("should error when the requested prototype doesn't exist", function (done) {
+
+            // get it through api
+            request(url)
+                .delete('/objects/prototypes/56af958fbb2d04ed141a24a7')
+                .expect('Content-Type', /json/)
+                .expect(500) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('There is no such prototype');
+
+                    done();
+                });
+
+
+        });
+
+    });
 
 });
