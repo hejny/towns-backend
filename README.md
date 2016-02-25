@@ -88,6 +88,8 @@ On production environments launch API simply without debug information
 
 Api will be accessible on http://localhost:3000
 
+Tip: Consider using [pm2](https://www.npmjs.com/package/pm2) for running node server as service or managing multiple instances on one server
+
 ## Migrations
 
 The code has also some default objects, which should be migrated into new mongoDB. This will show you the structure 
