@@ -36,7 +36,7 @@ objectsHandler.getAll = function (req, res) {
     if(typeof q.y !== 'undefined' && q.y && check.isInt(q.y)) {
         values.y = q.y;
     }
-    if(typeof q.radius !== 'undefined' && q.radius && check.isInt(q.radius, {min:1, max:30})) {
+    if(typeof q.radius !== 'undefined' && q.radius && check.isInt(q.radius, {min:1, max:200})) {
         values.radius = q.radius;
     }
     if(typeof q.not !== 'undefined' && q.not && q.not.constructor === Array) {
@@ -96,18 +96,27 @@ objectsHandler.getAll = function (req, res) {
 objectsHandler.getOne = function (req, res) {
     var parameters = req.params;
     ObjectModel.findOne({"_id": parameters.id}, function (err, object) {
+
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your object"
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting your object",
+                    val: parameters.id
+                }]
             });
         }
 
         //console.log(object);
         if (object === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such object"
+                "message": [{
+                    param: "id",
+                    msg: "There is no such object",
+                    val: ""+parameters.id
+                }]
             });
         }
 
@@ -128,17 +137,25 @@ objectsHandler.createOne = function (req, res) {
     // find the Prototype
     ObjectsPrototype.findOne({_id: json.prototypeId}, function (err, objectsPrototype) {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your prototype"
+                "message": [{
+                    param: "prototypeId",
+                    msg: "Problem getting your prototype",
+                    val: json.prototypeId
+                }]
             });
         }
 
         //console.log(objectsPrototype);
         if (objectsPrototype === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such prototype"
+                "message": [{
+                    param: "prototypeId",
+                    msg: "There is no such prototype",
+                    val: ""
+                }]
             });
         }
 
@@ -158,7 +175,7 @@ objectsHandler.createOne = function (req, res) {
         }
 
         // set the other values
-        newObject.version = 1;
+        newObject.version = 0;
         newObject.x = json.x;
         newObject.y = json.y;
         if ((json.hasOwnProperty('name')) && (typeof json.name == "string") && (json.name.length > 0)) {
@@ -187,13 +204,17 @@ objectsHandler.createOne = function (req, res) {
 
         var object = new ObjectModel(newObject);
 
-        console.log(newObject);
+        //console.log(newObject);
         // save the newly created object to DB
         object.save(function (err, object) {
             if (err) {
-                return res.status(500).json({
+                var errMessage = [];
+                for (var errName in err.errors) {
+                    errMessage.push({param: err.errors[errName].path, msg: err.errors[errName].kind, value: err.errors[errName].value});
+                }
+                return res.status(400).json({
                     "status": "error",
-                    "message": err
+                    "message": errMessage
                 });
             }
             res.status(201).json({
@@ -217,17 +238,24 @@ objectsHandler.updateOne = function (req, res) {
         history = {};
     ObjectModel.findOne({"_id": objectId}, function (err, object) {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your object"
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting your object",
+                    val: objectId
+                }]
             });
         }
 
-        console.log(object._doc);
         if (object === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such object"
+                "message": [{
+                    param: "id",
+                    msg: "There is no such object",
+                    val: ""+objectId
+                }]
             });
         }
 
@@ -250,7 +278,7 @@ objectsHandler.updateOne = function (req, res) {
                     "message": err
                 });
             }
-            console.log('Version of object was succesfully saved to ObjectsHistory');
+            //console.log('Version of object was succesfully saved to ObjectsHistory');
         });
 
         // increase version by 1 of current object & and set new start_time
@@ -281,7 +309,7 @@ objectsHandler.updateOne = function (req, res) {
                     "message": err
                 });
             }
-            console.log(object);
+            //console.log(object);
             res.status(200).json({
                 "status": "ok",
                 "objectId": object._id,
@@ -303,16 +331,24 @@ objectsHandler.deleteOne = function (req, res) {
     // get the object
     ObjectModel.findOne({"_id": objectId}, function (err, object) {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "Problem getting your object"
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting your object",
+                    val: objectId
+                }]
             });
         }
-        //console.log(object);
+
         if (object === null) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
-                "message": "There is no such object"
+                "message": [{
+                    param: "id",
+                    msg: "There is no such object",
+                    val: ""+objectId
+                }]
             });
         }
 
@@ -334,7 +370,7 @@ objectsHandler.deleteOne = function (req, res) {
                     "message": err
                 });
             }
-            console.log('Version of object was succesfully saved to ObjectsHistory');
+            //console.log('Version of object was succesfully saved to ObjectsHistory');
 
             // remove it from objects collection
             object.remove();
