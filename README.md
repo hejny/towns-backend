@@ -1,6 +1,5 @@
 # Towns backend
 
-* * *
 
 ## Organization
 
@@ -8,7 +7,6 @@ https://trello.com/townsgame
 
 https://trello.com/b/beAsHIkG/backend
 
-* * *
 
 ## Authors of backend
 
@@ -17,9 +15,6 @@ https://trello.com/b/beAsHIkG/backend
 **[PH] Pavol Hejný:** http://pavolhejny.com
 
 
-
-
-* * *
 
 ## Folder Structure
 
@@ -48,8 +43,6 @@ https://trello.com/b/beAsHIkG/backend
     package.json                <- npm packages
 	server.js
 
-	
-* * *
 
 ## Requirements
 
@@ -57,7 +50,6 @@ https://trello.com/b/beAsHIkG/backend
 - Node.js (with npm)
 - mongoDB
 
-* * *
 
 ## Installation
 
@@ -71,7 +63,6 @@ We will assume that you already have installed **globaly node and npm**.
 2. Create directory or symlink with project towns-shared in root
 
 
-* * *
 
 ## Launching
 
@@ -106,8 +97,7 @@ Run changes in mongoDB schemas and seed new migrations (if necessary) by:
 DEVELOPERS ONLY: In case you want to drop all collections and create them again from migration collection use:
     
     npm run mongo-remigrate
-
-* * *
+    
 	
 ## Testing
 
