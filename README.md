@@ -15,7 +15,6 @@ https://trello.com/b/beAsHIkG/backend
 **[PH] Pavol Hejný:** http://pavolhejny.com
 
 
-
 ## Folder Structure
 
     
