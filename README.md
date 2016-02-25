@@ -96,7 +96,7 @@ Tip: Consider using [pm2](https://www.npmjs.com/package/pm2) for running node se
 
 ## Migrations
 
-The code has also some default objects, which should be migrated into new mongoDB. This will show you the structure 
+The code has also some default objects, which should be migrated into new mongoDB. This will show you the structure
 of DB tables and adds you some objects to use with API.
 
 Run changes in mongoDB schemas and seed new migrations (if necessary) by: 
@@ -122,8 +122,8 @@ You can run tests for javascript syntax errors with linter, just run
 
 ### 2. Mocha
  
-You can also run [Mocha](https://mochajs.org) testing framework with BDD style 
-[should.js](https://github.com/shouldjs/should.js) assertion library. Basically any assertion which throws error 
+You can also run [Mocha](https://mochajs.org) testing framework with BDD style
+[should.js](https://github.com/shouldjs/should.js) assertion library. Basically any assertion which throws error
 will work. Don't forget that node with API must be running to be able to test.
 
 	npm test
