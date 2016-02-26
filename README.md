@@ -37,7 +37,7 @@ https://trello.com/b/beAsHIkG/backend
         ├── index.js           
         └── users.js
     [test]/                     <- tests for mochajs
-	.gitignore
+	.gitignore                  <- files ignored but git
 	apiary.apib                 <- backup of API documentation from apiary 
 	gulpgile.js                 <- configuration for linter testing
 	Makefile                    
