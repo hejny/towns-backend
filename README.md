@@ -42,7 +42,7 @@ https://trello.com/b/beAsHIkG/backend
 	gulpgile.js                 <- configuration for linter testing
 	Makefile                    
     package.json                <- npm packages
-	server.js
+	server.js                   <- express starter
 
 
 ## Requirements
