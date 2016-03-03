@@ -10,7 +10,7 @@ var indexHandler = {};
  * @param res
  */
 indexHandler.home = function(req, res) {
-    res.render('index', { title: 'Towns 5 API' });
+    res.render('index', { title: 'Towns 5 API', env: process.env});
 };
 
 module.exports = indexHandler;

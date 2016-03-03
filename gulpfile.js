@@ -1,7 +1,8 @@
 
 var gulp = require('gulp'),
     fs = require('fs'),
-    jshint = require('gulp-jshint');
+    jshint = require('gulp-jshint'),
+    env = require('gulp-env');
 
 // Configuration autoloader
 var config = [];
@@ -19,6 +20,8 @@ gulp.task('default', function() {
 
 // Linter
 gulp.task("test", function() {
+    env.set({ NODE_ENV: 'test' });
+
     gulp.src([
         "migrations/*.js",
         "config/*.json",
