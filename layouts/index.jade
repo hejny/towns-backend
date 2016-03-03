@@ -4,3 +4,9 @@ block content
   h1= title
   p You are welcomed on #{title}. Please bear in mind that this API is currently under heavy development.
   p To read more, please follow the link to the #[a(href="http://docs.townsapi.apiary.io/") Documentation]
+
+
+  if env.NODE_ENV == "test"
+    p Listing #{env.NODE_ENV} environment variables:
+    each val, key in env
+      p #{key}: #{val}

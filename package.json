@@ -11,7 +11,7 @@
     "start": "node ./bin/www",
     "start-test": "NODE_ENV=test node ./bin/www",
     "nodemonitor": "nodemon ./bin/www",
-    "test": "make test"
+    "test": "NODE_ENV=test make test"
   },
   "author": "Stefan Kecskes <mr.kecskes@gmail.com> (https://skey.uk)",
   "license": "MIT",
@@ -36,6 +36,7 @@
     "mocha": "^2.4.5",
     "nodemon": "~1.8.1",
     "should": "^8.2.1",
-    "supertest": "^1.1.0"
+    "supertest": "^1.1.0",
+    "gulp-env": "~0.4.0"
   }
 }
