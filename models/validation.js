@@ -2,12 +2,7 @@ var check = require('validator');
 
 // checks alpha numeric strings + space
 function isAlphanumericstring(value) {
-    // TODO: this doesnt work with accute characters, maybe UNICODE check would be OK
     // to prevent XSS we check only that it doesn't contain dangerous characters
-    //var valid = value.split(' ').every(function (word) {
-    //    return check.isAlphanumeric(word);
-    //});
-    //return valid;
     return value === check.escape(value);
 }
 

@@ -21,13 +21,15 @@ https://trello.com/b/beAsHIkG/backend
     [bin]/
     └── www                     <- shell starter for node server
     [config]/                   <- central folder with all configurations
-    └── mongo.json              <- settings for mongoDb connection
+    ├── mongo.json              <- settings for mongoDb connection
+    └── server.json             <- settings for api server
     [handlers]/                 <- handlers/controllers for routes
     [layouts]/                  <- view templates for pages
     [migrations]/               <- schemas and seeds for mongoDB collections    
     └── 0005-objects.js     
     [models]/                   <- collection models for mongoose
-    └── objects.js          
+    ├── objects.js          
+    └── validation.js           <- validations of models are here
     [public]/                   <- publicly accessible folder for node server 
     └── [css]/
         └── style.css
@@ -35,12 +37,12 @@ https://trello.com/b/beAsHIkG/backend
         ├── index.js           
         └── users.js
     [test]/                     <- tests for mochajs
-	.gitignore
+	.gitignore                  <- files ignored but git
 	apiary.apib                 <- backup of API documentation from apiary 
 	gulpgile.js                 <- configuration for linter testing
 	Makefile                    
     package.json                <- npm packages
-	server.js
+	server.js                   <- express starter
 
 
 ## Requirements
