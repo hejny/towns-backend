@@ -96,9 +96,16 @@ Run changes in mongoDB schemas and seed new migrations (if necessary) by:
 DEVELOPERS ONLY: In case you want to drop all collections and create them again from migration collection use:
     
     npm run mongo-remigrate
-    
+    #if you want to remigrate testing mognoDB(mLab) use this instead
+    npm run mongo-test-remigrate
 	
 ## Testing
+
+Start the server with correct NODE_ENV 
+    
+    NODE_ENV=test npm start
+    #or
+    npm run start-test
 
 Test files are in `test` directory.
 
