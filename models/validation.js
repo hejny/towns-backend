@@ -56,6 +56,11 @@ function isObjectId(value) {
     return check.isMongoId(value);
 }
 
+function isBcryptHash(value) {
+    //TODO: validate bcrypt string. No plain text password is allowed to be saved.
+    return true;
+}
+
 var is = {
     validObjectName: [isAlphanumericstring, '{VALUE} is not alphanumeric'],
     validObjectType: [typesOfObjects, '{VALUE} is not valid TYPE!'],
@@ -72,7 +77,8 @@ var is = {
         {'validator': hasTwoCharacters, msg: '{VALUE} must be 2 characters long', type: 'length'}
     ],
     validOwnerId: [isMongoId, '{VALUE} is not a valid Owner Id'],
-    validObjectId: [isObjectId, '{VALUE} is not a valid Object Id']
+    validObjectId: [isObjectId, '{VALUE} is not a valid Object Id'],
+    validBcryptHash: [isBcryptHash, '{VALUE} is not a bcrypt hash']
 };
 
 module.exports = is;
