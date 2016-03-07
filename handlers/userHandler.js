@@ -1,5 +1,6 @@
 var User = require('../models/user');
 var check = require('validator');
+var jwt = require('jwt-simple');
 var _ = require('lodash');
 
 // TODO: maybe move out to config
@@ -16,7 +17,7 @@ function findUserByUsername(username) {
 }
 
 function validateUser(user, password) {
-    return user.password === password
+    return user.login_methods.password === password
 }
 
 /**
@@ -29,7 +30,7 @@ userHandler.getUser = function (req, res) {
     var token = req.headers['x-auth'];
     var userFromToken = jwt.decode(token, secretKey);
 
-    User.findOne({"username": userFromToken.username}, function (err, user) {
+    User.findOne({"names.username": userFromToken.username}, function (err, user) {
 
         if (err) {
             return res.status(400).json({
@@ -71,7 +72,9 @@ userHandler.createToken = function (req, res) {
     if (!validateUser(user, req.body.password)) {
         return res.send(401); // Unauthorized
     }
-    var token = jwt.encode({username: username}, secretKey);
+    var token = jwt.encode({"user.names.username": username}, secretKey);
     res.json(token);
 
 };
+
+module.exports = userHandler;
