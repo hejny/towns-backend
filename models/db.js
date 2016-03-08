@@ -9,8 +9,8 @@ if( process.env.NODE_ENV == 'test') {
 try
 {
    mongoose.connect(mongo.protocol+'//'+mongo.username+':'+mongo.password+'@'+mongo.host+':'+mongo.port+'/'+mongo.db, function() {
-      console.log('mongodb connected');
-      console.log(mongo);
+      //console.log('mongodb connected');
+      //console.log(mongo);
    });
 } catch(e)
 {

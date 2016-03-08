@@ -7,17 +7,26 @@ var _ = require('lodash');
 var secretKey = "someultrasup3r5ecreth4shk3yw1thsom354lt";
 
 /**
- * Handler for working with User
+ * Handler for handling auth tokens
  * @type {{}}
  */
-var userHandler =  {};
+var authHandler =  {};
 
 function findUserByUsername(username) {
-    return _.find(User, {'username': username})
+    console.log(username);
+    User.findOne({"names.username": username}, function (err, user) {
+        if(err){
+            console.log(err);
+        }
+        console.log(user);
+
+        return user;
+    });
 }
 
 function validateUser(user, password) {
-    return user.login_methods.password === password
+    console.log(user);
+    //return user.login_methods.password === password
 }
 
 /**
@@ -25,7 +34,7 @@ function validateUser(user, password) {
  * @param req
  * @param res
  */
-userHandler.getUser = function (req, res) {
+authHandler.getUser = function (req, res) {
 
     var token = req.headers['x-auth'];
     var userFromToken = jwt.decode(token, secretKey);
@@ -48,14 +57,14 @@ userHandler.getUser = function (req, res) {
                 "status": "error",
                 "message": [{
                     param: "username",
-                    msg: "There is no such user",
+                    msg: "There is no user associated with that token",
                     val: ""+userFromToken.username
                 }]
             });
         }
 
         if (userFromToken.password !== user.password) {
-            res.send(401); // Unauthorized
+            res.sendStatus(401); // Unauthorized
         }
         res.json(user);
     });
@@ -66,15 +75,14 @@ userHandler.getUser = function (req, res) {
  * @param req
  * @param res
  */
-userHandler.createToken = function (req, res) {
-
+authHandler.createToken = function (req, res) {
     var user = findUserByUsername(req.body.username);
     if (!validateUser(user, req.body.password)) {
-        return res.send(401); // Unauthorized
+        return res.sendStatus(401); // Unauthorized
     }
     var token = jwt.encode({"user.names.username": username}, secretKey);
     res.json(token);
 
 };
 
-module.exports = userHandler;
+module.exports = authHandler;

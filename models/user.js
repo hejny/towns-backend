@@ -9,6 +9,14 @@ var is = require('./validation');
  UsersHistory
 
  */
+
+var profileSchema = new db.Schema({
+    username: String,
+    name: String,
+    surname: String,
+    email: String
+});
+
 var schema = new db.Schema({
     version: {
         type: Number,
@@ -16,12 +24,7 @@ var schema = new db.Schema({
         default: 0,
         validate: is.validObjectVersion
     },
-    names: {
-        username: String,
-        name: String,
-        surname: String,
-        email: String
-    },
+    names: profileSchema,
     login_methods: {
         password: {
             type: String,
@@ -46,5 +49,5 @@ var schema = new db.Schema({
     }
 });
 
-var user = db.model('users', schema);
-module.exports = user;
+var users = db.model('users', schema);
+module.exports = users;

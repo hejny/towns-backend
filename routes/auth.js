@@ -1,17 +1,24 @@
 var express = require('express');
 var router = express.Router();
-var userHandler = require('../handlers/userHandler');
+var authHandler = require('../handlers/authHandler');
 
 /**
- * GET /user
+ * GET /auth
  * will return information about the current authorised user
  */
-router.get('/', userHandler.getUser);
+router.get('/', authHandler.getUser);
 
 /**
- * POST /user
+ * POST /auth
  * Sending username and password will return web token
  */
-router.post('/', userHandler.createToken);
+router.post('/', authHandler.createToken);
+
+/**
+ * DELETE /auth
+ * Removes the token from client
+ * TODO: implement this
+ */
+//router.delete('/', authHandler.deleteToken);
 
 module.exports = router;
