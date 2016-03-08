@@ -40,7 +40,7 @@ var usersRoutes = require('./routes/users');
 app.use('/users', usersRoutes);
 
 var authRoutes = require('./routes/auth');
-app.use('/user', authRoutes);
+app.use('/auth', authRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
