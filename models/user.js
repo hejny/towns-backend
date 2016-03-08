@@ -17,6 +17,18 @@ var profileSchema = new db.Schema({
     email: String
 });
 
+var loginMethodsSchema = new db.Schema( {
+    password: {
+        type: String,
+        select: false,
+        max: 60,
+        validate: is.validBcryptHash
+    },
+    google: String,
+    facebook: String,
+    twitter: String
+});
+
 var schema = new db.Schema({
     version: {
         type: Number,
@@ -25,16 +37,7 @@ var schema = new db.Schema({
         validate: is.validObjectVersion
     },
     names: profileSchema,
-    login_methods: {
-        password: {
-            type: String,
-            max: 60,
-            validate: is.validBcryptHash
-        },
-        google: String,
-        facebook: String,
-        twitter: String
-    },
+    login_methods:loginMethodsSchema,
     contacts: {
         type: Array
     },
@@ -49,5 +52,5 @@ var schema = new db.Schema({
     }
 });
 
-var users = db.model('users', schema);
-module.exports = users;
+var user = db.model('users', schema);
+module.exports = user;

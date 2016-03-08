@@ -16,5 +16,6 @@ try
 {
    console.log(e);
 }
+console.log("Connected to mongoDB @ "+mongo.host);
 
 module.exports = mongoose;
