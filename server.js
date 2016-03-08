@@ -39,6 +39,7 @@ app.use('/objects', objectsRoutes);
 var usersRoutes = require('./routes/users');
 app.use('/users', usersRoutes);
 
+// routes for APIs auth
 var authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
