@@ -26,6 +26,7 @@ var userSchema = new db.Schema({
     login_methods: {
         password: {
             type: String,
+            select: false,
             max: 60,
             validate: is.validBcryptHash
         },

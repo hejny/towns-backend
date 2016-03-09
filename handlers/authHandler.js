@@ -18,7 +18,18 @@ var authHandler = {};
  * @param res
  */
 authHandler.createToken = function (req, res) {
-    UserModel.findOne({'names.username': req.body.username}, function (err, user) {
+    if((typeof req.body.username == 'undefined') || (typeof req.body.password == 'undefined')) {
+        return res.status(400).json({
+            "status": "error",
+            "message": [{
+                param: "body",
+                msg: "username and password must be present",
+                val: ""
+            }]
+        });
+    }
+
+    UserModel.findOne({'names.username': req.body.username}).select('names.username login_methods.password').exec( function (err, user) {
         if (err) {
             return res.status(400).json({
                 "status": "error",
@@ -43,7 +54,14 @@ authHandler.createToken = function (req, res) {
         console.log(user);
         bcrypt.compare(req.body.password, user.login_methods.password, function (bcerr, valid) {
             if (bcerr || !valid) {
-                return res.sendStatus(401); // Unauthorized
+                return res.status(400).json({
+                    "status": "error",
+                    "message": [{
+                        param: "password",
+                        msg: "The password is not correct for the given user",
+                        val: "" + req.body.password
+                    }]
+                });
             }
 
             var token = jwt.encode({username: user.names.username}, secretKey);
