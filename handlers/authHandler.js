@@ -18,10 +18,9 @@ var authHandler = {};
  * @param res
  */
 authHandler.createToken = function (req, res) {
-
-    UserModel.findOne({'names.username': req.body.username}).select('password').exec( function (err, user) {
+    UserModel.findOne({'names.username': req.body.username}, function (err, user) {
         if (err) {
-            return res.status(401).json({
+            return res.status(400).json({
                 "status": "error",
                 "message": [{
                     param: "username",
@@ -31,8 +30,8 @@ authHandler.createToken = function (req, res) {
             });
         }
 
-        if (!user) {
-            return res.status(401).json({
+        if (user === null) {
+            return res.status(400).json({
                 "status": "error",
                 "message": [{
                     param: "username",
@@ -41,18 +40,16 @@ authHandler.createToken = function (req, res) {
                 }]
             });
         }
-
-        bcrypt.compare(req.body.password, user.login_methods.password, function (err, valid) {
-            if (err || !valid) {
+        console.log(user);
+        bcrypt.compare(req.body.password, user.login_methods.password, function (bcerr, valid) {
+            if (bcerr || !valid) {
                 return res.sendStatus(401); // Unauthorized
             }
 
             var token = jwt.encode({username: user.names.username}, secretKey);
             res.json(token);
         });
-
-    });
-
+    })
 };
 
 /**

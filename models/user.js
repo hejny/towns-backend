@@ -10,34 +10,29 @@ var is = require('./validation');
 
  */
 
-var profileSchema = new db.Schema({
-    username: String,
-    name: String,
-    surname: String,
-    email: String
-});
-
-var loginMethodsSchema = new db.Schema( {
-    password: {
-        type: String,
-        select: false,
-        max: 60,
-        validate: is.validBcryptHash
-    },
-    google: String,
-    facebook: String,
-    twitter: String
-});
-
-var schema = new db.Schema({
+var userSchema = new db.Schema({
     version: {
         type: Number,
         required: true,
         default: 0,
         validate: is.validObjectVersion
     },
-    names: profileSchema,
-    login_methods:loginMethodsSchema,
+    names: {
+        username: {type: String},
+        name: {type: String},
+        surname: {type: String},
+        email: {type: String}
+    },
+    login_methods: {
+        password: {
+            type: String,
+            max: 60,
+            validate: is.validBcryptHash
+        },
+        google: {type: String},
+        facebook: {type: String},
+        twitter: {type: String}
+    },
     contacts: {
         type: Array
     },
@@ -52,5 +47,5 @@ var schema = new db.Schema({
     }
 });
 
-var user = db.model('users', schema);
-module.exports = user;
+var users = db.model('users', userSchema);
+module.exports = users;
