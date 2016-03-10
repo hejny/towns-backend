@@ -2,9 +2,7 @@ var UserModel = require('../models/user');
 var check = require('validator');
 var jwt = require('jwt-simple');
 var bcrypt = require('bcrypt');
-
-// TODO: maybe move out to config
-var secretKey = "someultrasup3r5ecreth4shk3yw1thsom354lt";
+var config = require('../config/server.json');
 
 /**
  * Handler for handling auth tokens
@@ -29,7 +27,7 @@ authHandler.createToken = function (req, res) {
         });
     }
 
-    UserModel.findOne({'names.username': req.body.username}).select('names.username login_methods.password').exec( function (err, user) {
+    UserModel.findOne({'names.username': req.body.username}).select('login_methods.password').exec( function (err, user) {
         if (err) {
             return res.status(400).json({
                 "status": "error",
@@ -51,7 +49,7 @@ authHandler.createToken = function (req, res) {
                 }]
             });
         }
-        console.log(user);
+        //console.log(user);
         bcrypt.compare(req.body.password, user.login_methods.password, function (bcerr, valid) {
             if (bcerr || !valid) {
                 return res.status(400).json({
@@ -64,8 +62,8 @@ authHandler.createToken = function (req, res) {
                 });
             }
 
-            var token = jwt.encode({username: user.names.username}, secretKey);
-            res.json(token);
+            var token = jwt.encode({username: req.body.username}, config.secretKey);
+            res.status(200).json(token);
         });
     })
 };
@@ -78,7 +76,7 @@ authHandler.createToken = function (req, res) {
 authHandler.getUser = function (req, res) {
 
     var token = req.headers['x-auth'];
-    var auth = jwt.decode(token, secretKey);
+    var auth = jwt.decode(token, config.secretKey);
 
     UserModel.findOne({'names.username': auth.username}, function( err, user) {
         if (err) {
