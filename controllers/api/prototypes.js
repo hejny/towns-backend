@@ -1,18 +1,18 @@
-var ObjectsPrototypesHistory = require('../models/objectsPrototypesHistory.js');
-var ObjectsPrototype = require('../models/objectsPrototype');
+var ObjectsPrototypesHistory = require('../../models/objectsPrototypesHistory.js');
+var ObjectsPrototype = require('../../models/objectsPrototype');
 
 /**
  * Handler for work with ObjectPrototypes Collection
  * @type {{}}
  */
-var prototypes = {};
+var prototypesController = {};
 
 /**
  * Returns all Prototypes
  * @param req
  * @param res
  */
-prototypes.getAll = function (req, res) {
+prototypesController.getAll = function (req, res) {
     ObjectsPrototype.find(function (err, objectsPrototypes) {
         if (err) {
             return res.status(500).json({
@@ -38,7 +38,7 @@ prototypes.getAll = function (req, res) {
  * @param req
  * @param res
  */
-prototypes.createOne = function (req, res) {
+prototypesController.createOne = function (req, res) {
     var newPrototype = {},
         json = req.body;
 
@@ -102,7 +102,7 @@ prototypes.createOne = function (req, res) {
  * @param req
  * @param res
  */
-prototypes.getOne = function (req, res) {
+prototypesController.getOne = function (req, res) {
     var parameters = req.params;
     ObjectsPrototype.findOne({"_id": parameters.id}, function (err, prototype) {
         if (err) {
@@ -129,7 +129,7 @@ prototypes.getOne = function (req, res) {
  * @param req
  * @param res
  */
-prototypes.updateOne = function (req, res) {
+prototypesController.updateOne = function (req, res) {
     var prototypeId = req.params.id,
         json = req.body,
         history = {},
@@ -242,7 +242,7 @@ prototypes.updateOne = function (req, res) {
  * @param req
  * @param res
  */
-prototypes.deleteOne = function (req, res) {
+prototypesController.deleteOne = function (req, res) {
     var prototypeId = req.params.id,
         history = {};
     // get the prototype
@@ -293,4 +293,4 @@ prototypes.deleteOne = function (req, res) {
     });
 };
 
-module.exports = prototypes;
+module.exports = prototypesController;

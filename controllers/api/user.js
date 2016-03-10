@@ -1,11 +1,11 @@
-var UserModel = require('../models/user');
+var UserModel = require('../../models/user');
 var bcrypt = require('bcrypt');
 
 /**
  * Handler for handling auth tokens
  * @type {{}}
  */
-var userHandler = {};
+var userController = {};
 
 
 /**
@@ -13,7 +13,7 @@ var userHandler = {};
  * @param req
  * @param res
  */
-userHandler.createUser = function (req, res) {
+userController.createUser = function (req, res) {
 
     var user = new UserModel({"names": {"username": req.body.username}});
     bcrypt.hash(req.body.password, 10, function (err, hash) {
@@ -27,4 +27,4 @@ userHandler.createUser = function (req, res) {
 
 
 
-module.exports = userHandler;
+module.exports = userController;
