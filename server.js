@@ -32,6 +32,10 @@ var indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
 
 // route for objects API
+var prototypesRoutes = require('./routes/prototypes');
+app.use('/objects/prototypes', prototypesRoutes);
+
+// route for objects API
 var objectsRoutes = require('./routes/objects');
 app.use('/objects', objectsRoutes);
 

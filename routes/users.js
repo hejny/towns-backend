@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var userHandler = require('../handlers/userHandler');
+var userController = require('../controllers/api/user');
 
 /**
  * POST /users
  * Create new user
  */
-router.post('/', userHandler.createUser);
+router.post('/', userController.createUser);
 
 module.exports = router;

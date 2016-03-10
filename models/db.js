@@ -5,7 +5,7 @@ if( process.env.NODE_ENV == 'test') {
 } else {
    var mongo = require('../config/mongo').mongoDb;
 }
-var credentials = (mongo.username != "" && mongo.password != "")? mongo.username+':'+mongo.password : "";
+var credentials = (mongo.username !== "" && mongo.password !== "")? mongo.username+':'+mongo.password : "";
 try
 {
    mongoose.connect(mongo.protocol+'//'+credentials+'@'+mongo.host+':'+mongo.port+'/'+mongo.db, function() {

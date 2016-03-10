@@ -1,13 +1,13 @@
-var ObjectModel = require('../models/object');
-var ObjectsPrototype = require('../models/objectsPrototype');
-var ObjectsHistory = require('../models/objectsHistory');
+var ObjectModel = require('../../models/object');
+var ObjectsPrototype = require('../../models/objectsPrototype');
+var ObjectsHistory = require('../../models/objectsHistory');
 var check = require('validator');
 
 /**
  * Handler for working with Objects
  * @type {{}}
  */
-var objectsHandler =  {};
+var objectsController =  {};
 
 /**
  * Gets all objects from object collection
@@ -15,7 +15,7 @@ var objectsHandler =  {};
  * @param res
  */
 
-objectsHandler.getAll = function (req, res) {
+objectsController.getAll = function (req, res) {
 
     // default values
     var values = {
@@ -93,7 +93,7 @@ objectsHandler.getAll = function (req, res) {
  * @param req
  * @param res
  */
-objectsHandler.getOne = function (req, res) {
+objectsController.getOne = function (req, res) {
     var parameters = req.params;
     ObjectModel.findOne({"_id": parameters.id}, function (err, object) {
 
@@ -129,7 +129,7 @@ objectsHandler.getOne = function (req, res) {
  * @param req
  * @param res
  */
-objectsHandler.createOne = function (req, res) {
+objectsController.createOne = function (req, res) {
     var newObject = {},
         json = req.body;
     //console.log(json);
@@ -232,7 +232,7 @@ objectsHandler.createOne = function (req, res) {
  * @param req
  * @param res
  */
-objectsHandler.updateOne = function (req, res) {
+objectsController.updateOne = function (req, res) {
     var objectId = req.params.id,
         json = req.body,
         history = {};
@@ -325,7 +325,7 @@ objectsHandler.updateOne = function (req, res) {
  * @param req
  * @param res
  */
-objectsHandler.deleteOne = function (req, res) {
+objectsController.deleteOne = function (req, res) {
     var objectId = req.params.id,
         history = {};
     // get the object
@@ -388,4 +388,4 @@ objectsHandler.deleteOne = function (req, res) {
 
 };
 
-module.exports = objectsHandler;
+module.exports = objectsController;

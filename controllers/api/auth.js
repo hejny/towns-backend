@@ -1,21 +1,21 @@
-var UserModel = require('../models/user');
+var UserModel = require('../../models/user');
 var check = require('validator');
 var jwt = require('jwt-simple');
 var bcrypt = require('bcrypt');
-var config = require('../config/server.json');
+var config = require('../../config/server.json');
 
 /**
  * Handler for handling auth tokens
  * @type {{}}
  */
-var authHandler = {};
+var authController = {};
 
 /**
  * Creates token
  * @param req
  * @param res
  */
-authHandler.createToken = function (req, res) {
+authController.createToken = function (req, res) {
     if((typeof req.body.username == 'undefined') || (typeof req.body.password == 'undefined')) {
         return res.status(400).json({
             "status": "error",
@@ -73,7 +73,7 @@ authHandler.createToken = function (req, res) {
  * @param req
  * @param res
  */
-authHandler.getUser = function (req, res) {
+authController.getUser = function (req, res) {
 
     var token = req.headers['x-auth'];
     var auth = jwt.decode(token, config.secretKey);
@@ -104,4 +104,4 @@ authHandler.getUser = function (req, res) {
     });
 };
 
-module.exports = authHandler;
+module.exports = authController;
