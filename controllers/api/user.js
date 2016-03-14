@@ -25,6 +25,42 @@ userController.createUser = function (req, res) {
     })
 };
 
+/**
+ * Returns user details of authorized user
+ * @param req
+ * @param res
+ */
+userController.getUser = function (req, res) {
+    if (!req.headers['x-auth']) {
+        return res.send(401);
+    }
+    var token = req.headers['x-auth'];
+    var auth = jwt.decode(token, config.secretKey);
 
+    UserModel.findOne({'names.username': auth.username}, function( err, user) {
+        if (err) {
+            return res.status(400).json({
+                "status": "error",
+                "message": [{
+                    param: "username",
+                    msg: "Problem getting user",
+                    val: auth.username
+                }]
+            });
+        }
+
+        if (!user) {
+            return res.status(400).json({
+                "status": "error",
+                "message": [{
+                    param: "username",
+                    msg: "There is no such user",
+                    val: "" + auth.username
+                }]
+            });
+        }
+        res.json(user);
+    });
+};
 
 module.exports = userController;

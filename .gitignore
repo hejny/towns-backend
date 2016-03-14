@@ -3,5 +3,8 @@ node_modules/
 
 npm-debug.log
 
+#my helper files, which shouldn't be in repo
+asd.*
 
+# shared library is in different repository
 towns-shared/

@@ -4,9 +4,10 @@ var authController = require('../controllers/api/auth');
 
 /**
  * GET /auth
- * will return information about the current authorised user
+ * sending GET request should return status:"ok"
+ * TODO: implement this
  */
-router.get('/', authController.getUser);
+// router.get('/', authController.get);
 
 /**
  * POST /auth
