@@ -14,15 +14,56 @@ var userController = {};
  * @param res
  */
 userController.createUser = function (req, res) {
+    if( req.body.username == null || req.body.username == "" ) {
+        res.status(400).json({
+            "status": "error",
+            "message": [{
+                param: "username",
+                msg: "Username is required",
+                val: ""
+            }]
+        });
+    }
 
-    var user = new UserModel({"names": {"username": req.body.username}});
-    bcrypt.hash(req.body.password, 10, function (err, hash) {
-        user.login_methods = {'password': hash};
-        user.save(function (err) {
-            if (err) { throw next(err) }
-            res.sendStatus(201);
-        })
-    })
+    if( req.body.password == null || req.body.password == "") {
+        res.status(400).json({
+            "status": "error",
+            "message": [{
+                param: "password",
+                msg: "Password is required",
+                val: ""
+            }]
+        });
+    }
+
+    // check if user exist and if not then create it.
+    UserModel.findOne({"names.username": req.body.username}, function( err, user) {
+        if (err) {
+            return next(err);
+        }
+        if (user == null) {
+            user = new UserModel({"names": {"username": req.body.username}});
+            bcrypt.hash(req.body.password, 10, function (bcryptError, hash) {
+                if (bcryptError) { throw next(bcryptError) }
+                user.login_methods = {'password': hash};
+                user.save(function (saveError) {
+                    if (saveError) { throw next(saveError) }
+                    res.sendStatus(201);
+                })
+            })
+        } else {
+            res.status(400).json({
+                "status": "error",
+                "message": [{
+                    param: "username",
+                    msg: "Username is already registered",
+                    val: "" + req.body.username
+                }]
+            });
+        }
+
+    });
+
 };
 
 /**

@@ -61,6 +61,14 @@ function isBcryptHash(value) {
     return true;
 }
 
+function isValidUsername(value) {
+    return value !== null && value.length > 0 && value.length <= 128 && value === check.escape(value);
+}
+
+function isValidPassword(value) {
+    return value !== null && value.length > 0 && value === check.escape(value);
+}
+
 var is = {
     validObjectName: [isAlphanumericstring, '{VALUE} is not alphanumeric'],
     validObjectType: [typesOfObjects, '{VALUE} is not valid TYPE!'],
@@ -78,7 +86,9 @@ var is = {
     ],
     validOwnerId: [isMongoId, '{VALUE} is not a valid Owner Id'],
     validObjectId: [isObjectId, '{VALUE} is not a valid Object Id'],
-    validBcryptHash: [isBcryptHash, '{VALUE} is not a bcrypt hash']
+    validBcryptHash: [isBcryptHash, '{VALUE} is not a bcrypt hash'],
+    validUsername: [isValidUsername, '{VALUE} is not valid username'],
+    validPassword: [isValidPassword, '{VALUE} is not valid password']
 };
 
 module.exports = is;
