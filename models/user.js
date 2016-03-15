@@ -18,7 +18,14 @@ var userSchema = new db.Schema({
         validate: is.validObjectVersion
     },
     names: {
-        username: {type: String},
+        username: {
+            type: String,
+            trim: true,
+            required: true,
+            min: 1,
+            max: 128,
+            validate: is.validUsername
+        },
         name: {type: String},
         surname: {type: String},
         email: {type: String}
@@ -27,6 +34,8 @@ var userSchema = new db.Schema({
         password: {
             type: String,
             select: false,
+            trim: true,
+            required: true,
             max: 60,
             validate: is.validBcryptHash
         },
