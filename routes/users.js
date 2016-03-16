@@ -3,10 +3,11 @@ var router = express.Router();
 var userController = require('../controllers/api/user');
 
 /**
+ * TODO: implement this
  * GET /users
- * will return information about the current authorised user
+ * Returns list of all users
  */
-router.get('/', userController.getUser);
+//router.get('/', userController.getAll);
 
 /**
  * POST /users
@@ -15,25 +16,31 @@ router.get('/', userController.getUser);
 router.post('/', userController.createUser);
 
 /**
+ * GET /users/me
+ * will return information about the current authorised user
+ */
+router.get('/me', userController.getUser);
+
+/**
  * TODO: implement this
  * GET /users/:id
  * Returns user with given id
  */
-//router.get('/:id', userController.getUserById);
+//router.get('/:id', userController.getOne);
 
 /**
  * TODO: implement this
  * POST /users/:id
  * Update user with given id, according to json sent in body
  */
-//router.post('/:id', userController.updateUserById);
+//router.post('/:id', userController.updateOne);
 
 /**
  * TODO: implement this
  * DELETE /users/:id
  * Deletes the users with given id
  */
-//router.delete('/:id', userController.deleteUserById);
+//router.delete('/:id', userController.deleteOne);
 
 
 module.exports = router;

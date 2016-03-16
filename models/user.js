@@ -7,8 +7,31 @@ var is = require('./validation');
  Users - current
  →
  UsersHistory
+ + _current_id
+ + stoptime
 
  */
+
+var profileSchema = new db.Schema({
+    username: {
+        type: String,
+        trim: true,
+        required: true,
+        min: 1,
+        max: 128,
+        validate: is.validUsername
+    },
+    name: {type: String},
+    surname: {type: String},
+    birthday: {
+        type: Date,
+        default: Date.now,
+        validate: is.validDate
+    },
+    description: {type: String},
+    image: {type: String},
+    email: {type: String}
+});
 
 var userSchema = new db.Schema({
     version: {
@@ -17,19 +40,13 @@ var userSchema = new db.Schema({
         default: 0,
         validate: is.validObjectVersion
     },
-    names: {
-        username: {
-            type: String,
-            trim: true,
-            required: true,
-            min: 1,
-            max: 128,
-            validate: is.validUsername
-        },
-        name: {type: String},
-        surname: {type: String},
-        email: {type: String}
+    start_time: {
+        type: Date,
+        required: true,
+        default: Date.now,
+        validate: is.validCurrentDate
     },
+    profile: profileSchema,
     login_methods: {
         password: {
             type: String,
@@ -49,11 +66,11 @@ var userSchema = new db.Schema({
     user_roles: {
         type: Array
     },
-    languages: {
+    language: {
         type: String,
         trim: true,
         default: "cs",
-        validate: is.validObjectLocale
+        validate: is.validLocale
     }
 });
 

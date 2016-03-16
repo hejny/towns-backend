@@ -9,22 +9,12 @@ exports.up = function(db, next){
     });
     users.insert([
         {
-            "version": 0,
-            "names": {
-                "username": "testuser",
-                "name": "",
-                "surname": "",
-                "email": ""
+            "profile": {
+                "username": "testuser"
             },
             "login_methods": {
-                "password": "$2a$08$E39.h5.BhrVYkeScsWffWOpLNqDjVhLx9kfmtCyLZ5CoZzLod7BS2",
-                "google": "",
-                "facebook": "",
-                "twitter": ""
-            },
-            "contacts": [],
-            "user_roles": [],
-            "languages": "cs"
+                "password": "$2a$08$E39.h5.BhrVYkeScsWffWOpLNqDjVhLx9kfmtCyLZ5CoZzLod7BS2"
+            }
         }
     ], next);
 };

@@ -209,6 +209,36 @@ describe('Prototypes', function () {
                     res.body.should.have.property('message');
                     res.body.message[0].param.should.equal('locale');
                     res.body.message[0].value.should.equal('12');
+                    res.body.message[0].msg.should.equal('ISO 3166-1 alpha-2 format required');
+                    done();
+                });
+        });
+
+        it('should fail when LOCALE is not one of valid types', function (done) {
+
+            var prototype = {
+                "name": "Ambasada",
+                "type": "building",
+                "locale": "ru"
+            };
+
+            request(url)
+                .post('/objects/prototypes')
+                .send(prototype)
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.have.property('status');
+                    res.body.status.should.not.equal(null);
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message[0].param.should.equal('locale');
+                    res.body.message[0].value.should.equal('ru');
+                    res.body.message[0].msg.should.equal('not allowed value');
                     done();
                 });
         });
