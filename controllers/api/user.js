@@ -14,22 +14,22 @@ var userController = {};
  * @param res
  */
 userController.createUser = function (req, res) {
-    if( req.body.username == null || req.body.username == "" ) {
+    if(!req.body.hasOwnProperty('profile') || req.body.profile.username == null || req.body.profile.username == "" ) {
         res.status(400).json({
             "status": "error",
             "message": [{
-                param: "username",
+                param: "profile.username",
                 msg: "Username is required",
                 val: ""
             }]
         });
     }
 
-    if( req.body.password == null || req.body.password == "") {
+    if(!req.body.hasOwnProperty('login_methods') ||  req.body.login_methods.password == null || req.body.login_methods.password == "") {
         res.status(400).json({
             "status": "error",
             "message": [{
-                param: "password",
+                param: "login_methods.password",
                 msg: "Password is required",
                 val: ""
             }]
@@ -37,18 +37,44 @@ userController.createUser = function (req, res) {
     }
 
     // check if user exist and if not then create it.
-    UserModel.findOne({"names.username": req.body.username}, function( err, user) {
+    UserModel.findOne({"names.username": req.body.profile.username}, function( err, user) {
         if (err) {
             return next(err);
         }
         if (user == null) {
-            user = new UserModel({"names": {"username": req.body.username}});
-            bcrypt.hash(req.body.password, 10, function (bcryptError, hash) {
+            bcrypt.hash(req.body.login_methods.password, 10, function (bcryptError, hash) {
                 if (bcryptError) { throw next(bcryptError) }
-                user.login_methods = {'password': hash};
-                user.save(function (saveError) {
-                    if (saveError) { throw next(saveError) }
-                    res.sendStatus(201);
+
+                newUser = new UserModel({
+                    "profile": {
+                        "username": req.body.profile.username,
+                        "name": (req.body.profile.hasOwnProperty('name') ? req.body.profile.name : ""),
+                        "surname": (req.body.profile.hasOwnProperty('surname') ? req.body.profile.surname : ""),
+                        "birthday": (req.body.profile.hasOwnProperty('birthday') ? req.body.profile.birthday : ""),
+                        "description": (req.body.profile.hasOwnProperty('description') ? req.body.profile.description : ""),
+                        "image": (req.body.profile.hasOwnProperty('image') ? req.body.profile.image : ""),
+                        "email": (req.body.profile.hasOwnProperty('email') ? req.body.profile.email : "")
+                    },
+                    "login_methods": {
+                        "password": hash
+                    }
+                });
+
+                newUser.save(function (saveError, savedUser) {
+                    if (saveError) {
+                        var errMessage = [];
+                        for (var errName in saveError.errors) {
+                            errMessage.push({param: err.errors[errName].path, msg: err.errors[errName].kind, value: err.errors[errName].value});
+                        }
+                        return res.status(400).json({
+                            "status": "error",
+                            "message": errMessage
+                        });
+                    }
+                    res.status(201).json({
+                        "status": "ok",
+                        "objectId": savedUser._id
+                    });
                 })
             })
         } else {
