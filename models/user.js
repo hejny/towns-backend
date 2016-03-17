@@ -1,5 +1,6 @@
-var db = require('./db');
-var is = require('./validation');
+var db = require('./services/db');
+var is = require('./services/validation');
+var profileSchema = require('./schemas/profile');
 
 /*
  Changes in this db.Schema should be applied in all object schema files!
@@ -11,27 +12,6 @@ var is = require('./validation');
  + stoptime
 
  */
-
-var profileSchema = new db.Schema({
-    username: {
-        type: String,
-        trim: true,
-        required: true,
-        min: 1,
-        max: 64,
-        validate: is.validUsername
-    },
-    name: {type: String},
-    surname: {type: String},
-    birthday: {
-        type: Date,
-        default: Date.now,
-        validate: is.validDate
-    },
-    description: {type: String},
-    image: {type: String},
-    email: {type: String}
-});
 
 var userSchema = new db.Schema({
     version: {

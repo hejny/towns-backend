@@ -1,5 +1,5 @@
-var db = require('./db');
-var is = require('./validation');
+var db = require('./services/db');
+var is = require('./services/validation');
 
 /*
 Changes in this db.Schema should be applied in all object schema files!
