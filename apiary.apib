@@ -40,17 +40,17 @@ The example URL is not displayed correctly by APIARY and should look like this:
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
 + Parameters
 
-   + x: `45` (optional, integer) - The x coordinate. Default 0.
-   + y: `12` (optional, integer) - The y coordinate. Default 0.
-   + radius: `10` (optional, integer) - The radius is set on server side, to prevent getting to much info in one request.(min = 1, max = 30, default = 10)
-   + not: `[ "5666b8259297ffe7c16c4696", "5666b8259297ffe7c16c4697", "5666b8259297ffe7c16c4698"]` (optional, array) - List of object IDs, not to return. Default is returning all objects in area.
-   + type: `["building"]` (optional, array) - List of types of objects to return. Default is all object types.
-   + subtype: `["main"]` (optional, array) - list of subtypes of objects to return
-   + keys: `['x', 'y', 'design', 'owner']` (optional, array) - List of properties to return. Defaultly all public properties are sent.
+   + x: `45.12` (optional, number) - The x coordinate. Default 0.
+   + y: `12.001` (optional, number) - The y coordinate. Default 0.
+   + radius: `10` (optional, integer) - The radius is set on server side, to prevent getting to much info in one request.(min = 1, max = 200, default = 10)
+   + not: `5666b8259297ffe7c16c4696`, `5666b8259297ffe7c16c4697`, `5666b8259297ffe7c16c4698` (optional, array) - List of object IDs, not to return. Default is returning all objects in area.
+   + type: `building` (optional, array) - List of types of objects to return. Default is all object types.
+   + subtype: `main` (optional, array) - list of subtypes of objects to return
+   + keys: `x`, `y`, `design`, `owner` (optional, array) - List of properties to return. Defaultly all public properties are sent.
 
 
 + Response 200 (application/json)
@@ -59,68 +59,8 @@ The example URL is not displayed correctly by APIARY and should look like this:
 
             Location: /objects
 
-    + Body
-
-            [{
-                "_id" : ObjectId("5666b8259297ffe7c16c4696"),
-                "version": "2",
-                "name" : "Ambasada",
-                "type" : "building",
-                "subtype": "",
-                "x": "12.34",
-                "y": "-55.05",
-                "start_time": "1449572794",
-                "stop_time": "",
-                "locale": "cs",
-                "design": {
-                    type: "model",
-                    data: "12,3453,654,234,...",
-                },
-                "content": {
-                    type: "markdown",
-                    data: "Kde bolo tam bolo"
-                },
-                "properties": {
-                    strength: "5",
-                    defense: "3",
-                    speed: "10"
-                },
-                "actions": ["attack", "defense", "dismantle"],
-                "owner" : {
-                    "$ref" : "Users",
-                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
-                }
-            },
-            {
-                "_id" : ObjectId("5666b8259297ffe7c16c1212"),
-                "version": "1",
-                "name" : "Veza",
-                "type" : "building",
-                "subtype": "",
-                "x": "12.10",
-                "y": "-55.55",
-                "start_time": "1449572794",
-                "stop_time": "",
-                "locale": "cs",
-                "design": {
-                    type: "model",
-                    data: "12,3453,654,234,...",
-                },
-                "content": {
-                    type: "markdown",
-                    data: "Veza je obranna budova"
-                },
-                "properties": {
-                    strength: "1",
-                    defense: "10",
-                    speed: "1"
-                },
-                "actions": ["defense", "dismantle"],
-                "owner" : {
-                    "$ref" : "Users",
-                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
-                }
-            }]
+    + Attributes
+        - objects (array[Object Full])
 
 ### POST
 
@@ -128,7 +68,6 @@ You may create new object using this action. It takes a JSON object.
 To create a new object, the client have to send:
 - the x and y coordinates where the new object will be built,
 - the id of prototype
-- content, which is the description or story of object
 
 Everything else of new object will be calculated based on user and prototype.
 
@@ -136,18 +75,14 @@ Everything else of new object will be calculated based on user and prototype.
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
     + Body
 
             {
                 "prototypeId": "asd123454hg4536yhsd4",
                 "x": "12,435",
-                "y": "43.123",
-                "content": {
-                    "type": "markdown",
-                    "data": "Kde bolo tam bolo"
-                }
+                "y": "43.123"
             }
 
 
@@ -173,41 +108,17 @@ Everything else of new object will be calculated based on user and prototype.
 Get the details of the object by its Id. There will be optional query parameter for html version. Something like ?format=html which will return html version. Default format of response will be json.
 
  + Parameters
-    + object_id (number) - ID of object
+    + object_id: `5666b8259297ffe7c16c1212` - The unique ID of the object.
 
+ + Request (application/json)
 
+    + Headers
+
+            x-auth: {access_token}
  + Response 200 (application/json)
+    + Attributes
+        - object (Object Full)
 
-        {
-          "_id" : ObjectId("5666b8259297ffe7c16c1212"),
-                "version": "1",
-                "name" : "Veza",
-                "type" : "building",
-                "subtype": "",
-                "x": "12.10",
-                "y": "-55.55",
-                "start_time": "1449572794",
-                "stop_time": "",
-                "locale": "cs",
-                "design": {
-                    type: "model",
-                    data: "12,3453,654,234,...",
-                },
-                "content": {
-                    type: "markdown",
-                    data: "Veza je obranna budova"
-                },
-                "properties": {
-                    strength: "1",
-                    defense: "10",
-                    speed: "1"
-                },
-                "actions": ["defense", "dismantle"],
-                "owner" : {
-                    "$ref" : "Users",
-                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
-                }
-        }
 
 ### POST
 
@@ -217,38 +128,10 @@ This method should update the object. Users can't update the object directly, in
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
-    + Body
-
-            {
-                "_id" : ObjectId("5666b8259297ffe7c16c6456"),
-                "version" : "1",
-                "name" : "Brana",
-                "type" : "building",
-                "subtype": "",
-                "x" : "15.23",
-                "y" : "12.85",
-                "locale": "cs",
-                "design": {
-                    type: "model",
-                    data: "54,32,11,...",
-                },
-                "content": {
-                    type: "markdown",
-                    data: "Brana je cast ochrannej steny"
-                },
-                "properties": {
-                    strength: "3",
-                    defense: "7",
-                    speed: "1"
-                },
-                "actions": ["attack","defense", "dismantle"],
-                "owner" : {
-                    "$ref" : "Users",
-                    "$id" : ObjectId("5126bc054aed4daf9e2ab772")
-                }
-            }
+    + Attributes
+        - object (Object Create)
 
 
 
@@ -271,6 +154,12 @@ This method should update the object. Users can't update the object directly, in
 
 This method deletes object. User can't delete objects directly, instead they can call actions such as dismantle or attack.
 
++ Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
 + Response 200 (application/json)
 
     + Headers
@@ -287,6 +176,38 @@ This method deletes object. User can't delete objects directly, instead they can
 
 
 
+# Data Structures
+
+## Object Create (object)
+
+- name: `Veza` (string, required) - The name of the object.
+- type (enum[string])
+    - building - The building type object.
+    - terrain - The terrain type of object.
+    - story - The Story object.
+- subtype: `` (string)
+- x: `12.10` (number, required)
+- y: `-55.55` (number, required)
+- locale: `cs` (string)
+- design: {} (object, required)
+    - type: `model` (string)
+    - data: `12,3453,654,234,...` (string)
+- content: {} (object, required)
+    - type: `markdown` (string)
+    - data: `Veza je obranna budova`
+- properties: {} (object)
+    - strength: `1` (number)
+    - defense: `10` (number)
+    - speed: `1` (number)
+- actions: `defense`, `dismantle` (array, required)
+
+## Object Full (object)
+
+- _id: `5666b8259297ffe7c16c1212` (string, required) - The unique ID of the object.
+- version: `0` (number, required) - The version of the object.
+- Include Object Create
+- start_time: `2016-02-23T17:24:24.872Z` (string, required) - ISO8601 date and time of when the object was created.
+- owner: `5126bc054aed4daf9e2ab772` (string, required)
 
 
 ## /objects/{object_id}/{action}
@@ -311,6 +232,12 @@ Do action with Objects. There are many actions
     + object_id (number) - ID of object
     + action (string) - attack, use or dimantle
 
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
  + Response 200 (application/json)
 
 
@@ -325,6 +252,12 @@ Get History of Object from ObjectHistory. It will return collection of the searc
 
  + Parameters
     + current_id (number) - ID of object
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -400,6 +333,12 @@ Get History of Object from ObjectHistory. It will return collection of the searc
 
 Get all object prototypes, which are available to user. There is no filtering at the moment and clients will get full list of active prototypes.
 
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
  + Response 200 (application/json)
 
     + Headers
@@ -460,7 +399,7 @@ The API will return object id on success, otherwise will return reason with corr
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
     + Body
 
@@ -516,6 +455,12 @@ Get requested object prototype
  + Parameters
     + object_id (number) - ID of object
 
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
  + Response 200 (application/json)
 
     + Headers
@@ -555,7 +500,7 @@ Update requested object prototype
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
             Location: /objects/prototypes/5666b8259297ffe7c16c6785
 
     + Body
@@ -596,6 +541,12 @@ Update requested object prototype
 
 Delete requested object prototype. The object prototype will be moved to objectsPrototypeHistory.
 
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
  + Response 200 (application/json)
 
     + Headers
@@ -611,6 +562,233 @@ Delete requested object prototype. The object prototype will be moved to objects
                 }
 
 
+# Group Actions
+
+## /actions/attack
+
+### POST
+
+Call when attacking (active ability)
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "action": "attack"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /actions/attack
+
+    + Body
+
+            {
+                "status": "ok"
+            }
+
+## /actions/defense
+
+### POST
+
+Call when defending (passive ability)
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "action": "defense"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /actions/defense
+
+    + Body
+
+            {
+                "status": "ok"
+            }
+
+## /actions/regenerate
+
+### POST
+
+Passive regeneration
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "action": "regenerate"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /actions/regenerate
+
+    + Body
+
+            {
+                "status": "ok"
+            }
+
+
+## /actions/repair
+
+### POST
+
+Call when repairing object (active ability)
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "action": "repair"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /actions/repair
+
+    + Body
+
+            {
+                "status": "ok"
+            }
+
+## /actions/mine
+
+### POST
+
+Call when mining resources (active ability)
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "action": "mine"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /actions/mine
+
+    + Body
+
+            {
+                "status": "ok"
+            }
+
+## /actions/move
+
+### POST
+
+Call when moving object from one place to another place (active ability)
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "action": "move"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /actions/move
+
+    + Body
+
+            {
+                "status": "ok"
+            }
+
+## /actions/throughput
+
+### POST
+
+Speed - throughputing through object (passive ability)
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "action": "throughput"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /actions/throughput
+
+    + Body
+
+            {
+                "status": "ok"
+            }
+
 # Group Users
 
 ## /users
@@ -624,57 +802,71 @@ Get all users
     + Headers
 
             Location: /users
-
+            x-auth: {access_token}
     + Body
 
             [{
                 "_id" : ObjectId("5666b8259297ffe7c16c6785"),
                 "version" : "1",
+                "start_time": "1444345632",
                 "profile" {
-                    "name": "Janko",
-                    "real_name": "Jano Mrkvicka",
-                    "birth_date": "11.11.1911",
+                    "username": "Janko11",
+                    "name": "Jano",
+                    "surname": "Mrkvicka",
+                    "birthday": "11.11.1911",
                     "description": "Som Janko a mam rad mrkvicku",
                     "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                     "email": "jano@mrkvicka.cz"
-                }
+                },
+                "contacts": ["Dzanko12"],
+                "user_roles": ["player"],
+                "language": "cs"
             },{
                 "_id" : ObjectId("5666b8259297ffe7c16c5784"),
                 "version" : "3",
+                "start_time": "13443423465",
                 "profile" {
+                    "username": "Dzanko12",
                     "name": "Janko",
-                    "real_name": "Janik Hruska",
-                    "birth_date": "12.12.1912",
+                    "surname": "Janik",
+                    "birthday": "12.12.1912",
                     "description": "Som Janik a mam rad hrusku",
                     "image": "cdn.towns.cz/users/profileimages/janik.jpg",
                     "email": "janik@hruska.cz"
-                }
+                },
+                "contacts": ["Janko11"],
+                "user_roles": ["player"],
+                "language": "cs"
             }]
 
 
 ### POST
 
-Register user
+Register a new user.
 
 + Request (application/json)
+
+    + Headers
+
+            Location: /users
 
     + Body
 
             {
                 "profile" {
-                    "name": "Janko",
-                    "real_name": "Jano Mrkvicka",
-                    "birth_date": "11.11.1911",
+                    "username": "Janko11",
+                    "name": "Jano",
+                    "surname": "Mrkvicka",
+                    "birthday": "11.11.1911",
                     "description": "Som Janko a mam rad mrkvicku",
                     "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                     "email": "jano@mrkvicka.cz"
                 },
                 "login_methods": {
-                    "password": {
-                        "type": "bcrypt",
-                        "data": "$2a$10$vbnPNKPvd1y6mhp44dKjxuTftdZ1bMn/e8F4Vsl9w1d4JJZ7oLM3y"
+                    "password": "$2a$10$vbnPNKPvd1y6mhp44dKjxuTftdZ1bMn/e8F4Vsl9w1d4JJZ7oLM3y"
                     }
                 },
+                "contacts": [],
                 "language" : "cs"
             }
 
@@ -690,7 +882,7 @@ Register user
 
             {
                 "status": "ok",
-                "objectId": "5666b8259297ffe7c16c6456"
+                "userId": "5666b8259297ffe7c16c6456"
             }
 
 
@@ -702,6 +894,12 @@ Get requested user
 
  + Parameters
     + user_id (number) - ID of user
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -727,7 +925,7 @@ Get requested user
 
 ### POST
 
-Update requsted user
+Update requested user
 
  + Parameters
     + user_id (number) - ID of user
@@ -736,7 +934,7 @@ Update requsted user
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
     + Body
 
@@ -783,6 +981,12 @@ Delete requested user. Moves user to UsersHistory collection
  + Parameters
     + user_id (number) - ID of user
 
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
  + Response 204 (application/json)
 
      + Headers
@@ -791,19 +995,19 @@ Delete requested user. Moves user to UsersHistory collection
 
 
 
+# Group Authentication
 
-## /users/token
+## /auth
 
 ### GET
 
-This is used to check the status of token only. User will send this request with own token and if it is valid, then our API will return true, otherwise false will return.
+This is used to check the status of token. User will send this GET request with own token in header. The api will check the validity and will return user details if valid, otherwise error will be return.
 
  + Request (application/json)
 
     + Headers
 
-            Authorization: Token {access_token}
-            Timestamp: "1300228849"
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -821,8 +1025,12 @@ This is used to check the status of token only. User will send this request with
 
 ### POST
 
-Create new token. When user wants to get token from API, he must send A) correct username and password B) correct FB token, then our API will create token and send it back to user.
+Create new token. When user wants to get token from API, he must send A) correct username and password
+Provider can be one of values: towns, facebook, google, twitter. If provider is not present, it will defaults to towns.
+Username and password are required in all cases. Request will fail without username and password.
 
+These are not implemented in this stage:
+B) correct FB token, then our API will create token and send it back to user.
 
  + Request (application/json)
 
@@ -831,7 +1039,7 @@ Create new token. When user wants to get token from API, he must send A) correct
     + Body
 
             {
-                "login" : "mrkvicka",
+                "username" : "mrkvicka",
                 "password" : "heslo12345"
             }
 
@@ -841,19 +1049,23 @@ Create new token. When user wants to get token from API, he must send A) correct
 
     + Headers
 
-            Location: /users/token
+            Location: /auth
 
     + Body
 
             {
-                "status" : "true",
-                "token" : "Z6eEdO8MOmk394WozF5oKyuAv855l4Mlqo7hhlSLik",
-                "token_secret" : "Kd75W4OQfb2oJTV0vzGzeXftVAwgMnEK9MumzYcM"
+                "x-auth" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU"
             }
 
 ### DELETE
 
 Delete token. The user logged out, so delete his token in API (invalidate or remove)
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
 
  + Response 204 (application/json)
 
@@ -867,6 +1079,12 @@ Delete token. The user logged out, so delete his token in API (invalidate or rem
 
 ### GET
 Get all groups
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -912,6 +1130,10 @@ Create new User Group. The owner will become admin and also first member.
 
 + Request (application/json)
 
+    + Headers
+
+            x-auth: {access_token}
+
     + Body
 
             {
@@ -956,7 +1178,7 @@ Get details of given group
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -1007,7 +1229,7 @@ Update given group
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
     + Body
 
@@ -1068,7 +1290,7 @@ Delete given User Group
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
  + Response 204 (application/json)
 
@@ -1098,7 +1320,7 @@ New statuses may be added later.
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -1124,7 +1346,7 @@ Update membership status. Currently only 'apply' request, but this may be extend
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
     + Body
 
@@ -1156,7 +1378,7 @@ Leave given User group
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
  + Response 204 (application/json)
 
@@ -1177,7 +1399,7 @@ Get all chat messages
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -1216,7 +1438,7 @@ Send new chat message
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
     + Body
 
@@ -1252,7 +1474,7 @@ Get the list of permalinks
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -1286,7 +1508,7 @@ Create new permalink. On success it will return status and id of new permalink
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
     + Body
 
@@ -1332,7 +1554,7 @@ Get details of requested permalink
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
  + Response 200 (application/json)
 
@@ -1387,7 +1609,7 @@ Update permalink resource
 
     + Headers
 
-            Authorization: Token {access_token}
+            x-auth: {access_token}
 
     + Body
 
@@ -1446,11 +1668,11 @@ Delete the permalink resource
  + Parameters
     + id (string) - id of permalink resource
 
- + Request
+ + Request (application/json)
 
     + Headers
 
-                Authorization: Token {access_token}
+            x-auth: {access_token}
 
 
  + Response 204 (application/json)
