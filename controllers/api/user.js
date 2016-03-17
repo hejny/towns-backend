@@ -9,6 +9,31 @@ var userController = {};
 
 
 /**
+ * Get all users from Users collection
+ * @param req
+ * @param res
+ */
+userController.getAll = function (req, res) {
+    UserModel.find(function (err, users) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": "Problem getting users"
+            });
+        }
+
+        if (users === null) {
+            return res.status(400).json({
+                "status": "error",
+                "message": "There are no users"
+            });
+        }
+
+        return res.status(200).json(users);
+    });
+};
+
+/**
  * Creates new user
  * @param req
  * @param res

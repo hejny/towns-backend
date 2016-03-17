@@ -16,7 +16,6 @@ describe('Users', function () {
     });
 
     describe('Creation of new user', function () {
-        this.timeout(15000);
 
         it('should fail when username is missing', function (done) {
             var json = {
@@ -296,6 +295,36 @@ describe('Users', function () {
                 });
 
         });
+
+    });
+
+    describe('Getting all users from API', function () {
+
+        it('should return a list of users', function (done) {
+            request(url)
+                .get('/users')
+                .expect('Content-Type', /json/)
+                .expect(200) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    for (var each in res.body) {
+                        res.body[each].should.have.property('profile');
+                        res.body[each].profile.should.not.equal(null);
+                        res.body[each].profile.should.have.property('username');
+                        res.body[each].should.have.property('start_time');
+                        res.body[each].should.have.property('version');
+                        res.body[each].should.have.property('contacts');
+                        res.body[each].should.have.property('user_roles');
+
+                        res.body[each].should.not.have.property('stop_time');
+                        res.body[each].should.not.have.property('_current_id');
+                    }
+                    done();
+                });
+        });
+
     });
 
 });

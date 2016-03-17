@@ -3,11 +3,10 @@ var router = express.Router();
 var userController = require('../controllers/api/user');
 
 /**
- * TODO: implement this
  * GET /users
  * Returns list of all users
  */
-//router.get('/', userController.getAll);
+router.get('/', userController.getAll);
 
 /**
  * POST /users
