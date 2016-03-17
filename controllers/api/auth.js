@@ -28,7 +28,7 @@ authController.createToken = function (req, res, next) {
         });
     }
 
-    UserModel.findOne({'names.username': req.body.username}).select('login_methods.password').exec( function (err, user) {
+    UserModel.findOne({'profile.username': req.body.username}).select('login_methods.password').exec( function (err, user) {
         if (err) {
             return next(err);
         }
