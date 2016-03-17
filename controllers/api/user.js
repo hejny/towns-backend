@@ -67,7 +67,6 @@ userController.createUser = function (req, res) {
     // check if user exist and if not then create it.
     UserModel.findOne({"profile.username": req.body.profile.username}, function (err, user) {
         if (err) {
-            console.log(err);
             return res.status(400).json({
                 "status": "error",
                 "message": [{
@@ -80,7 +79,6 @@ userController.createUser = function (req, res) {
         if (user == null) {
             bcrypt.hash(req.body.login_methods.password, 10, function (bcryptError, hash) {
                 if (bcryptError) {
-                    console.log(bcryptError);
                     return res.status(400).json({
                         "status": "error",
                         "message": [{
