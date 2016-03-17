@@ -96,13 +96,12 @@ describe('Users', function () {
                 .post('/users')
                 .send(json)
                 .expect('Content-Type', /json/)
-                .expect(400) //Status code
+                .expect(400)
                 .end(function (err, res) {
                     if (err) {
                         throw err;
                     }
 
-                    // Should.js fluent syntax applied
                     res.body.should.have.property('status');
                     res.body.status.should.not.equal(null);
                     res.body.status.should.equal('error');
@@ -212,8 +211,8 @@ describe('Users', function () {
         it('should fail when language is not one of the allowed type', function (done) {
 
 
-             //currently we support only czech and english language. bg stands for bulgaria
-             //it should fail while we don't support that language
+            //currently we support only czech and english language. bg stands for bulgaria
+            //it should fail while we don't support that language
 
             var requestJson = {
                 'profile': {
@@ -366,6 +365,84 @@ describe('Users', function () {
                     done();
                 });
 
+        });
+
+    });
+
+    describe('Getting user with given id', function () {
+
+        it('should return the requested user', function (done) {
+
+            UserModel.findOne({'profile.username': 'testuser'}, function (err, user) {
+                if (err) {
+                    throw err;
+                }
+
+                request(url)
+                    .get('/users/' + user._id)
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        res.body.should.have.property('profile');
+                        res.body.profile.should.not.equal(null);
+                        res.body.profile.should.have.property('username');
+                        res.body.profile.username.should.equal('testuser');
+                        res.body.should.have.property('language');
+                        res.body.language.should.equal('cs');
+                        res.body.should.have.property('version');
+                        res.body.should.have.property('start_time');
+                        res.body.should.have.property('user_roles');
+                        res.body.should.have.property('contacts');
+                        res.body.should.not.have.property('stop_time');
+                        res.body.should.not.have.property('login_methods');
+                        done();
+                    });
+
+            });
+        });
+
+        it("should error when the requested user id is not valid", function (done) {
+            request(url)
+                .get('/users/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(500)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    res.body.should.have.property('status');
+                    res.body.status.should.not.equal(null);
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].msg.should.equal('Problem getting user');
+                    res.body.message[0].val.should.equal('1234567890');
+                    done();
+                });
+
+        });
+
+        it("should return error if the requested user id doesn't exist", function (done) {
+            request(url)
+                .get('/users/56eaa0ada7a2956d16b1d1fa')
+                .expect('Content-Type', /json/)
+                .expect(400)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    res.body.should.have.property('status');
+                    res.body.status.should.not.equal(null);
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].msg.should.equal('There is no such user');
+                    res.body.message[0].val.should.equal('56eaa0ada7a2956d16b1d1fa');
+                    done();
+                });
         });
 
     });

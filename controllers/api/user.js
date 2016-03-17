@@ -183,4 +183,37 @@ userController.getUser = function (req, res) {
     });
 };
 
+/**
+ * Returns user with given _id
+ * @param req
+ * @param res
+ */
+userController.getOne = function (req, res) {
+    var parameters = req.params;
+    UserModel.findOne({'_id': parameters.id}, function (err, user) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting user",
+                    val: "" + parameters.id
+                }]
+            });
+        }
+
+        if (!user) {
+            return res.status(400).json({
+                "status": "error",
+                "message": [{
+                    param: "id",
+                    msg: "There is no such user",
+                    val: "" + parameters.id
+                }]
+            });
+        }
+        res.json(user);
+    });
+};
+
 module.exports = userController;
