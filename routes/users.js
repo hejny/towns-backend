@@ -27,11 +27,10 @@ router.get('/me', userController.getUser);
 router.get('/:id', userController.getOne);
 
 /**
- * TODO: implement this
  * POST /users/:id
  * Update user with given id, according to json sent in body
  */
-//router.post('/:id', userController.updateOne);
+router.post('/:id', userController.updateOne);
 
 /**
  * TODO: implement this
