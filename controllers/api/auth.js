@@ -1,5 +1,4 @@
 var UserModel = require('../../models/user');
-var check = require('validator');
 var jwt = require('jwt-simple');
 var bcrypt = require('bcrypt');
 var config = require('../../config/server.json');
@@ -14,9 +13,8 @@ var authController = {};
  * Creates token
  * @param req
  * @param res
- * @param next
  */
-authController.createToken = function (req, res, next) {
+authController.createToken = function (req, res) {
     if((typeof req.body.username == 'undefined') || (typeof req.body.password == 'undefined')) {
         return res.status(400).json({
             "status": "error",
@@ -30,7 +28,14 @@ authController.createToken = function (req, res, next) {
 
     UserModel.findOne({'profile.username': req.body.username}).select('login_methods.password').exec( function (err, user) {
         if (err) {
-            return next(err);
+            return res.status(400).json({
+                "status": "error",
+                "message": [{
+                    param: "username",
+                    msg: "Problem getting user's password",
+                    val: "" + req.body.username
+                }]
+            });
         }
 
         if (user === null) {
@@ -45,9 +50,17 @@ authController.createToken = function (req, res, next) {
         }
 
         bcrypt.compare(req.body.password, user.login_methods.password, function (bcryptError, valid) {
-            if(bcryptError) {
-                return next(bcryptError);
+            if (bcryptError) {
+                return res.status(400).json({
+                    "status": "error",
+                    "message": [{
+                        param: "password",
+                        msg: "Problem validating password",
+                        val: "" + req.body.password
+                    }]
+                });
             }
+
             if (!valid) {
                 return res.status(400).json({
                     "status": "error",
@@ -60,7 +73,9 @@ authController.createToken = function (req, res, next) {
             }
 
             var token = jwt.encode({username: req.body.username}, config.secretKey);
-            res.status(200).json(token);
+            return res.status(200).json({
+                'x-auth': token
+            });
         });
     })
 };
