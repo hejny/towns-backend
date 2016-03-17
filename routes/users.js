@@ -21,11 +21,10 @@ router.post('/', userController.createUser);
 router.get('/me', userController.getUser);
 
 /**
- * TODO: implement this
  * GET /users/:id
  * Returns user with given id
  */
-//router.get('/:id', userController.getOne);
+router.get('/:id', userController.getOne);
 
 /**
  * TODO: implement this
