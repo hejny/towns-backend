@@ -50,6 +50,7 @@ var userSchema = new db.Schema({
         type: String,
         trim: true,
         default: "cs",
+        lowercase: true,
         validate: is.validLocale
     }
 });
