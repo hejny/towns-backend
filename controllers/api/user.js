@@ -109,9 +109,9 @@ userController.createUser = function (req, res) {
             return res.status(400).json({
                 "status": "error",
                 "message": [{
-                    param: "username",
+                    param: "profile.username",
                     msg: "taken",
-                    val: "" + req.body.username
+                    val: "" + req.body.profile.username
                 }]
             });
         }

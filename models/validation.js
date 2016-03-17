@@ -68,7 +68,7 @@ function isBcryptHash(value) {
 }
 
 function isValidUsername(value) {
-    return value !== null && value.length > 0 && value.length <= 128 && value === check.escape(value);
+    return value !== null && value.length > 0 && value.length <= 64 && value === check.escape(value);
 }
 
 function isValidPassword(value) {

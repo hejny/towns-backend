@@ -18,7 +18,7 @@ var profileSchema = new db.Schema({
         trim: true,
         required: true,
         min: 1,
-        max: 128,
+        max: 64,
         validate: is.validUsername
     },
     name: {type: String},
