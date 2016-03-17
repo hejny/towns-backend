@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 require('mongoose-double')(mongoose);
 var mongo;
 if( process.env.NODE_ENV == 'test') {
-    mongo = require('../config/mLab').mongoDb;
+    mongo = require('../../config/mLab').mongoDb;
 } else {
-   mongo = require('../config/mongo').mongoDb;
+   mongo = require('../../config/mongo').mongoDb;
 }
 var credentials = (mongo.username !== "" && mongo.password !== "")? mongo.username+':'+mongo.password : "";
 try
