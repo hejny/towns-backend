@@ -116,7 +116,7 @@ userController.createUser = function (req, res) {
                             errMessage.push({
                                 param: saveError.errors[errName].path,
                                 msg: saveError.errors[errName].kind,
-                                val: ""+saveError.errors[errName].value
+                                val: "" + saveError.errors[errName].value
                             });
                         }
                         return res.status(400).json({
@@ -213,6 +213,106 @@ userController.getOne = function (req, res) {
             });
         }
         res.json(user);
+    });
+};
+
+/**
+ * Updates the user with given _id
+ * @param req
+ * @param res
+ */
+userController.updateOne = function (req, res) {
+    var userId = req.params.id,
+        json = req.body,
+        history = {},
+        newUser = {};
+    UserModel.findOne({"_id": userId}, function (err, originalUser) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": [{
+                    param: "id",
+                    msg: "Problem getting user",
+                    val: userId
+                }]
+            });
+        }
+
+        if (originalUser === null) {
+            return res.status(400).json({
+                "status": "error",
+                "message": [{
+                    param: "id",
+                    msg: "There is no such user",
+                    val: "" + userId
+                }]
+            });
+        }
+
+        // create copy of current user in UsersHistory
+        for (var name in originalUser._doc) {
+            if (originalUser._doc.hasOwnProperty(name) && name != "_id") {
+                history[name] = originalUser._doc[name];
+            }
+        }
+        history._current_id = originalUser._id;
+        history.stop_time = Date.now();
+
+        var userHistory = new UsersHistoryModel(history);
+        userHistory.save(function (err) {
+            if (err) {
+                return res.status(500).json({
+                    "status": "error",
+                    "message": [{
+                        param: "id",
+                        msg: "Could not update user",
+                        val: "" + userId
+                    }]
+                });
+            }
+        });
+
+
+        // create newUser from json and previous user
+        newUser.language = json.hasOwnProperty('language') ? json.language : history.language;
+        newUser.start_time = Date.now();
+        newUser.version = history.version++;
+        newsUser.contacts = json.hasOwnProperty('contacts') ? json.contacts : history.contacts;
+        newsUser.user_roles = json.hasOwnProperty('user_roles') ? json.user_roles : history.user_roles;
+        if (json.hasOwnProperty('profile')) {
+            var profileProperties = json.profile;
+            for (var key in profileProperties) {
+                if (profileProperties.hasOwnProperty(key) && key !== "_id") {
+                    if (!newUser.hasOwnProperty("profile")) {
+                        newUser.profile = {};
+                    }
+                    newUser.profile[key] = profileProperties[key];
+                }
+            }
+        }
+
+        newUser.login_methods = history.login_methods;
+        if (json.hasOwnProperty('login_methods') && json.login_methods.hasOwnProperty('password')) {
+            newUser.login_methods.password = bcrypt.hash(json.login_methods.password, 10);
+        }
+
+        var user = new UserModel(newUser);
+        originalUser.remove();
+
+        // save the newly created prototype to DB
+        user.save(function (err, savedUser) {
+            if (err) {
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
+            }
+            res.status(200).json({
+                "status": "ok",
+                "userId": savedUser._id
+            });
+        });
+
     });
 };
 
