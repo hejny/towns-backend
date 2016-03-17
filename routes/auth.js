@@ -11,6 +11,7 @@ var authController = require('../controllers/api/auth');
 
 /**
  * POST /auth
+ * Login
  * Sending username and password will return web token
  */
 router.post('/', authController.createToken);

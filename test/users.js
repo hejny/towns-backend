@@ -327,4 +327,46 @@ describe('Users', function () {
 
     });
 
+    describe('Getting /users/me from API', function () {
+
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .get('/users/me')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+
+        it('should return my profile when token is present', function (done) {
+
+            request(url)
+                .get('/users/me')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('profile');
+                    res.body.profile.should.not.equal(null);
+                    res.body.profile.should.have.property('username');
+                    res.body.profile.username.should.equal('testuser');
+                    res.body.should.have.property('language');
+                    res.body.language.should.equal('cs');
+                    res.body.should.have.property('user_roles');
+                    res.body.should.have.property('contacts');
+
+                    done();
+                });
+
+        });
+
+    });
 });

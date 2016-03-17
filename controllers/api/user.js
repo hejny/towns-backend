@@ -1,5 +1,7 @@
 var UserModel = require('../../models/user');
 var bcrypt = require('bcrypt');
+var jwt = require('jwt-simple');
+var config = require('../../config/server.json');
 
 /**
  * Handler for handling auth tokens
@@ -152,7 +154,7 @@ userController.createUser = function (req, res) {
  */
 userController.getUser = function (req, res) {
     if (!req.headers['x-auth']) {
-        return res.send(401);
+        return res.sendStatus(401);
     }
     var token = req.headers['x-auth'];
     var auth = jwt.decode(token, config.secretKey);
