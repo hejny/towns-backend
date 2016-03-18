@@ -2,9 +2,9 @@
   "mongoDb": {
     "protocol": "mongodb:",
     "username": "towns",
-    "password": "m0u53",
-    "host" : "ds035985.mlab.com",
-    "port" : "35985",
-    "db"   : "strider-foss"
+    "password": "kE7b04rd",
+    "host" : "ds013559.mlab.com",
+    "port" : "13559",
+    "db"   : "towns-testing"
   }
 }
