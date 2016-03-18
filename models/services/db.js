@@ -11,7 +11,6 @@ try
 {
    mongoose.connect(mongo.protocol+'//'+credentials+'@'+mongo.host+':'+mongo.port+'/'+mongo.db, function() {
       console.log("Connected to " + mongo.db + " @ "+mongo.host);
-      //console.log(mongo);
    });
 } catch(e)
 {

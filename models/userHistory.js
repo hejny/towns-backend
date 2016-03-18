@@ -64,7 +64,9 @@ var usersHistorySchema = new db.Schema({
         lowercase: true,
         validate: is.validLocale
     }
+}, {
+    collection: 'usersHistory'
 });
 
-var usersHistory = db.model('usersHistory', usersHistorySchema);
+var usersHistory = db.model('usersHistory', usersHistorySchema, 'usersHistory');
 module.exports = usersHistory;
