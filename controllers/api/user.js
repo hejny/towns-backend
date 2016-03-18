@@ -1,7 +1,8 @@
-var UserModel = require('../../models/user');
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
 var config = require('../../config/server.json');
+var UserModel = require('../../models/user');
+var UsersHistoryModel = require('../../models/userHistory');
 
 /**
  * Handler for handling auth tokens
@@ -226,7 +227,7 @@ userController.updateOne = function (req, res) {
         json = req.body,
         history = {},
         newUser = {};
-    UserModel.findOne({"_id": userId}, function (err, originalUser) {
+    UserModel.findOne({"_id": userId}).select('+login_methods.password').exec(function (err, originalUser) {
         if (err) {
             return res.status(500).json({
                 "status": "error",
@@ -249,7 +250,7 @@ userController.updateOne = function (req, res) {
             });
         }
 
-        // create copy of current user in UsersHistory
+        // create copy of  originalUser in UsersHistory
         for (var name in originalUser._doc) {
             if (originalUser._doc.hasOwnProperty(name) && name != "_id") {
                 history[name] = originalUser._doc[name];
@@ -272,28 +273,28 @@ userController.updateOne = function (req, res) {
             }
         });
 
+        console.log(req.body);
 
-        // create newUser from json and previous user
-        newUser.language = json.hasOwnProperty('language') ? json.language : history.language;
+        // create newUser from req.body and history
+        newUser.language = req.body.hasOwnProperty('language') ? req.body.language : history.language;
         newUser.start_time = Date.now();
-        newUser.version = history.version++;
-        newsUser.contacts = json.hasOwnProperty('contacts') ? json.contacts : history.contacts;
-        newsUser.user_roles = json.hasOwnProperty('user_roles') ? json.user_roles : history.user_roles;
-        if (json.hasOwnProperty('profile')) {
-            var profileProperties = json.profile;
+        newUser.version = history.version+1;
+        newUser.contacts = req.body.hasOwnProperty('contacts') ? req.body.contacts : history.contacts;
+        newUser.user_roles = req.body.hasOwnProperty('user_roles') ? req.body.user_roles : history.user_roles;
+        if (req.body.hasOwnProperty('profile')) {
+            var profileProperties = req.body.profile;
             for (var key in profileProperties) {
                 if (profileProperties.hasOwnProperty(key) && key !== "_id") {
-                    if (!newUser.hasOwnProperty("profile")) {
-                        newUser.profile = {};
-                    }
                     newUser.profile[key] = profileProperties[key];
                 }
             }
+        } else {
+            newUser.profile = history.profile;
         }
 
         newUser.login_methods = history.login_methods;
-        if (json.hasOwnProperty('login_methods') && json.login_methods.hasOwnProperty('password')) {
-            newUser.login_methods.password = bcrypt.hash(json.login_methods.password, 10);
+        if (req.body.hasOwnProperty('login_methods') && req.body.login_methods.hasOwnProperty('password')) {
+            newUser.login_methods.password = bcrypt.hash(req.body.login_methods.password, 10);
         }
 
         var user = new UserModel(newUser);
@@ -307,7 +308,7 @@ userController.updateOne = function (req, res) {
                     "message": err
                 });
             }
-            res.status(200).json({
+            return res.status(200).json({
                 "status": "ok",
                 "userId": savedUser._id
             });
