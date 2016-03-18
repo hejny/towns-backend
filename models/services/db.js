@@ -10,7 +10,7 @@ var credentials = (mongo.username !== "" && mongo.password !== "")? mongo.userna
 try
 {
    mongoose.connect(mongo.protocol+'//'+credentials+'@'+mongo.host+':'+mongo.port+'/'+mongo.db, function() {
-      console.log("Connected to mongoDB @ "+mongo.host);
+      console.log("Connected to " + mongo.db + " @ "+mongo.host);
       //console.log(mongo);
    });
 } catch(e)

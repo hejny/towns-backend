@@ -6,9 +6,7 @@ exports.up = function(db, next){
     users.createIndex({
         version: 1,
         _current_id: 1
-    });
-
-    next();
+    }, next);
 
 };
 
