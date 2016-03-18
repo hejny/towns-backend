@@ -7,7 +7,7 @@
     "rebuild": "node-gyp rebuild",
     "mongo-migrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/mongo.json -dbn mongoDb up",
     "mongo-remigrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/mongo.json -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./config/mongo.json -dbn mongoDb up",
-    "mongo-test-remigrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/mLab.json -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./config/mLab.json -dbn mongoDb up",
+    "mongo-test-remigrate": "NODE_ENV=test node ./node_modules/mongodb-migrate -runmm -cfg ./config/mLab.json -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./config/mLab.json -dbn mongoDb up",
     "start": "node ./bin/www",
     "start-test": "NODE_ENV=test node ./bin/www",
     "nodemonitor": "nodemon ./bin/www",
