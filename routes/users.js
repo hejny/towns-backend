@@ -33,11 +33,10 @@ router.get('/:id', userController.getOne);
 router.post('/:id', userController.updateOne);
 
 /**
- * TODO: implement this
  * DELETE /users/:id
  * Deletes the users with given id
  */
-//router.delete('/:id', userController.deleteOne);
+router.delete('/:id', userController.deleteOne);
 
 
 module.exports = router;

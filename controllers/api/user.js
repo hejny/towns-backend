@@ -339,4 +339,49 @@ function updateUser(res, originalUser, history) {
     });
 }
 
+/**
+ * Delete user with given id
+ * @param req
+ * @param res
+ */
+userController.deleteOne = function (req, res) {
+    var userId = req.params.id,
+        history = {};
+
+    UserModel.findOne({"_id": userId}).select('+login_methods.password').exec( function (err, user) {
+        if (err) {
+            return res.status(400).json({
+                "status": "error",
+                "message": "Problem getting user"
+            });
+        }
+        if (user === null) {
+            return res.status(400).json({
+                "status": "error",
+                "message": "There is no such user"
+            });
+        }
+
+        for (var key in user._doc) {
+            if (user._doc.hasOwnProperty(key) && key != "_id") {
+                history[key] = user._doc[key];
+            }
+        }
+        history._current_id = user._doc._id;
+        var userHistory = new UsersHistoryModel(history);
+        userHistory.save(function (err) {
+            if (err) {
+                return res.status(500).json({
+                    "status": "error",
+                    "message": err
+                });
+            }
+
+            user.remove();
+
+            res.sendStatus(204);
+        });
+    });
+};
+
 module.exports = userController;
