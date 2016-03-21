@@ -59,7 +59,7 @@ https://trello.com/b/beAsHIkG/backend
 
 ## Installation
 
-We will assume that you already have installed **globaly node and npm**.
+We will assume that you already have installed **globally node and npm**.
 
 1. Go into api folder and install the necessary node modules (express framework, etc) with npm:
 

@@ -53,6 +53,8 @@ var userSchema = new db.Schema({
         lowercase: true,
         validate: is.validLocale
     }
+}, {
+    versionKey: "_version"
 });
 
 var users = db.model('users', userSchema);
