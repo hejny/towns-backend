@@ -224,7 +224,6 @@ userController.getOne = function (req, res) {
  */
 userController.updateOne = function (req, res) {
     var userId = req.params.id,
-        json = req.body,
         history = {};
     UserModel.findOne({"_id": userId}).select('+login_methods.password').exec(function (err, originalUser) {
         if (err) {
@@ -274,10 +273,9 @@ userController.updateOne = function (req, res) {
             originalUser.user_roles = req.body.user_roles;
         }
         if (req.body.hasOwnProperty('profile')) {
-            var profileProperties = req.body.profile;
-            for (var key in profileProperties) {
-                if (profileProperties.hasOwnProperty(key) && key !== "_id" && key !== "username") {
-                    originalUser.profile[key] = profileProperties[key];
+            for (var key in req.body.profile) {
+                if (req.body.profile.hasOwnProperty(key) && key != "_id" && key != "username") {
+                    originalUser.profile[key] = req.body.profile[key];
                 }
             }
         }
@@ -302,11 +300,21 @@ userController.updateOne = function (req, res) {
 function updateUser(res, originalUser, history) {
 
     //console.log(originalUser);
-    originalUser.save(function (err, savedUser) {
-        if (err) {
-            return res.status(500).json({
+    originalUser.save(function (saveError, savedUser) {
+        if (saveError) {
+            var errMessage = [];
+            for (var errName in saveError.errors) {
+                if (saveError.errors.hasOwnProperty(errName)) {
+                    errMessage.push({
+                        param: saveError.errors[errName].path,
+                        msg: saveError.errors[errName].kind,
+                        val: "" + saveError.errors[errName].value
+                    });
+                }
+            }
+            return res.status(400).json({
                 "status": "error",
-                "message": err
+                "message": errMessage
             });
         }
 

@@ -32,16 +32,19 @@ https://trello.com/b/beAsHIkG/backend
 	├── [migrations]/               <- schemas and seeds for mongoDB collections    
 	|   └── 000x-*.js     
 	├── [models]/                   <- collection models for mongoose
-	|   ├── objects.js          
-	|   └── validation.js           <- validations of models are here
+	|   ├── [schemas]/              <- Schemas are partials of collections 
+	|   |   └── *.js                
+	|   ├── [services]/             <- model helpers
+	|   |   ├── db.js               <- connection to DB 
+	|   |   └── validation.js       <- validations of models are here
+	|   ├── *.js                    <- all models sits here
 	├── [public]/                   <- publicly accessible folder for node server 
 	|   └── [css]/
 	|       └── style.css
 	├── [routes]/                   <- routes
-	|   ├── index.js           
-	|   └── users.js
+	|   └── *.js
 	├── [test]/                     
-	|   └── *.js                    <- tests for mochajs
+	|   └── *.js                    <- tests for mocha.js
 	├── .gitignore                  <- files ignored but git
 	├── apiary.apib                 <- backup of API documentation from apiary 
 	├── gulpgile.js                 <- configuration for linter testing
@@ -61,10 +64,7 @@ https://trello.com/b/beAsHIkG/backend
 
 We will assume that you already have installed **globally node and npm**.
 
-1. Go into api folder and install the necessary node modules (express framework, etc) with npm:
-
-	`npm install`
-
+1. Go into api folder and install the necessary node modules (express framework, etc) with npm: `npm install`
 
 2. Create directory or symlink with project towns-shared in root
 
@@ -72,20 +72,33 @@ We will assume that you already have installed **globally node and npm**.
 
 ## Launching
 
-Towns 5 Api server is node.js aplication and can be launched with command:
+### Production environment
 
-On develop environments:
+Towns 5 Api server is node.js aplication and can be launched on production environments with command:
 
-	# for Linux and Mac use this
-	DEBUG=api:* npm start
-	# or with node monitor which will restart nodejs everytime API files are changed
-	DEBUG=api:* npm run nodemonitor
-	# for Windows use this
-	set DEBUG=myapp & npm start
+	npm start
 
-On production environments launch API simply without debug information
+In case you use node manager like pm2, then go to root folder of project and run
 
-    npm start
+	pm2 start ./bin/www
+	
+### Develop environment
+
+In case you need to debug it or on develop environments set environment variable DEBUG=api:* This is set differently on
+Mac, Linux or windows. We also use nodemonitor, which detects changes in files and restarts when requested.
+
+For for debugging on Linux and Mac use this
+
+	npm run start-debug
+	
+or with node monitor which will restart nodejs everytime API files are changed
+
+	npm run nodemonitor
+	
+or for Windows use this
+	
+	set DEBUG=api:* & npm start
+
 
 Api will be accessible on http://localhost:3000
 
@@ -108,13 +121,11 @@ DEVELOPERS ONLY: In case you want to drop all collections and create them again 
 	
 ## Testing
 
-Start the server with correct NODE_ENV 
+The api checks the environment variables and depending on them load correct DB and so on. Node starts automatically
+in production mode, therefore we have to set it test environment. Start the server with correct NODE_ENV. 
     
-    NODE_ENV=test npm start
-    #or
     npm run start-test
-
-Test files are in `test` directory.
+    
 
 ### 1. Linter
 
@@ -125,12 +136,12 @@ You can run tests for javascript syntax errors with linter, just run
 
 ### 2. Mocha
  
-You can also run [Mocha](https://mochajs.org) testing framework with BDD style
+Test files are in `test` directory. You can run [Mocha](https://mochajs.org) testing framework with BDD style
 [should.js](https://github.com/shouldjs/should.js) assertion library. Basically any assertion which throws error
 will work. Don't forget that node with API must be running to be able to test.
 
 	# in test environment
 	npm test
 	## or on dev machine
-	make test
+	npm run mocha
 
