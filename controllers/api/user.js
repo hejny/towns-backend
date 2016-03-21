@@ -225,11 +225,10 @@ userController.getOne = function (req, res) {
 userController.updateOne = function (req, res) {
     var userId = req.params.id,
         json = req.body,
-        history = {},
-        newUser = {};
+        history = {};
     UserModel.findOne({"_id": userId}).select('+login_methods.password').exec(function (err, originalUser) {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 "status": "error",
                 "message": [{
                     param: "id",
@@ -259,6 +258,58 @@ userController.updateOne = function (req, res) {
         history._current_id = originalUser._id;
         history.stop_time = Date.now();
 
+        //console.log(req.body);
+        // update originalUser with req.body
+        originalUser.start_time = Date.now();
+        originalUser.version++;
+
+        if (req.body.hasOwnProperty('language')) {
+            originalUser.language = req.body.language;
+        }
+        if (req.body.hasOwnProperty('contacts')) {
+            originalUser.contacts = req.body.contacts;
+        }
+        if (req.body.hasOwnProperty('user_roles')) {
+            // TODO: I think user will not be able to set his role. This will be probably set at user registration
+            originalUser.user_roles = req.body.user_roles;
+        }
+        if (req.body.hasOwnProperty('profile')) {
+            var profileProperties = req.body.profile;
+            for (var key in profileProperties) {
+                if (profileProperties.hasOwnProperty(key) && key !== "_id" && key !== "username") {
+                    originalUser.profile[key] = profileProperties[key];
+                }
+            }
+        }
+        if (req.body.hasOwnProperty('login_methods') && req.body.login_methods.hasOwnProperty('password')) {
+            bcrypt.hash(req.body.login_methods.password, 10, function (err, bcryptedPassword) {
+                originalUser.login_methods.password = bcryptedPassword;
+                updateUser(res, originalUser, history);
+            });
+        } else {
+            updateUser(res, originalUser, history);
+        }
+    });
+};
+
+/**
+ * Updates the Original User with new properties.
+ * UserHistory will be created only when User is successfully updated
+ * @param res Response back to client
+ * @param originalUser Updated Object of User
+ * @param history Copy of OriginalUser to be copied into
+ */
+function updateUser(res, originalUser, history) {
+
+    //console.log(originalUser);
+    originalUser.save(function (err, savedUser) {
+        if (err) {
+            return res.status(500).json({
+                "status": "error",
+                "message": err
+            });
+        }
+
         var userHistory = new UsersHistoryModel(history);
         userHistory.save(function (err) {
             if (err) {
@@ -273,48 +324,11 @@ userController.updateOne = function (req, res) {
             }
         });
 
-        console.log(req.body);
-
-        // create newUser from req.body and history
-        newUser.language = req.body.hasOwnProperty('language') ? req.body.language : history.language;
-        newUser.start_time = Date.now();
-        newUser.version = history.version+1;
-        newUser.contacts = req.body.hasOwnProperty('contacts') ? req.body.contacts : history.contacts;
-        newUser.user_roles = req.body.hasOwnProperty('user_roles') ? req.body.user_roles : history.user_roles;
-        if (req.body.hasOwnProperty('profile')) {
-            var profileProperties = req.body.profile;
-            for (var key in profileProperties) {
-                if (profileProperties.hasOwnProperty(key) && key !== "_id") {
-                    newUser.profile[key] = profileProperties[key];
-                }
-            }
-        } else {
-            newUser.profile = history.profile;
-        }
-
-        newUser.login_methods = history.login_methods;
-        if (req.body.hasOwnProperty('login_methods') && req.body.login_methods.hasOwnProperty('password')) {
-            newUser.login_methods.password = bcrypt.hash(req.body.login_methods.password, 10);
-        }
-
-        var user = new UserModel(newUser);
-        originalUser.remove();
-
-        // save the newly created prototype to DB
-        user.save(function (err, savedUser) {
-            if (err) {
-                return res.status(500).json({
-                    "status": "error",
-                    "message": err
-                });
-            }
-            return res.status(200).json({
-                "status": "ok",
-                "userId": savedUser._id
-            });
+        return res.status(200).json({
+            "status": "ok",
+            "userId": savedUser._id
         });
-
     });
-};
+}
 
 module.exports = userController;

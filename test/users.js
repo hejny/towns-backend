@@ -3,6 +3,7 @@ var assert = require('assert');
 var request = require('supertest');
 var config = require('../config/server').server;
 var UserModel = require('../models/user');
+var UserHistoryModel = require('../models/userHistory');
 
 describe('Users', function () {
 
@@ -444,6 +445,133 @@ describe('Users', function () {
                     done();
                 });
         });
+
+    });
+
+    describe('Updating user with given id', function () {
+
+        it("should error when the userId in parameter is not valid", function (done) {
+            request(url)
+                .post('/users/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('Problem getting user');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('1234567890');
+                    done();
+                });
+        });
+
+        it("should error when the requested userId doesn't exist", function (done) {
+            request(url)
+                .post('/users/56af958fbb2d04ed141a24a7')
+                .expect('Content-Type', /json/)
+                .expect(400) //Status code
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.be.instanceof(Array);
+                    res.body.message[0].should.have.property('msg');
+                    res.body.message[0].msg.should.equal('There is no such user');
+                    res.body.message[0].should.have.property('param');
+                    res.body.message[0].param.should.equal('id');
+                    res.body.message[0].should.have.property('val');
+                    res.body.message[0].val.should.equal('56af958fbb2d04ed141a24a7');
+                    done();
+                });
+        });
+
+        it('should update the requested user', function (done) {
+            // create mock user
+            userJson = {
+                "profile": {
+                    "username": "tester123321tester"
+                },
+                "login_methods": {
+                    "password": "something"
+                }
+
+            };
+            var user = new UserModel(userJson);
+            user.save(function (err, savedUser) {
+                if (err) {
+                    throw err;
+                }
+
+                updateJson = {
+                    "profile": {
+                        "username": "cannotBeChanged",
+                        "name": "Janko",
+                        "surname": "Mrkvicka",
+                        "email": "ja@towns.cz"
+
+                    },
+                    "language": "en"
+                };
+
+                // update it through api
+                request(url)
+                    .post('/users/' + savedUser._id)
+                    .send(updateJson)
+                    .expect('Content-Type', /json/)
+                    .expect(200) //Status code
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+
+                        UserHistoryModel.findOneAndRemove({_current_id: savedUser._id}, function (err) {
+                            if (err) {
+                                throw err;
+                            }
+                        });
+
+                        res.body.should.have.property('status');
+                        res.body.status.should.equal('ok');
+                        res.body.should.have.property('userId');
+
+                        // check that current values are updated
+                        UserModel.findOne({_id: res.body.userId}, function (err, saved) {
+                            if (err) {
+                                throw err;
+                            }
+
+                            if (saved.profile.username != userJson.profile.username &&
+                                saved.profile.name != updateJson.profile.name &&
+                                saved.profile.surname != updateJson.profile.surname &&
+                                saved.profile.email != updateJson.profile.email &&
+                                saved.language != updateJson.language) {
+                                throw new Error("Saved prototype is different than ");
+                            }
+
+                            // remove prototype
+                            saved.remove();
+
+                        });
+
+                        done();
+                    });
+
+            });
+        });
+
 
     });
 });
