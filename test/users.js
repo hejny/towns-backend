@@ -574,4 +574,87 @@ describe('Users', function () {
 
 
     });
+
+    describe('Deleting user with given id', function () {
+
+        it("should error when the requested user id is not valid", function (done) {
+            request(url)
+                .delete('/users/1234567890')
+                .expect('Content-Type', /json/)
+                .expect(400)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('Problem getting user');
+
+                    done();
+                });
+        });
+
+        it("should error when the requested user doesn't exist", function (done) {
+            request(url)
+                .delete('/users/56af958fbb2d04ed141a24a7')
+                .expect('Content-Type', /json/)
+                .expect(400)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    res.body.should.have.property('status');
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal('There is no such user');
+        
+                    done();
+                });
+        });
+        
+        it('should delete the requested user', function (done) {
+            newUserJson = {
+                "profile": {
+                    "username": "test1233212testname"
+                },
+                "login_methods": {
+                    "password": "password"
+                }
+            };
+
+            var user = new UserModel(newUserJson);
+            user.save(function (err, savedUser) {
+                if (err) {
+                    throw err;
+                }
+                
+                request(url)
+                    .delete('/users/' + savedUser._id)
+                    .expect(204)
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        
+                        UserHistoryModel.findOne({_current_id: savedUser._id}, function (err, history) {
+                            if (err) {
+                                throw err;
+                            }
+                            
+                            history.remove(function (err) {
+                                if (err) {
+                                    throw err;
+                                }
+
+                                done();
+
+                            });
+                        });
+                    });
+
+            });
+        });
+        
+    });
 });
