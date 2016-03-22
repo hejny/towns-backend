@@ -5,9 +5,8 @@ var authController = require('../controllers/api/auth');
 /**
  * GET /auth
  * sending GET request should return status:"ok"
- * TODO: implement this
  */
-// router.get('/', authController.get);
+router.get('/', authController.getStatus);
 
 /**
  * POST /auth
