@@ -15,7 +15,7 @@ var authController = {};
  * @param res
  */
 authController.createToken = function (req, res) {
-    if((typeof req.body.username == 'undefined') || (typeof req.body.password == 'undefined')) {
+    if ((typeof req.body.username == 'undefined') || (typeof req.body.password == 'undefined')) {
         return res.status(400).json({
             "status": "error",
             "message": [{
@@ -26,7 +26,7 @@ authController.createToken = function (req, res) {
         });
     }
 
-    UserModel.findOne({'profile.username': req.body.username}).select('login_methods.password').exec( function (err, user) {
+    UserModel.findOne({'profile.username': req.body.username}).select('login_methods.password').exec(function (err, user) {
         if (err) {
             return res.status(400).json({
                 "status": "error",
@@ -78,6 +78,50 @@ authController.createToken = function (req, res) {
             });
         });
     })
+};
+
+/**
+ * Check the status of token
+ * @param res
+ * @param req
+ */
+authController.getStatus = function (req, res, next) {
+    if (!req.headers.hasOwnProperty('x-auth')) {
+        return res.sendStatus(401);
+    }
+
+    token = req.headers['x-auth'];
+    try {
+        var auth = jwt.decode(token, config.secretKey);
+    } catch (err) {
+        return res.status(400).json({
+            "status": "error",
+            "message": [{
+                param: "token",
+                msg: "Broken token",
+                val: "" + token
+            }]
+        });
+    }
+
+
+    UserModel.findOne({'profile.username': auth.username}, function (err, user) {
+        if (err || !user) {
+            return res.status(400).json({
+                "status": "error",
+                "message": [{
+                    param: "token",
+                    msg: "Invalid token",
+                    val: "" + token
+                }]
+            });
+        }
+
+        return res.status(200).json({
+            "status": "ok"
+        });
+    });
+
 };
 
 module.exports = authController;

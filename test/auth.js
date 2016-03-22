@@ -189,4 +189,92 @@ describe('Authentication', function () {
         });
 
     });
+
+    describe('Checking auth by getting /auth', function () {
+
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .get('/auth')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+
+        it("should fail when token is not valid", function (done) {
+
+            token = 'eyJ0eXAiOiJKV1QiLjchbGciOiJIUrI1niJ9.eyJ1c2VybmFtZSI6InRlcr41c8VyIk0.xyrhj0YRax4aylMdElRXqHh2vIltDii22-kCgsvZsxU';
+            request(url)
+                .get('/auth')
+                .set('x-auth', token)
+                //.expect('Content-Type', /json/)
+                .expect(400)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.not.equal(null);
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message[0].param.should.equal('token');
+                    res.body.message[0].msg.should.equal('Broken token');
+                    res.body.message[0].val.should.equal(token);
+                    done();
+                });
+
+        });
+
+        it("should fail when token is manipulated", function (done) {
+
+            token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlamhzdHVzZXIyIn0.fHxUl8Im9tHZvETl2fFy-k908kehlTEa59LXlSn0nn4';
+            request(url)
+                .get('/auth')
+                .set('x-auth', token)
+                .expect('Content-Type', /json/)
+                .expect(400)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.not.equal(null);
+                    res.body.status.should.equal('error');
+                    res.body.should.have.property('message');
+                    res.body.message[0].param.should.equal('token');
+                    res.body.message[0].msg.should.equal('Invalid token');
+                    res.body.message[0].val.should.equal(token);
+                    done();
+                });
+
+        });
+
+        it('should return ok status when token is valid', function (done) {
+
+            request(url)
+                .get('/auth')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    res.body.should.have.property('status');
+                    res.body.status.should.not.equal(null);
+                    res.body.status.should.equal('ok');
+                    done();
+                });
+
+        });
+
+    });
+
 });
