@@ -92,6 +92,8 @@ var schema = new db.Schema({
         default: "admin",
         validate: is.validOwnerId
     }
+}, {
+    versionKey: "_version"
 });
 
 var object = db.model('objects', schema);

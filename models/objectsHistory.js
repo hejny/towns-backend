@@ -99,7 +99,8 @@ var historySchema = new db.Schema({
         validate: is.validOwnerId
     }
 }, {
-    collection: 'objectsHistory'
+    collection: 'objectsHistory', 
+    versionKey: "_version"
 });
 
 var objectsHistory = db.model('objectsHistory', historySchema, 'objectsHistory');

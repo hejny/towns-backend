@@ -64,7 +64,8 @@ var prototypeSchema = new db.Schema({
         validate: is.validOwnerId
     }
 }, {
-    collection: 'objectsPrototypes'
+    collection: 'objectsPrototypes',
+    versionKey: "_version"
 });
 
 var objectsPrototype = db.model('objectsPrototypes', prototypeSchema, 'objectsPrototypes');

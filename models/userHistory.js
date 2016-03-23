@@ -65,7 +65,8 @@ var usersHistorySchema = new db.Schema({
         validate: is.validLocale
     }
 }, {
-    collection: 'usersHistory'
+    collection: 'usersHistory',
+    versionKey: "_version"
 });
 
 var usersHistory = db.model('usersHistory', usersHistorySchema, 'usersHistory');

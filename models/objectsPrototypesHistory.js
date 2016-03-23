@@ -67,7 +67,8 @@ var prototypesHistorySchema = new db.Schema({
         validate: is.validOwnerId
     }
 }, {
-    collection: 'objectsPrototypesHistory'
+    collection: 'objectsPrototypesHistory',
+    versionKey: "_version"
 });
 
 var objectsPrototypesHistory = db.model('objectsPrototypesHistory', prototypesHistorySchema, 'objectsPrototypesHistory');
