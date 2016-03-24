@@ -30,7 +30,7 @@ app.use(require('./controllers/middleware/auth'));
 
 
 // CONTROLLER ROUTES
-// -----------------
+// ----------------- 
 // route for index page
 var indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
