@@ -85,7 +85,7 @@ authController.createToken = function (req, res) {
  * @param res
  * @param req
  */
-authController.getStatus = function (req, res, next) {
+authController.getStatus = function (req, res) {
     if (!req.headers.hasOwnProperty('x-auth')) {
         return res.sendStatus(401);
     }
