@@ -5,15 +5,11 @@
   "private": true,
   "scripts": {
     "rebuild": "node-gyp rebuild",
-    "mongo-migrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/mongo.json -dbn mongoDb up",
-    "mongo-remigrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/mongo.json -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./config/mongo.json -dbn mongoDb up",
-    "mongo-test-remigrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/mLab.json -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./config/mLab.json -dbn mongoDb up",
+    "mongo-migrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/db.js -dbn mongoDb up",
+    "mongo-remigrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/db.js -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./config/db.js -dbn mongoDb up",
     "start": "node ./bin/www",
-    "start-test": "NODE_ENV=test node ./bin/www",
-    "start-debug": "DEBUG=api:* node ./bin/www",
-    "nodemonitor": "DEBUG=api:* nodemon ./bin/www",
-    "mocha": "make test",
-    "test": "NODE_ENV=test make test"
+    "start-debug": "DEBUG=api:* nodemon ./bin/www",
+    "test": "make test"
   },
   "author": "Stefan Kecskes <mr.kecskes@gmail.com> (https://skey.uk)",
   "license": "MIT",
@@ -32,7 +28,8 @@
     "mongoose-double": "0.0.1",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "validator": "~4.5.2"
+    "validator": "~4.5.2",
+    "dotenv": "~2.0.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0",

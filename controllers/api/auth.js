@@ -1,7 +1,7 @@
 var UserModel = require('../../models/user');
 var jwt = require('jwt-simple');
 var bcrypt = require('bcrypt');
-var config = require('../../config/server.json');
+var server = require('../../config/server');
 
 /**
  * Handler for handling auth tokens
@@ -72,7 +72,7 @@ authController.createToken = function (req, res) {
                 });
             }
 
-            var token = jwt.encode({username: req.body.username}, config.secretKey);
+            var token = jwt.encode({username: req.body.username}, server.secretKey);
             return res.status(200).json({
                 'x-auth': token
             });
@@ -92,7 +92,7 @@ authController.getStatus = function (req, res) {
 
     token = req.headers['x-auth'];
     try {
-        var auth = jwt.decode(token, config.secretKey);
+        var auth = jwt.decode(token, server.secretKey);
     } catch (err) {
         return res.status(400).json({
             "status": "error",
