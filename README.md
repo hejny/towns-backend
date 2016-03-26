@@ -91,14 +91,16 @@ For for debugging on Linux and Mac use this
 
 	npm run start-debug
 	
-or with node monitor which will restart nodejs everytime API files are changed
-
-	npm run nodemonitor
-	
 or for Windows use this
 	
 	set DEBUG=api:* & npm start
 
+
+### Testing environment
+
+On testing environment run:
+
+    npm run start-test
 
 Api will be accessible on http://localhost:3000
 
