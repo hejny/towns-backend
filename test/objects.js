@@ -55,6 +55,22 @@ describe('Objects', function () {
     describe('Creation of new object', function () {
         this.timeout(15000);
 
+        it('should fail when user is not authorised', function (done) {
+
+            
+                request(url)
+                    .post('/objects')
+                    .send({})
+                    .expect(401)
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        done();
+                    });
+
+        });
+        
         it('should fail when X is missing', function (done) {
 
             ObjectsPrototype.findOne({}, function (err, prototype) {
@@ -69,6 +85,7 @@ describe('Objects', function () {
 
                 request(url)
                     .post('/objects')
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .send(object)
                     .expect('Content-Type', /json/)
                     .expect(400) //Status code
@@ -104,6 +121,7 @@ describe('Objects', function () {
 
                 request(url)
                     .post('/objects')
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .send(object)
                     .expect('Content-Type', /json/)
                     .expect(400) //Status code
@@ -134,6 +152,7 @@ describe('Objects', function () {
 
             request(url)
                 .post('/objects')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .send(object)
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
@@ -164,6 +183,7 @@ describe('Objects', function () {
 
             request(url)
                 .post('/objects')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .send(object)
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
@@ -200,6 +220,7 @@ describe('Objects', function () {
 
                 request(url)
                     .post('/objects')
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .send(object)
                     .expect('Content-Type', /json/)
                     .expect(201) //Status code
@@ -246,6 +267,19 @@ describe('Objects', function () {
     describe('Getting of One object from API', function () {
         this.timeout(15000);
 
+        it('should fail when user is not authorised', function (done) {
+            request(url)
+                .get('/objects/56f82aca3f9285b667df03ca')
+                .send({})
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+
         it('should return the requested object', function (done) {
 
             ObjectsPrototype.findOne({}, function (err, prototype) {
@@ -271,6 +305,7 @@ describe('Objects', function () {
                     // get it through api
                     request(url)
                         .get('/objects/' + newObject._id)
+                        .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                         .expect('Content-Type', /json/)
                         .expect(200) //Status code
                         .end(function (err, res) {
@@ -309,6 +344,7 @@ describe('Objects', function () {
             // get it through api
             request(url)
                 .get('/objects/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -337,6 +373,7 @@ describe('Objects', function () {
             // get it through api
             request(url)
                 .get('/objects/56af958fbb2d04ed141a24a7')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -365,13 +402,26 @@ describe('Objects', function () {
     describe('Updating One object from API', function () {
         this.timeout(15000);
 
+        it('should fail when user is not authorised', function (done) {
+            request(url)
+                .post('/objects/56f82aca3f9285b667df03ca')
+                .send({})
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+
         it("should error when the requested object id is not valid", function (done) {
 
-            // get it through api
             request(url)
                 .post('/objects/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
-                .expect(400) //Status code
+                .expect(400)
                 .end(function (err, res) {
                     if (err) {
                         throw err;
@@ -390,17 +440,16 @@ describe('Objects', function () {
 
                     done();
                 });
-
-
+            
         });
 
         it("should error when the requested object doesn't exist", function (done) {
 
-            // get it through api
             request(url)
                 .post('/objects/56af958fbb2d04ed141a24a7')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
-                .expect(400) //Status code
+                .expect(400)
                 .end(function (err, res) {
                     if (err) {
                         throw err;
@@ -420,12 +469,10 @@ describe('Objects', function () {
                     done();
                 });
 
-
         });
 
         it('should update the requested object', function (done) {
 
-            // create mocked object
             ObjectsPrototype.findOne({}, function (err, prototype) {
                 if (err) {
                     throw err;
@@ -438,9 +485,10 @@ describe('Objects', function () {
                 };
                 request(url)
                     .post('/objects')
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .send(createNewObject)
                     .expect('Content-Type', /json/)
-                    .expect(201) //Status code
+                    .expect(201)
                     .end(function (err, res) {
                         if (err) {
                             throw err;
@@ -460,6 +508,7 @@ describe('Objects', function () {
                             };
                             request(url)
                                 .post('/objects/' + objectId)
+                                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                                 .send(updatedObjectJson)
                                 .expect('Content-Type', /json/)
                                 .expect(200)
@@ -520,14 +569,26 @@ describe('Objects', function () {
 
     describe('Deleting One object from API', function () {
         this.timeout(15000);
-
+        
+        it('should fail when user is not authorised', function (done) {
+            request(url)
+                .delete('/objects/56f82aca3f9285b667df03ca')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+        
         it("should error when the requested object id is not valid", function (done) {
 
-            // get it through api
             request(url)
                 .delete('/objects/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
-                .expect(400) //Status code
+                .expect(400)
                 .end(function (err, res) {
                     if (err) {
                         throw err;
@@ -546,8 +607,7 @@ describe('Objects', function () {
 
                     done();
                 });
-
-
+            
         });
 
         it("should error when the requested object doesn't exist", function (done) {
@@ -555,6 +615,7 @@ describe('Objects', function () {
             // get it through api
             request(url)
                 .delete('/objects/56af958fbb2d04ed141a24a7')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -594,6 +655,7 @@ describe('Objects', function () {
                 };
                 request(url)
                     .post('/objects')
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .send(createNewObject)
                     .expect('Content-Type', /json/)
                     .expect(201) //Status code
@@ -606,6 +668,7 @@ describe('Objects', function () {
                         // get it through api
                         request(url)
                             .delete('/objects/' + objectId)
+                            .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                             .expect('Content-Type', /json/)
                             .expect(200) //Status code
                             .end(function (err, res) {
