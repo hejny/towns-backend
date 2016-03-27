@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('./controllers/middleware/auth'));
+app.use(require('./controllers/middleware/auth').decodeToken);
 
 
 // CONTROLLER ROUTES
@@ -61,6 +61,6 @@ app.use(function(req, res, next) {
 // -----------------
 
 // error handlers
-app.use(require('./controllers/middleware/auth'));
+app.use(require('./controllers/middleware/error'));
 
 module.exports = app;
