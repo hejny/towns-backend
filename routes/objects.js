@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-
 var objectsController = require('../controllers/api/objects');
+var auth = require('../controllers/middleware/auth');
 
 /**
  * GET /objects
