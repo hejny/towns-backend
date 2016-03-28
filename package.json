@@ -9,7 +9,9 @@
     "mongo-remigrate": "node ./node_modules/mongodb-migrate -runmm -cfg ./config/db.js -dbn mongoDb down && node ./node_modules/mongodb-migrate -runmm -cfg ./config/db.js -dbn mongoDb up",
     "start": "node ./bin/www",
     "start-debug": "DEBUG=api:* nodemon ./bin/www",
-    "test": "make test"
+    "test": "make test",
+    "preinstall": "bash ./bin/setup-ssh.sh",
+    "postinstall": "bash ./bin/cleanup-ssh.sh"
   },
   "author": "Stefan Kecskes <mr.kecskes@gmail.com> (https://skey.uk)",
   "license": "MIT",
@@ -29,7 +31,8 @@
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
     "validator": "~4.5.2",
-    "dotenv": "~2.0.0"
+    "dotenv": "~2.0.0",
+    "towns-backend": "git+ssh://git@bitbucket.org:towns/towns-backend.git#0.1.1"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
