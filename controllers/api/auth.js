@@ -86,42 +86,9 @@ authController.createToken = function (req, res) {
  * @param req
  */
 authController.getStatus = function (req, res) {
-    if (!req.headers.hasOwnProperty('x-auth')) {
-        return res.sendStatus(401);
-    }
-
-    token = req.headers['x-auth'];
-    try {
-        var auth = jwt.decode(token, server.secretKey);
-    } catch (err) {
-        return res.status(400).json({
-            "status": "error",
-            "message": [{
-                param: "token",
-                msg: "Broken token",
-                val: "" + token
-            }]
-        });
-    }
-
-
-    UserModel.findOne({'profile.username': auth.username}, function (err, user) {
-        if (err || !user) {
-            return res.status(400).json({
-                "status": "error",
-                "message": [{
-                    param: "token",
-                    msg: "Invalid token",
-                    val: "" + token
-                }]
-            });
-        }
-
-        return res.status(200).json({
-            "status": "ok"
-        });
+    return res.status(200).json({
+        "status": "ok"
     });
-
 };
 
 module.exports = authController;

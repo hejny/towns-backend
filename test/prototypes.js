@@ -18,12 +18,12 @@ describe('Prototypes', function () {
     });
 
     describe('Getting prototypes from API', function () {
-        this.timeout(15000);
 
         it('should return a list of prototypes', function (done) {
 
             request(url)
                 .get('/objects/prototypes')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(200) //Status code
                 .end(function (err, res) {
@@ -47,10 +47,35 @@ describe('Prototypes', function () {
                     done();
                 });
         });
+        
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .get('/objects/prototypes')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
     });
 
     describe('Creation of new prototype', function () {
-        this.timeout(15000);
+
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .post('/objects/prototypes')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
 
         it('should fail when NAME is missing', function (done) {
 
@@ -63,6 +88,7 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes')
                 .send(prototype)
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -88,6 +114,7 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes')
                 .send(prototype)
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -114,6 +141,7 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes')
                 .send(prototype)
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -140,6 +168,7 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes')
                 .send(prototype)
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -168,6 +197,7 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes')
                 .send(prototype)
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -196,6 +226,7 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes')
                 .send(prototype)
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -225,6 +256,7 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes')
                 .send(prototype)
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -274,6 +306,7 @@ describe('Prototypes', function () {
             request(url)
                 .post('/objects/prototypes')
                 .send(prototype)
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(201) //Status code
                 .end(function (err, res) {
@@ -319,7 +352,19 @@ describe('Prototypes', function () {
     });
 
     describe('Getting of One prototype from API', function () {
-        this.timeout(15000);
+
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .get('/objects/prototypes/12345677890')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
 
         it('should return the requested prototype', function (done) {
             // create prototype
@@ -338,6 +383,7 @@ describe('Prototypes', function () {
                 // get it through api
                 request(url)
                     .get('/objects/prototypes/' + prototype._id)
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .expect('Content-Type', /json/)
                     .expect(200) //Status code
                     .end(function (err, res) {
@@ -366,9 +412,9 @@ describe('Prototypes', function () {
 
         it("should error when the requested prototype id is not valid", function (done) {
 
-            // get it through api
             request(url)
                 .get('/objects/prototypes/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(500) //Status code
                 .end(function (err, res) {
@@ -391,6 +437,7 @@ describe('Prototypes', function () {
             // get it through api
             request(url)
                 .get('/objects/prototypes/12345677890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(500) //Status code
                 .end(function (err, res) {
@@ -410,13 +457,26 @@ describe('Prototypes', function () {
     });
 
     describe('Updating One prototype from API', function () {
-        this.timeout(15000);
 
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .post('/objects/prototypes/56af958fbb2d04ed141a24a7')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+        
         it("should error when the requested prototype id is not valid", function (done) {
 
             // get it through api
             request(url)
                 .post('/objects/prototypes/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -446,6 +506,7 @@ describe('Prototypes', function () {
             // get it through api
             request(url)
                 .post('/objects/prototypes/56af958fbb2d04ed141a24a7')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -494,6 +555,7 @@ describe('Prototypes', function () {
                 // update it through api
                 request(url)
                     .post('/objects/prototypes/' + prototype._id)
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .send(update)
                     .expect('Content-Type', /json/)
                     .expect(200) //Status code
@@ -542,8 +604,20 @@ describe('Prototypes', function () {
     });
 
     describe('Deleting One prototype from API', function () {
-        this.timeout(15000);
 
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .delete('/objects/prototypes/56af958fbb2d04ed141a24a7')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+        
         it('should delete the requested prototype', function (done) {
             // create prototype
             newPrototype = {
@@ -561,6 +635,7 @@ describe('Prototypes', function () {
                 // get it through api
                 request(url)
                     .delete('/objects/prototypes/' + prototype._id)
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .expect('Content-Type', /json/)
                     .expect(200) //Status code
                     .end(function (err, res) {
@@ -596,49 +671,39 @@ describe('Prototypes', function () {
         });
 
         it("should error when the requested prototype id is not valid", function (done) {
-
-            // get it through api
             request(url)
                 .delete('/objects/prototypes/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
-                .expect(500) //Status code
+                .expect(500)
                 .end(function (err, res) {
                     if (err) {
                         throw err;
                     }
-                    // Should.js fluent syntax applied
                     res.body.should.have.property('status');
                     res.body.status.should.equal('error');
                     res.body.should.have.property('message');
                     res.body.message.should.equal('Problem getting your prototype');
-
                     done();
                 });
-
-
         });
 
         it("should error when the requested prototype doesn't exist", function (done) {
-
-            // get it through api
             request(url)
                 .delete('/objects/prototypes/56af958fbb2d04ed141a24a7')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
-                .expect(500) //Status code
+                .expect(500)
                 .end(function (err, res) {
                     if (err) {
                         throw err;
                     }
-                    // Should.js fluent syntax applied
                     res.body.should.have.property('status');
                     res.body.status.should.equal('error');
                     res.body.should.have.property('message');
                     res.body.message.should.equal('There is no such prototype');
-
                     done();
                 });
-
-
         });
 
     });
