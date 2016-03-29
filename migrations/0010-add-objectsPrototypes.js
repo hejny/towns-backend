@@ -1,4 +1,5 @@
 var mongodb = require('mongodb');
+var ObjectsPrototype = require('../models/objectsPrototype');
 
 exports.up = function (db, next) {
 
@@ -8,260 +9,35 @@ exports.up = function (db, next) {
         owner: 1
     });
 
-    objectsPrototypes.insert([
+    var prototypeJson = {};
+    
+    var buildingsPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/buildings/main");
+    require("fs").readdirSync(buildingsPath).forEach(function(file) {
+        prototypeJson = require("towns5shared/objects/buildings/main/" + file);
+        prototypeJson.forEach( function(prototype) {
+            ObjectsPrototype.create(prototype, function (err, savedProto) {
+                if (err) return handleError(err);
+                // saved!
+            })
+        });
+        // objectsPrototypes.insert([
+        //     prototypeJson
+        // ]);
+    });
 
-        //==============================================================================================================building
+    var storiesPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/stories");
+    require("fs").readdirSync(storiesPath).forEach(function(file) {
+        prototypesJson = require("towns5shared/objects/stories/" + file);
+        objectsPrototypes.insert(prototypesJson);
+    });
 
-        {
-            name: "Kamenný domek",
-            type: "building",
-            subtype: "main",
-            design: {
-                type: "model",
-                data: {
-                    particles: [
-                        {
-                            shape:{
-                                type: 'prism',
-                                n:4
-                            },
-                            color: "#cccccc",
-                            position: {x:0,y:0,z:0},
-                            size: {x:50,y:50,z:50},
-                            rotation: {"xy":0,"xz":0}
+    var terrainsPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/terrains");
+    require("fs").readdirSync(terrainsPath).forEach(function(file) {
+        prototypesJson = require("towns5shared/objects/terrains/" + file);
+        objectsPrototypes.insert(prototypesJson);
+    });
 
-                        },{
-                            shape:{
-                                type: 'prism',
-                                n:4,
-                                top:0
-                            },
-                            color: "#cccccc",
-                            position: {x:0,y:0,z:100},
-                            size: {x:50,y:50,z:40},
-                            rotation: {"xy":0,"xz":0}
-
-                        }
-                    ]
-                }
-
-            }
-
-        },{
-            name: "Kamenná pyramida",
-            type: "building",
-            subtype: "block",
-            design: {
-                type: "model",
-                data: {
-                    particles: [
-                        {
-                            shape:{
-                                type: 'prism',
-                                n:4,
-                                top:1
-                            },
-                            color: "#cccccc",
-                            position: {x:0,y:0,z:0},
-                            size: {x:50,y:50,z:50},
-                            rotation: {"xy":0,"xz":0}
-
-                        }
-                    ]
-                }
-
-            }
-
-        },{
-            name: "Kamenný ježek",
-            type: "building",
-            subtype: "wall",
-            design: {
-                type: "model",
-                data: {
-                    particles: [
-                        {
-                            shape:{
-                                type: 'prism',
-                                n:3,
-                                top:0.1
-                            },
-                            color: "#cccccc",
-                            position: {x:0,y:0,z:0},
-                            size: {x:40,y:40,z:40},
-                            rotation: {"xy":30,"xz":0}
-
-                        }
-                    ]
-                }
-
-            }
-
-        },
-
-
-        //==============================================================================================================terrain
-        {
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:1,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:2,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:3,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:4,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:5,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:6,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:7,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:8,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:9,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:10,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:11,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:12,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:13,
-                    size: 1
-                }
-            }
-        },{
-            "type": "terrain",
-            "name": "Terén",
-            "design": {
-                "type": "terrain",
-                "data":{
-                    image:14,
-                    size: 1
-                }
-            }
-        },
-
-
-        //==============================================================================================================story
-
-
-        {
-            "name": "Příběh",
-            "type": "story",
-            "locale": "cs",
-            "content": {
-                "type": "markdown",
-                "data": "Kde bolo tam bolo"
-            },
-            "owner": "5126bc054aed4daf9e2ab772"
-        }
-
-
-        //==============================================================================================================
-    ], next);
-
+    next();
 };
 
 exports.down = function (db, next) {
