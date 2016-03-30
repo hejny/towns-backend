@@ -16,7 +16,6 @@ var auth = {};
  * @param next
  */
 auth.check = function (req, res, next) {
-    console.log(req.auth);
     UserModel.findOne({'profile.username': req.auth.username}, function (err, user) {
         if (err) {
             return res.sendStatus(401);
