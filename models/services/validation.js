@@ -75,6 +75,10 @@ function isValidPassword(value) {
     return value !== null && value.length > 0 && value === check.escape(value);
 }
 
+function isValidResource(value) {
+    return check.isInt(value)
+}
+
 var is = {
     validObjectName: [isAlphanumericstring, '{VALUE} is not alphanumeric'],
     validObjectType: [typesOfObjects, '{VALUE} is not valid TYPE!'],
@@ -95,7 +99,8 @@ var is = {
     validObjectId: [isObjectId, '{VALUE} is not a valid Object Id'],
     validBcryptHash: [isBcryptHash, '{VALUE} is not a bcrypt hash'],
     validUsername: [isValidUsername, '{VALUE} is not valid username'],
-    validPassword: [isValidPassword, '{VALUE} is not valid password']
+    validPassword: [isValidPassword, '{VALUE} is not valid password'],
+    validReource: [isValidResource, '{VALUE} is not valid resource']
 };
 
 module.exports = is;
