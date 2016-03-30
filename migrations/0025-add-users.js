@@ -16,9 +16,8 @@ exports.up = function(db, next){
             "password": "$2a$08$E39.h5.BhrVYkeScsWffWOpLNqDjVhLx9kfmtCyLZ5CoZzLod7BS2"
         }
     };
-    var newUser = new userModel(json);
-    newUser.save(function (err) {
-        if (err) return handleError(err);
+    userModel.create(json, function (err, savedUser) {
+        if (err) return console.log(err);
         next();
     });
 };

@@ -10,15 +10,14 @@ exports.up = function (db, next) {
     });
 
     var prototypeJson = {};
-    
+
     var buildingsPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/buildings/main");
-    require("fs").readdirSync(buildingsPath).forEach(function(file) {
+    require("fs").readdirSync(buildingsPath).forEach(function (file) {
         prototypeJson = require("towns5shared/objects/buildings/main/" + file);
-        prototypeJson.forEach( function(prototype) {
-            ObjectsPrototype.create(prototype, function (err, savedProto) {
-                if (err) return handleError(err);
-                // saved!
-            })
+
+        ObjectsPrototype.create(prototypeJson, function (err, savedProto) {
+            if (err) return console.log(err);
+            // saved!
         });
         // objectsPrototypes.insert([
         //     prototypeJson
@@ -26,15 +25,27 @@ exports.up = function (db, next) {
     });
 
     var storiesPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/stories");
-    require("fs").readdirSync(storiesPath).forEach(function(file) {
+    require("fs").readdirSync(storiesPath).forEach(function (file) {
         prototypesJson = require("towns5shared/objects/stories/" + file);
-        objectsPrototypes.insert(prototypesJson);
+        for (var i; i<prototypesJson.length; ++i) {
+            ObjectsPrototype.create(prototypeJson[i], function (err, savedProto) {
+                if (err) return console.log(err);
+                // saved!
+            });
+            //objectsPrototypes.insert(prototypesJson);
+        }
     });
 
     var terrainsPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/terrains");
-    require("fs").readdirSync(terrainsPath).forEach(function(file) {
+    require("fs").readdirSync(terrainsPath).forEach(function (file) {
         prototypesJson = require("towns5shared/objects/terrains/" + file);
-        objectsPrototypes.insert(prototypesJson);
+        for (var i; i<prototypeJson.length; ++i) {
+            ObjectsPrototype.create(prototypeJson[i], function (err, savedProto) {
+                if (err) return console.log(err);
+                // saved!
+            });
+            //objectsPrototypes.insert(prototypesJson);
+        }    
     });
 
     next();
