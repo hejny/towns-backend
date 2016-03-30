@@ -976,7 +976,8 @@ Update requested user
 
 ### DELETE
 
-Delete requested user. Moves user to UsersHistory collection
+Delete requested user. Moves user to UsersHistory collection.
+TODO: find out who can delete users.(admin + owner?)
 
  + Parameters
     + user_id (number) - ID of user
@@ -994,14 +995,17 @@ Delete requested user. Moves user to UsersHistory collection
             Location: /users/5666b8259297ffe7c16c6785
 
 
+# Group Resources
 
-# Group Authentication
+This is where user's resources are stored. It is like bank account, but with 4 currencies (clay, wood, stone, iron). People
+can get only their own resources and also manipulate with own resource.
+Therefore there are only 2 endpoints: GET and POST. Both requests will need a valid x-auth token.
 
-## /auth
+## /resources
 
 ### GET
 
-This is used to check the status of token. User will send this GET request with own token in header. The api will check the validity and will return user details if valid, otherwise error will be return.
+Use to get the resources of user. User is recognised from token.
 
  + Request (application/json)
 
@@ -1013,14 +1017,79 @@ This is used to check the status of token. User will send this GET request with 
 
     + Headers
 
-            Location: /users/token
+            Location: /resources
 
     + Body
 
             {
-                "status" : "true",
-                "token" : "Z6eEdO8MOmk394WozF5oKyuAv855l4Mlqo7hhlSLik",
-                "token_secret" : "Kd75W4OQfb2oJTV0vzGzeXftVAwgMnEK9MumzYcM"
+                "status": "ok",
+                "balance_at": "2016-03-30T17:10:40Z"
+                "resources":
+                {
+                    "wood": 1000,
+                    "stone": 1000,
+                    "clay": 1000,
+                    "iron": 1000
+                }
+            }
+
+### POST
+
+Used to manipulate resources. This is not implemented yet. All manipulations with resources will happen inside API based
+on action performed.
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "clay": "1234"
+            }
+
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /resources
+
+    + Body
+
+            {
+                "status" : "ok"
+            }
+
+
+# Group Authentication
+
+## /auth
+
+### GET
+
+This is used to check the status of token. User will send this GET request with own token in header. The api will check the validity and will return status about validity.
+There is one possible values for status: ok. Otherwise error '401 Unauthorized' is returned.
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /auth
+
+    + Body
+
+            {
+                "status" : "ok"
             }
 
 ### POST
