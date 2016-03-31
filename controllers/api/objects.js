@@ -200,7 +200,7 @@ objectsController.createOne = function (req, res) {
                 data: data
             };
         }
-        newObject.owner = "admin"; // todo: later here will go current user (find him from token used)
+        newObject.owner = req.user._id;
 
         var object = new ObjectModel(newObject);
 

@@ -34,8 +34,7 @@ function isValidLocale(value) {
 }
 
 function isMongoId(value) {
-    // TODO: temporarily allow admin as value, remove after AUTH is implemented
-    return check.isMongoId(value) || value == "admin";
+    return check.isMongoId(value);
 }
 
 function isPositiveInteger(value) {
