@@ -1,5 +1,6 @@
 var server = require('../../config/server');
 var ResourcesModel = require('../../models/resources');
+var userEvents = require('../../events/user');
 
 /**
  * Controller for handling resources
@@ -26,27 +27,33 @@ resourcesController.getResources = function (req, res) {
         }
 
         if (!resource) {
-            return res.status(400).json({
-                "status": "error",
-                "message": [{
-                    param: "resources",
-                    msg: "User hasn't any resources",
-                    val: "{}"
-                }]
+            userEvents.addInitialResources(req.user, function(err, savedResource) {
+                return res.status(200).json({
+                    "status": "ok",
+                    "balance_at": savedResource.created_at,
+                    "resources":
+                    {
+                        "clay": savedResource.resources.clay,
+                        "wood": savedResource.resources.wood,
+                        "stone": savedResource.resources.stone,
+                        "iron": savedResource.resources.iron
+                    }
+                });
             });
+        } else {
+            return res.status(200).json({
+                "status": "ok",
+                "balance_at": resource.created_at,
+                "resources":
+                {
+                    "clay": resource.resources.clay,
+                    "wood": resource.resources.wood,
+                    "stone": resource.resources.stone,
+                    "iron": resource.resources.iron
+                }
+            });   
         }
-        return res.status(200).json({
-            "status": "ok",
-            "balance_at": resource.created_at,
-            "resources":
-            {
-                "clay": resource.resources.clay,
-                "wood": resource.resources.wood,
-                "stone": resource.resources.stone,
-                "iron": resource.resources.iron
-            }
-        });
-
+        
     });
 };
 

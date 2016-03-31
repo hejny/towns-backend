@@ -25,22 +25,22 @@ var resourcesSchema = new db.Schema({
         wood: {
             type: Number,
             default: 0,
-            validate: is.validReource
+            validate: is.validResource
         },
         clay: {
             type: Number,
             default: 0,
-            validate: is.validReource
+            validate: is.validResource
         },
         iron: {
             type: Number,
             default: 0,
-            validate: is.validReource
+            validate: is.validResource
         },
         stone: {
             type: Number,
             default: 0,
-            validate: is.validReource
+            validate: is.validResource
         }
     },
     reference: {

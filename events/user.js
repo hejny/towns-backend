@@ -22,7 +22,7 @@ UserEvents.prototype.hasRegistered = function(user) {
     this.emit('sendWelcomeEmail', user);
 };
 
-UserEvents.prototype.addInitialResources = function addInitialResources(user)
+UserEvents.prototype.addInitialResources = function addInitialResources(user, callback)
 {
     // TODO: add initial resources from some config file
     console.info('Event: adding initial resources to ' + user.profile.username);
@@ -41,6 +41,10 @@ UserEvents.prototype.addInitialResources = function addInitialResources(user)
     resources.save(function(err, savedResource) {
         if (err) {
            console.log(err);
+        }
+        // Make sure the callback is a function​
+        if (typeof callback === "function") {
+            callback(err, savedResource);
         }
     });
     
