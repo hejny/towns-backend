@@ -1,5 +1,6 @@
 const util = require('util');
 const EventEmitter = require('events');
+var ResourcesModel = require('../models/resources');
 
 /**
  * Event Handler
@@ -24,13 +25,31 @@ UserEvents.prototype.hasRegistered = function(user) {
 UserEvents.prototype.addInitialResources = function addInitialResources(user)
 {
     // TODO: add initial resources from some config file
-    console.log('adding initial resources to ' + user.profile.username);
+    console.info('Event: adding initial resources to ' + user.profile.username);
+    var initialResources = {
+        "owner": user._id,
+        "resources": {
+            "clay": 10000,
+            "wood": 10000,
+            "stone": 10000,
+            "iron": 10000
+        },
+        "reference": "adding initial resources"
+    };
+    
+    var resources = new ResourcesModel(initialResources);
+    resources.save(function(err, savedResource) {
+        if (err) {
+           console.log(err);
+        }
+    });
+    
 };
 
 UserEvents.prototype.sendWelcomeEmail = function sendWelcomeEmail(user)
 {
+    console.info('Event: Sending welcoming email to ' + user.profile.email);
     // TODO: send some welcoming email to user if email is present
-    console.log('Sending welcoming email to ' + user.profile.email);
 };
 
 /**

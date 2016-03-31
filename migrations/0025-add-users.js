@@ -1,5 +1,6 @@
 var mongodb = require('mongodb');
 var userModel = require("./../models/user");
+var userEvents = require('../events/user');
 
 exports.up = function(db, next){
 
@@ -18,6 +19,7 @@ exports.up = function(db, next){
     };
     userModel.create(json, function (err, savedUser) {
         if (err) return console.log(err);
+        userEvents.hasRegistered(savedUser);
         next();
     });
 };

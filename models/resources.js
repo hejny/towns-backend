@@ -51,9 +51,9 @@ var resourcesSchema = new db.Schema({
         validate: is.validObjectName
     }
 }, {
-    collection: 'reources',
+    collection: 'resources',
     versionKey: "_version"
 });
 
-var resources = db.model('resources', resourcesSchema, 'reources');
+var resources = db.model('resources', resourcesSchema, 'resources');
 module.exports = resources;
