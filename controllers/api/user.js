@@ -3,9 +3,9 @@ var jwt = require('jwt-simple');
 var server = require('../../config/server');
 var UserModel = require('../../models/user');
 var UsersHistoryModel = require('../../models/userHistory');
-
+var userEvents = require('../../events/user');
 /**
- * Handler for handling auth tokens
+ * Controller for handling users
  * @type {{}}
  */
 var userController = {};
@@ -112,7 +112,7 @@ userController.createUser = function (req, res) {
                 newUser.save(function (saveError, savedUser) {
                     if (saveError) {
                         var errMessage = [];
-                        console.log(saveError);
+                        //console.log(saveError);
                         for (var errName in saveError.errors) {
                             errMessage.push({
                                 param: saveError.errors[errName].path,
@@ -125,6 +125,9 @@ userController.createUser = function (req, res) {
                             "message": errMessage
                         });
                     }
+                    //triggering events after user has registered
+                    userEvents.hasRegistered(savedUser);
+
                     return res.status(201).json({
                         "status": "ok",
                         "userId": savedUser._id
