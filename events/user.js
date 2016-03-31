@@ -1,5 +1,5 @@
 const util = require('util');
-const EventEmitter = require('events');
+const EventEmitter = require('events').EventEmitter;
 var ResourcesModel = require('../models/resources');
 
 /**

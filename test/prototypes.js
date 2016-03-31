@@ -4,7 +4,7 @@ var request = require('supertest');
 var config = require('../config/server').server;
 var ObjectsPrototype = require('../models/objectsPrototype');
 var ObjectsPrototypesHistory = require('../models/objectsPrototypesHistory');
-
+var UserModel = require('../models/user');
 
 describe('Prototypes', function () {
 
@@ -367,46 +367,47 @@ describe('Prototypes', function () {
         });
 
         it('should return the requested prototype', function (done) {
-            // create prototype
-            newPrototype = {
-                "name": "Ambasada",
-                "type": "building",
-                "locale": "cs"
+            UserModel.findOne({"profile.username": "testuser"}, function(err, user) {
+                // create prototype
+                newPrototype = {
+                    "name": "Ambasada",
+                    "type": "building",
+                    "locale": "cs",
+                    "owner": user._id
+                };
+                var prototype = new ObjectsPrototype(newPrototype);
+                prototype.save(function (err, prototype) {
+                    if (err) {
+                        throw err;
+                    }
 
-            };
-            var prototype = new ObjectsPrototype(newPrototype);
-            prototype.save(function (err, prototype) {
-                if (err) {
-                    throw err;
-                }
+                    // get it through api
+                    request(url)
+                        .get('/objects/prototypes/' + prototype._id)
+                        .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
+                        .expect('Content-Type', /json/)
+                        .expect(200) //Status code
+                        .end(function (err, res) {
+                            if (err) {
+                                throw err;
+                            }
+                            // Should.js fluent syntax applied
+                            res.body.should.have.property('name');
+                            res.body.name.should.not.equal(null);
+                            res.body.name.should.equal('Ambasada');
+                            res.body.should.have.property('type');
+                            res.body.type.should.equal('building');
+                            res.body.should.have.property('subtype');
+                            res.body.should.have.property('locale');
+                            res.body.locale.should.equal('cs');
+                            res.body.should.have.property('owner');
 
-                // get it through api
-                request(url)
-                    .get('/objects/prototypes/' + prototype._id)
-                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
-                    .expect('Content-Type', /json/)
-                    .expect(200) //Status code
-                    .end(function (err, res) {
-                        if (err) {
-                            throw err;
-                        }
-                        // Should.js fluent syntax applied
-                        res.body.should.have.property('name');
-                        res.body.name.should.not.equal(null);
-                        res.body.name.should.equal('Ambasada');
-                        res.body.should.have.property('type');
-                        res.body.type.should.equal('building');
-                        res.body.should.have.property('subtype');
-                        res.body.should.have.property('locale');
-                        res.body.locale.should.equal('cs');
-                        res.body.should.have.property('owner');
+                            // remove prototype
+                            prototype.remove();
 
-                        // remove prototype
-                        prototype.remove();
-
-                        done();
-                    });
-
+                            done();
+                        });
+                });
             });
         });
 
@@ -532,71 +533,72 @@ describe('Prototypes', function () {
         });
 
         it('should update the requested prototype', function (done) {
-            // create prototype
-            newPrototype = {
-                "name": "Ambasada",
-                "type": "building",
-                "locale": "cs"
-
-            };
-            var prototype = new ObjectsPrototype(newPrototype);
-            prototype.save(function (err, prototype) {
-                if (err) {
-                    throw err;
-                }
-
-                update = {
+            UserModel.findOne({"profile.username": "testuser"}, function(err, user) {
+                // create prototype
+                newPrototype = {
                     "name": "Ambasada",
                     "type": "building",
                     "locale": "cs",
-                    "subtype": "new value"
+                    "owner": user._id
                 };
+                var prototype = new ObjectsPrototype(newPrototype);
+                prototype.save(function (err, prototype) {
+                    if (err) {
+                        throw err;
+                    }
 
-                // update it through api
-                request(url)
-                    .post('/objects/prototypes/' + prototype._id)
-                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
-                    .send(update)
-                    .expect('Content-Type', /json/)
-                    .expect(200) //Status code
-                    .end(function (err, res) {
-                        if (err) {
-                            throw err;
-                        }
+                    update = {
+                        "name": "Ambasada",
+                        "type": "building",
+                        "locale": "cs",
+                        "subtype": "new value"
+                    };
 
-                        ObjectsPrototypesHistory.findOneAndRemove({_prototypeId: prototype._id}, function (err) {
-                            if (err) {
-                                throw err;
-                            }
-                        });
-
-                        // Should.js fluent syntax applied
-                        res.body.should.have.property('status');
-                        res.body.status.should.equal('ok');
-                        res.body.should.have.property('prototypeId');
-                        if (res.body.prototypeId == prototype._id) {
-                            throw new Error("New prototype overwrote the previous one");
-                        }
-
-                        //console.log(res.body.prototypeId);
-                        // check that current values are updated
-                        ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err, saved) {
+                    // update it through api
+                    request(url)
+                        .post('/objects/prototypes/' + prototype._id)
+                        .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
+                        .send(update)
+                        .expect('Content-Type', /json/)
+                        .expect(200) //Status code
+                        .end(function (err, res) {
                             if (err) {
                                 throw err;
                             }
 
-                            if (saved.name != "Ambasada" && saved.type != "building" && saved.locale != "cs" && saved.subtype != "new value") {
-                                throw new Error("Saved prototype is different than ");
+                            ObjectsPrototypesHistory.findOneAndRemove({_prototypeId: prototype._id}, function (err) {
+                                if (err) {
+                                    throw err;
+                                }
+                            });
+
+                            // Should.js fluent syntax applied
+                            res.body.should.have.property('status');
+                            res.body.status.should.equal('ok');
+                            res.body.should.have.property('prototypeId');
+                            if (res.body.prototypeId == prototype._id) {
+                                throw new Error("New prototype overwrote the previous one");
                             }
 
-                            // remove prototype
-                            saved.remove();
+                            //console.log(res.body.prototypeId);
+                            // check that current values are updated
+                            ObjectsPrototype.findOne({_id: res.body.prototypeId}, function (err, saved) {
+                                if (err) {
+                                    throw err;
+                                }
 
+                                if (saved.name != "Ambasada" && saved.type != "building" && saved.locale != "cs" && saved.subtype != "new value") {
+                                    throw new Error("Saved prototype is different than ");
+                                }
+
+                                // remove prototype
+                                saved.remove();
+
+                            });
+
+                            done();
                         });
-
-                        done();
-                    });
-
+                });
             });
         });
 
@@ -619,54 +621,55 @@ describe('Prototypes', function () {
         });
         
         it('should delete the requested prototype', function (done) {
-            // create prototype
-            newPrototype = {
-                "name": "Ambasada",
-                "type": "building",
-                "locale": "cs"
+            UserModel.findOne({"profile.username": "testuser"}, function(err, user) {
+                // create prototype
+                newPrototype = {
+                    "name": "Ambasada",
+                    "type": "building",
+                    "locale": "cs",
+                    "owner": user._id
+                };
+                var prototype = new ObjectsPrototype(newPrototype);
+                prototype.save(function (err, prototype) {
+                    if (err) {
+                        throw err;
+                    }
 
-            };
-            var prototype = new ObjectsPrototype(newPrototype);
-            prototype.save(function (err, prototype) {
-                if (err) {
-                    throw err;
-                }
-
-                // get it through api
-                request(url)
-                    .delete('/objects/prototypes/' + prototype._id)
-                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
-                    .expect('Content-Type', /json/)
-                    .expect(200) //Status code
-                    .end(function (err, res) {
-                        if (err) {
-                            throw err;
-                        }
-                        // Should.js fluent syntax applied
-                        res.body.should.have.property('status');
-                        res.body.status.should.equal('deleted');
-                        res.body.should.have.property('prototypeId');
-                        if (res.body.prototypeId != prototype._id) {
-                            throw new Error("Different prototype was deleted");
-                        }
-
-                        // delete from prototypeHistory
-                        ObjectsPrototypesHistory.findOne({_prototypeId: prototype._id}, function (err, history) {
+                    // get it through api
+                    request(url)
+                        .delete('/objects/prototypes/' + prototype._id)
+                        .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
+                        .expect('Content-Type', /json/)
+                        .expect(200) //Status code
+                        .end(function (err, res) {
                             if (err) {
                                 throw err;
                             }
-                            // remove history of prototype
-                            history.remove(function (err) {
+                            // Should.js fluent syntax applied
+                            res.body.should.have.property('status');
+                            res.body.status.should.equal('deleted');
+                            res.body.should.have.property('prototypeId');
+                            if (res.body.prototypeId != prototype._id) {
+                                throw new Error("Different prototype was deleted");
+                            }
+
+                            // delete from prototypeHistory
+                            ObjectsPrototypesHistory.findOne({_prototypeId: prototype._id}, function (err, history) {
                                 if (err) {
                                     throw err;
                                 }
+                                // remove history of prototype
+                                history.remove(function (err) {
+                                    if (err) {
+                                        throw err;
+                                    }
 
-                                done();
+                                    done();
 
+                                });
                             });
                         });
-                    });
-
+                });
             });
         });
 

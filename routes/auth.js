@@ -19,7 +19,6 @@ router.post('/', authController.createToken);
 /**
  * DELETE /auth
  * Removes the token from client
- * TODO: implement this
  */
 //router.delete('/', authController.deleteToken);
 

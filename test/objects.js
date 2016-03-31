@@ -5,7 +5,7 @@ var config = require('../config/server').server;
 var ObjectModel = require('../models/object');
 var ObjectsPrototype = require('../models/objectsPrototype');
 var ObjectsHistory = require('../models/objectsHistory');
-
+var UserModel = require('../models/user');
 
 describe('Objects', function () {
 
@@ -287,55 +287,58 @@ describe('Objects', function () {
                     throw err;
                 }
 
-                createObject = {
-                    "_prototypeId": prototype._id,
-                    "x": 1.234,
-                    "y": 4.321,
-                    "name": "Domek",
-                    "type": "building"
+                UserModel.findOne({"profile.username":"admin"}, function(err, user) {
+                    createObject = {
+                        "_prototypeId": prototype._id,
+                        "x": 1.234,
+                        "y": 4.321,
+                        "name": "Domek",
+                        "type": "building",
+                        "owner": user._id
+                    };
 
-                };
+                    var object = new ObjectModel(createObject);
+                    object.save(function (err, newObject) {
+                        if (err) {
+                            throw err;
+                        }
+                        //console.log(newObject);
+                        // get it through api
+                        request(url)
+                            .get('/objects/' + newObject._id)
+                            .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
+                            .expect('Content-Type', /json/)
+                            .expect(200) //Status code
+                            .end(function (err, res) {
+                                if (err) {
+                                    throw err;
+                                }
+                                console.log();
+                                console.log();
 
-                var object = new ObjectModel(createObject);
-                object.save(function (err, newObject) {
-                    if (err) {
-                        throw err;
-                    }
-                    //console.log(newObject);
-                    // get it through api
-                    request(url)
-                        .get('/objects/' + newObject._id)
-                        .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
-                        .expect('Content-Type', /json/)
-                        .expect(200) //Status code
-                        .end(function (err, res) {
-                            if (err) {
-                                throw err;
-                            }
-                            console.log();
-                            console.log();
+                                // Should.js fluent syntax applied
+                                res.body.should.have.property('x');
+                                res.body.x.should.not.equal(null);
+                                res.body.x.should.equal(1.234);
+                                res.body.should.have.property('y');
+                                res.body.y.should.equal(4.321);
+                                res.body.should.have.property('_prototypeId');
+                                if (res.body._prototypeId != prototype._id) {
+                                    throw new Error("Objects prototypeId doesn't equal.");
+                                }
+                                res.body.should.have.property('owner');
 
-                            // Should.js fluent syntax applied
-                            res.body.should.have.property('x');
-                            res.body.x.should.not.equal(null);
-                            res.body.x.should.equal(1.234);
-                            res.body.should.have.property('y');
-                            res.body.y.should.equal(4.321);
-                            res.body.should.have.property('_prototypeId');
-                            if (res.body._prototypeId != prototype._id) {
-                                throw new Error("Objects prototypeId doesn't equal.");
-                            }
-                            res.body.should.have.property('owner');
+                                // remove prototype
+                                newObject.remove({}, function (err, removed_count) {
+                                    done();
+                                });
 
-                            // remove prototype
-                            newObject.remove({}, function (err, removed_count) {
-                                done();
                             });
 
-                        });
+                    });
 
                 });
-
+               
             });
         });
 

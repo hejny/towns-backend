@@ -62,8 +62,7 @@ function isObjectId(value) {
 }
 
 function isBcryptHash(value) {
-    //TODO: validate bcrypt string. No plain text password is allowed to be saved.
-    return true;
+    return /^\$2[ayb]\$.{56}$/i.test(value);
 }
 
 function isValidUsername(value) {
