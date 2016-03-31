@@ -14,7 +14,6 @@ var resourcesController = {};
  */
 resourcesController.getResources = function (req, res) {
     ResourcesModel.findOne({'owner': req.user._id}).sort({"version": -1}).exec( function (err, resource) {
-        //TODO: finish output/error json
         if (err) {
             return res.status(500).json({
                 "status": "error",
@@ -32,11 +31,22 @@ resourcesController.getResources = function (req, res) {
                 "message": [{
                     param: "resources",
                     msg: "User hasn't any resources",
-                    val: ""
+                    val: "{}"
                 }]
             });
         }
-        return res.json(resource);
+        return res.status(200).json({
+            "status": "ok",
+            "balance_at": resource.created_at,
+            "resources":
+            {
+                "clay": resource.resources.clay,
+                "wood": resource.resources.wood,
+                "stone": resource.resources.stone,
+                "iron": resource.resources.iron
+            }
+        });
+
     });
 };
 
