@@ -100,7 +100,7 @@ var is = {
     validBcryptHash: [isBcryptHash, '{VALUE} is not a bcrypt hash'],
     validUsername: [isValidUsername, '{VALUE} is not valid username'],
     validPassword: [isValidPassword, '{VALUE} is not valid password'],
-    validReource: [isValidResource, '{VALUE} is not valid resource']
+    validResource: [isValidResource, '{VALUE} is not valid resource']
 };
 
 module.exports = is;
