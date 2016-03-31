@@ -74,7 +74,7 @@ prototypesController.createOne = function (req, res) {
         }
     }
     newPrototype.actions = json.hasOwnProperty('actions') ? json.actions : "";
-    newPrototype.owner = "admin"; // todo: later here will go current user (find him from token used)
+    newPrototype.owner = req.user._id;
     //console.log(newPrototype);
     var prototype = new ObjectsPrototype(newPrototype);
 
@@ -214,7 +214,7 @@ prototypesController.updateOne = function (req, res) {
             }
         }
         newPrototype.actions = json.hasOwnProperty('actions') ? json.actions : "";
-        newPrototype.owner = "admin"; // todo: later here will go current user (find him from token used)
+        newPrototype.owner = req.user._id;
         var objectsPrototype = new ObjectsPrototype(newPrototype);
 
         // delete current prototype

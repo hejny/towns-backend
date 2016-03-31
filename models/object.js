@@ -89,7 +89,6 @@ var schema = new db.Schema({
         type: String,
         required: true,
         trim: true,
-        default: "admin",
         validate: is.validOwnerId
     }
 }, {
