@@ -9,7 +9,7 @@ exports.up = function(db, next){
         version: 1
     });
 
-    var jsons = {
+    var testUserJson = {
         "profile": {
             "username": "testuser"
         },
@@ -17,21 +17,22 @@ exports.up = function(db, next){
             "password": "$2a$08$E39.h5.BhrVYkeScsWffWOpLNqDjVhLx9kfmtCyLZ5CoZzLod7BS2"
         }
     };
-    userModel.create(json, function (err, savedUser) {
-        if (err) return console.log(err);
-        userEvents.hasRegistered(savedUser);
-        next();
-    });
-    
-    var json2 = {
+
+    var adminJson = {
         "profile": {
             "username": "admin"
         },
         "login_methods": {
-            "password": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0.F7C0NLiX-s7VN0UL0ZGT6-6NsEFi_ory8UM5uxob804"
+            "password": "$2a$10$AwJmJRnTODwmZfSUivywjegEA1u.DfekCi48EKdr8boaG/xnx6GZe"
         }
     };
-    //TODO: finsh adding admin and then migrations owner
+
+    userModel.create(testUserJson, adminJson, function (err, savedTestuser, savedAdmin) {
+        if (err) return console.log(err);
+        userEvents.hasRegistered(savedTestuser);
+        userEvents.hasRegistered(savedAdmin);
+        next();
+    });
 };
 
 exports.down = function(db, next){

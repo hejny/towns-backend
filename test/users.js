@@ -4,6 +4,7 @@ var request = require('supertest');
 var config = require('../config/server').server;
 var UserModel = require('../models/user');
 var UserHistoryModel = require('../models/userHistory');
+var bcrypt = require('bcrypt');
 
 describe('Users', function () {
 
@@ -544,78 +545,85 @@ describe('Users', function () {
         });
 
         it('should update the requested user', function (done) {
-            // create mock user
-            userJson = {
-                "profile": {
-                    "username": "tester123321tester"
-                },
-                "login_methods": {
-                    "password": "something"
+            bcrypt.hash('password', 10, function (bcryptError, hash) {
+                if (bcryptError) {
+                    console.log(bcryptError);
                 }
 
-            };
-            var user = new UserModel(userJson);
-            user.save(function (err, savedUser) {
-                if (err) {
-                    throw err;
-                }
-
-                updateJson = {
+                // create mock user
+                userJson = {
                     "profile": {
-                        "username": "cannotBeChanged",
-                        "name": "Janko",
-                        "surname": "Mrkvicka",
-                        "email": "ja@towns.cz"
-
+                        "username": "tester123321tester"
                     },
-                    "language": "en"
+                    "login_methods": {
+                        "password": hash
+                    }
+
                 };
+                var user = new UserModel(userJson);
+                user.save(function (err, savedUser) {
+                    if (err) {
+                        throw err;
+                    }
 
-                // update it through api
-                request(url)
-                    .post('/users/' + savedUser._id)
-                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
-                    .send(updateJson)
-                    .expect('Content-Type', /json/)
-                    .expect(200) //Status code
-                    .end(function (err, res) {
-                        if (err) {
-                            throw err;
-                        }
+                    updateJson = {
+                        "profile": {
+                            "username": "cannotBeChanged",
+                            "name": "Janko",
+                            "surname": "Mrkvicka",
+                            "email": "ja@towns.cz"
 
-                        UserHistoryModel.findOneAndRemove({_current_id: savedUser._id}, function (err) {
+                        },
+                        "language": "en"
+                    };
+
+                    // update it through api
+                    request(url)
+                        .post('/users/' + savedUser._id)
+                        .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
+                        .send(updateJson)
+                        .expect('Content-Type', /json/)
+                        .expect(200) //Status code
+                        .end(function (err, res) {
                             if (err) {
                                 throw err;
                             }
+
+                            UserHistoryModel.findOneAndRemove({_current_id: savedUser._id}, function (err) {
+                                if (err) {
+                                    throw err;
+                                }
+                            });
+
+                            res.body.should.have.property('status');
+                            res.body.status.should.equal('ok');
+                            res.body.should.have.property('userId');
+
+                            // check that current values are updated
+                            UserModel.findOne({_id: res.body.userId}, function (err, saved) {
+                                if (err) {
+                                    throw err;
+                                }
+
+                                if (saved.profile.username != userJson.profile.username &&
+                                    saved.profile.name != updateJson.profile.name &&
+                                    saved.profile.surname != updateJson.profile.surname &&
+                                    saved.profile.email != updateJson.profile.email &&
+                                    saved.language != updateJson.language) {
+                                    throw new Error("Saved prototype is different than ");
+                                }
+
+                                // remove prototype
+                                saved.remove();
+
+                            });
+
+                            done();
                         });
 
-                        res.body.should.have.property('status');
-                        res.body.status.should.equal('ok');
-                        res.body.should.have.property('userId');
-
-                        // check that current values are updated
-                        UserModel.findOne({_id: res.body.userId}, function (err, saved) {
-                            if (err) {
-                                throw err;
-                            }
-
-                            if (saved.profile.username != userJson.profile.username &&
-                                saved.profile.name != updateJson.profile.name &&
-                                saved.profile.surname != updateJson.profile.surname &&
-                                saved.profile.email != updateJson.profile.email &&
-                                saved.language != updateJson.language) {
-                                throw new Error("Saved prototype is different than ");
-                            }
-
-                            // remove prototype
-                            saved.remove();
-
-                        });
-
-                        done();
-                    });
-
+                });
             });
+
         });
 
 
@@ -675,46 +683,52 @@ describe('Users', function () {
         });
         
         it('should delete the requested user', function (done) {
-            newUserJson = {
-                "profile": {
-                    "username": "test1233212testname"
-                },
-                "login_methods": {
-                    "password": "password"
+            bcrypt.hash('password', 10, function (bcryptError, hash) {
+                if (bcryptError) { 
+                    console.log(bcryptError);
                 }
-            };
-
-            var user = new UserModel(newUserJson);
-            user.save(function (err, savedUser) {
-                if (err) {
-                    throw err;
-                }
-                
-                request(url)
-                    .delete('/users/' + savedUser._id)
-                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
-                    .expect(204)
-                    .end(function (err, res) {
-                        if (err) {
-                            throw err;
-                        }
-                        
-                        UserHistoryModel.findOne({_current_id: savedUser._id}, function (err, history) {
+            
+                newUserJson = {
+                    "profile": {
+                        "username": "test1233212testname"
+                    },
+                    "login_methods": {
+                        "password": hash
+                    }
+                };
+    
+                var user = new UserModel(newUserJson);
+                user.save(function (err, savedUser) {
+                    if (err) {
+                        throw err;
+                    }
+                    
+                    request(url)
+                        .delete('/users/' + savedUser._id)
+                        .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
+                        .expect(204)
+                        .end(function (err, res) {
                             if (err) {
                                 throw err;
                             }
                             
-                            history.remove(function (err) {
+                            UserHistoryModel.findOne({_current_id: savedUser._id}, function (err, history) {
                                 if (err) {
                                     throw err;
                                 }
-
-                                done();
-
+                                
+                                history.remove(function (err) {
+                                    if (err) {
+                                        throw err;
+                                    }
+    
+                                    done();
+    
+                                });
                             });
                         });
-                    });
-
+    
+                });
             });
         });
         
