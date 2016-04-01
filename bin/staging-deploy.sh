@@ -12,7 +12,7 @@ ln -s /var/www/alpha_towns_cz/api-$NOW /var/www/alpha_towns_cz/current
 cp /var/www/ci_towns_cz/dotenv/.env.alpha /var/www/alpha_towns_cz/api-$NOW/.env
 
 # restart node server
-# pm2 start /var/www/aplha_towns_cz/current/bin/www --name alpha-api
+# pm2 start /var/www/alpha_towns_cz/current/bin/www --name alpha-api
 pm2 restart alpha-api
 
 # TODO: remove old build
