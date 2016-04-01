@@ -21,13 +21,15 @@ https://trello.com/b/beAsHIkG/backend
 	├── [bin]/
 	|   └── www                     <- shell starter for node server
 	├── [config]/                   <- central folder with all configurations
-	|   ├── mongo.json              <- settings for mongoDb connection
-	|   └── server.json             <- settings for api server
+	|   ├── db.js                   <- settings for mongoDb connection
+	|   └── server.js               <- settings for api server
 	├── [controllers]/              <- controllers for routes
 	|   ├── [api]/                  <- json api controllers
-	|   |   └── *.js                
-	|   └── [http]/                 <- html controllers
-	|       └── index.js            
+	|   |   └── *.js       
+	|   ├── [http]/                 <- html controllers
+	|   |   └── index.js     	         
+	|   └── [middleware]/           <- middlewares
+	|       └── *.js            
 	├── [layouts]/                  <- view templates for pages
 	├── [migrations]/               <- schemas and seeds for mongoDB collections    
 	|   └── 000x-*.js     
@@ -45,6 +47,7 @@ https://trello.com/b/beAsHIkG/backend
 	|   └── *.js
 	├── [test]/                     
 	|   └── *.js                    <- tests for mocha.js
+	├── .env                        <- environment variables (copy from .env.example and fill in details)
 	├── .gitignore                  <- files ignored but git
 	├── apiary.apib                 <- backup of API documentation from apiary 
 	├── gulpgile.js                 <- configuration for linter testing
@@ -66,15 +69,17 @@ We will assume that you already have installed **globally node and npm**.
 
 1. Go into api folder and install the necessary node modules (express framework, etc) with npm: `npm install`
 
-2. Create directory or symlink with project towns-shared in root
+2. copy .env.example to .env file and fill in the required details
+
+3. Create directory or symlink with project towns-shared in root
 
 
 
 ## Launching
 
-### Production environment
+### Production and testing environment
 
-Towns 5 Api server is node.js aplication and can be launched on production environments with command:
+Towns 5 Api server is node.js application and can be launched with command:
 
 	npm start
 
@@ -85,20 +90,15 @@ In case you use node manager like pm2, then go to root folder of project and run
 ### Develop environment
 
 In case you need to debug it or on develop environments set environment variable DEBUG=api:* This is set differently on
-Mac, Linux or windows. We also use nodemonitor, which detects changes in files and restarts when requested.
+Mac, Linux or windows. We also use nodemonitor, which detects changes in files and automatically restarts node.
 
 For for debugging on Linux and Mac use this
 
 	npm run start-debug
 	
-or with node monitor which will restart nodejs everytime API files are changed
-
-	npm run nodemonitor
-	
 or for Windows use this
 	
 	set DEBUG=api:* & npm start
-
 
 Api will be accessible on http://localhost:3000
 
@@ -116,17 +116,13 @@ Run changes in mongoDB schemas and seed new migrations (if necessary) by:
 DEVELOPERS ONLY: In case you want to drop all collections and create them again from migration collection use:
     
     npm run mongo-remigrate
-    #if you want to remigrate testing mognoDB(mLab) use this instead
-    npm run mongo-test-remigrate
 	
 ## Testing
 
-The api checks the environment variables and depending on them load correct DB and so on. Node starts automatically
-in production mode, therefore we have to set it test environment. Start the server with correct NODE_ENV. 
+Node loads automatically environment variables from .env file, therefore it have to be set to test environment. 
     
-    npm run start-test
+    npm run start
     
-
 ### 1. Linter
 
 You can run tests for javascript syntax errors with linter, just run
@@ -140,8 +136,5 @@ Test files are in `test` directory. You can run [Mocha](https://mochajs.org) tes
 [should.js](https://github.com/shouldjs/should.js) assertion library. Basically any assertion which throws error
 will work. Don't forget that node with API must be running to be able to test.
 
-	# in test environment
 	npm test
-	## or on dev machine
-	npm run mocha
 

@@ -300,9 +300,23 @@ describe('Users', function () {
 
     describe('Getting all users from API', function () {
 
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .get('/users')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+
         it('should return a list of users', function (done) {
             request(url)
                 .get('/users')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(200) //Status code
                 .end(function (err, res) {
@@ -372,6 +386,19 @@ describe('Users', function () {
 
     describe('Getting user with given id', function () {
 
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .get('/users/56eaa0ada7a2956d16b1d1fa')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+
         it('should return the requested user', function (done) {
 
             UserModel.findOne({'profile.username': 'testuser'}, function (err, user) {
@@ -381,6 +408,7 @@ describe('Users', function () {
 
                 request(url)
                     .get('/users/' + user._id)
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .expect('Content-Type', /json/)
                     .expect(200)
                     .end(function (err, res) {
@@ -408,6 +436,7 @@ describe('Users', function () {
         it("should error when the requested user id is not valid", function (done) {
             request(url)
                 .get('/users/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(500)
                 .end(function (err, res) {
@@ -429,6 +458,7 @@ describe('Users', function () {
         it("should return error if the requested user id doesn't exist", function (done) {
             request(url)
                 .get('/users/56eaa0ada7a2956d16b1d1fa')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400)
                 .end(function (err, res) {
@@ -450,9 +480,23 @@ describe('Users', function () {
 
     describe('Updating user with given id', function () {
 
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .post('/users/56af958fbb2d04ed141a24a7')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+
         it("should error when the userId in parameter is not valid", function (done) {
             request(url)
                 .post('/users/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -477,6 +521,7 @@ describe('Users', function () {
         it("should error when the requested userId doesn't exist", function (done) {
             request(url)
                 .post('/users/56af958fbb2d04ed141a24a7')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400) //Status code
                 .end(function (err, res) {
@@ -529,6 +574,7 @@ describe('Users', function () {
                 // update it through api
                 request(url)
                     .post('/users/' + savedUser._id)
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .send(updateJson)
                     .expect('Content-Type', /json/)
                     .expect(200) //Status code
@@ -577,9 +623,23 @@ describe('Users', function () {
 
     describe('Deleting user with given id', function () {
 
+        it('should return unauthorized without authorization token', function (done) {
+
+            request(url)
+                .delete('/users/56af958fbb2d04ed141a24a7')
+                .expect(401)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+        
         it("should error when the requested user id is not valid", function (done) {
             request(url)
                 .delete('/users/1234567890')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400)
                 .end(function (err, res) {
@@ -598,6 +658,7 @@ describe('Users', function () {
         it("should error when the requested user doesn't exist", function (done) {
             request(url)
                 .delete('/users/56af958fbb2d04ed141a24a7')
+                .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                 .expect('Content-Type', /json/)
                 .expect(400)
                 .end(function (err, res) {
@@ -631,6 +692,7 @@ describe('Users', function () {
                 
                 request(url)
                     .delete('/users/' + savedUser._id)
+                    .set('x-auth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU')
                     .expect(204)
                     .end(function (err, res) {
                         if (err) {

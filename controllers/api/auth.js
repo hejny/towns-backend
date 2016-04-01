@@ -1,7 +1,7 @@
 var UserModel = require('../../models/user');
 var jwt = require('jwt-simple');
 var bcrypt = require('bcrypt');
-var config = require('../../config/server.json');
+var server = require('../../config/server');
 
 /**
  * Handler for handling auth tokens
@@ -72,7 +72,7 @@ authController.createToken = function (req, res) {
                 });
             }
 
-            var token = jwt.encode({username: req.body.username}, config.secretKey);
+            var token = jwt.encode({username: req.body.username}, server.secretKey);
             return res.status(200).json({
                 'x-auth': token
             });
@@ -85,43 +85,10 @@ authController.createToken = function (req, res) {
  * @param res
  * @param req
  */
-authController.getStatus = function (req, res, next) {
-    if (!req.headers.hasOwnProperty('x-auth')) {
-        return res.sendStatus(401);
-    }
-
-    token = req.headers['x-auth'];
-    try {
-        var auth = jwt.decode(token, config.secretKey);
-    } catch (err) {
-        return res.status(400).json({
-            "status": "error",
-            "message": [{
-                param: "token",
-                msg: "Broken token",
-                val: "" + token
-            }]
-        });
-    }
-
-
-    UserModel.findOne({'profile.username': auth.username}, function (err, user) {
-        if (err || !user) {
-            return res.status(400).json({
-                "status": "error",
-                "message": [{
-                    param: "token",
-                    msg: "Invalid token",
-                    val: "" + token
-                }]
-            });
-        }
-
-        return res.status(200).json({
-            "status": "ok"
-        });
+authController.getStatus = function (req, res) {
+    return res.status(200).json({
+        "status": "ok"
     });
-
 };
 
 module.exports = authController;

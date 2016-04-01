@@ -8,3 +8,6 @@ asd.*
 
 # shared library is in different repository
 towns-shared/
+
+.env
+.env.test
