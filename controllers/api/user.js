@@ -1,6 +1,6 @@
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
-var config = require('../../config/server.json');
+var server = require('../../config/server');
 var UserModel = require('../../models/user');
 var UsersHistoryModel = require('../../models/userHistory');
 
@@ -156,7 +156,7 @@ userController.getUser = function (req, res) {
         return res.sendStatus(401);
     }
     var token = req.headers['x-auth'];
-    var auth = jwt.decode(token, config.secretKey);
+    var auth = jwt.decode(token, server.secretKey);
 
     UserModel.findOne({'profile.username': auth.username}, function (err, user) {
         if (err) {

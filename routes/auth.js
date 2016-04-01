@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var authController = require('../controllers/api/auth');
+var auth = require('../controllers/middleware/auth');
 
 /**
  * GET /auth
  * sending GET request should return status:"ok"
  */
-router.get('/', authController.getStatus);
+router.get('/', auth.check, authController.getStatus);
 
 /**
  * POST /auth
