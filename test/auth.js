@@ -2,6 +2,9 @@ var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
 var config = require('../config/server').server;
+var jwt = require('jwt-simple');
+var server = require('../config/server');
+var UserModel = require('../models/user');
 
 describe('Authentication', function () {
 
@@ -36,8 +39,8 @@ describe('Authentication', function () {
                     res.body.status.should.not.equal(null);
                     res.body.status.should.equal('error');
                     res.body.should.have.property('message');
-                    res.body.message[0].param.should.equal('body');
-                    res.body.message[0].msg.should.equal('username and password must be present');
+                    res.body.message[0].param.should.equal('username');
+                    res.body.message[0].msg.should.equal('Username must be present');
                     res.body.message[0].val.should.equal('');
                     done();
                 });
@@ -76,7 +79,7 @@ describe('Authentication', function () {
 
         it("should fail when user doesn't exist", function (done) {
             var json = {
-                'username': 'this username surely doesnt exit or I eat my shoe',
+                'username': 'this username surely doesnt exist or I eat my shoe',
                 'password': 'password'
 
             };
@@ -98,7 +101,7 @@ describe('Authentication', function () {
                     res.body.should.have.property('message');
                     res.body.message[0].param.should.equal('username');
                     res.body.message[0].msg.should.equal('There is no such user');
-                    res.body.message[0].val.should.equal('this username surely doesnt exit or I eat my shoe');
+                    res.body.message[0].val.should.equal('this username surely doesnt exist or I eat my shoe');
                     done();
                 });
 
@@ -124,8 +127,8 @@ describe('Authentication', function () {
                     res.body.status.should.not.equal(null);
                     res.body.status.should.equal('error');
                     res.body.should.have.property('message');
-                    res.body.message[0].param.should.equal('body');
-                    res.body.message[0].msg.should.equal('username and password must be present');
+                    res.body.message[0].param.should.equal('password');
+                    res.body.message[0].msg.should.equal('Password must be present');
                     res.body.message[0].val.should.equal('');
                     done();
                 });
@@ -167,25 +170,36 @@ describe('Authentication', function () {
                 'username': 'testuser',
                 'password': 'password'
             };
+            UserModel.findOne({'profile.username': 'testuser'}, function (err, user) {
+                if (err) {
+                    throw err;
+                }
 
-            request(url)
-                .post('/auth')
-                .send(json)
-                .expect('Content-Type', /json/)
-                .expect(200) //Status code
-                .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
+                var token = jwt.encode(
+                    {
+                        id: user._id,
+                        username: 'testuser'
+                    },
+                    server.secretKey);
 
-                    res.body.should.have.property('x-auth');
-                    res.body["x-auth"].should.not.equal(null);
-                    res.body["x-auth"].should.equal('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIn0.xyrhj0YRax4aylMdElRXqHh2vIltDIi22-kCgDvZsxU');
+                request(url)
+                    .post('/auth')
+                    .send(json)
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
 
-                    done();
+                        res.body.should.have.property('x-auth');
+                        res.body["x-auth"].should.not.equal(null);
+                        res.body["x-auth"].should.equal(token);
 
-                });
+                        done();
 
+                    });
+            });
         });
 
     });

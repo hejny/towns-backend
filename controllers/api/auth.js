@@ -13,16 +13,31 @@ var authController = {};
  * Creates token
  * @param req
  * @param res
+ * @returns {*}
  */
 authController.createToken = function (req, res) {
+
     if ((typeof req.body.username == 'undefined') || (typeof req.body.password == 'undefined')) {
+        var msgs = [];
+        if (typeof req.body.username == 'undefined') {
+            msgs[msgs.length] = {
+                param: "username",
+                msg: "Username must be present",
+                val: ""
+            };
+        }
+
+        if (typeof req.body.password == 'undefined') {
+            msgs[msgs.length] = {
+                param: "password",
+                msg: "Password must be present",
+                val: ""
+            };
+        }
+
         return res.status(400).json({
             "status": "error",
-            "message": [{
-                param: "body",
-                msg: "username and password must be present",
-                val: ""
-            }]
+            "message": msgs
         });
     }
 
@@ -72,7 +87,12 @@ authController.createToken = function (req, res) {
                 });
             }
 
-            var token = jwt.encode({id:user._id,username: req.body.username}, server.secretKey);
+            var token = jwt.encode(
+                {
+                    id: user._id,
+                    username: req.body.username
+                },
+                server.secretKey);
             return res.status(200).json({
                 'x-auth': token
             });
