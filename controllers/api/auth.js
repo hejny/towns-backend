@@ -72,7 +72,7 @@ authController.createToken = function (req, res) {
                 });
             }
 
-            var token = jwt.encode({username: req.body.username}, server.secretKey);
+            var token = jwt.encode({id:user._id,username: req.body.username}, server.secretKey);
             return res.status(200).json({
                 'x-auth': token
             });
