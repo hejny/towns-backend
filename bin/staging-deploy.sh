@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # format current date
-NOW=$(date +"%F_%H-%M-%S")
+NOW=$(date +"%F_%H%M%S")
 
 # copy and symlink new build
 cp -r $PWD /var/www/alpha_towns_cz/api-$NOW
-ln -s /var/www/alpha_towns_cz/api-$NOW /var/www/aplha_towns_cz/current
+ln -s /var/www/alpha_towns_cz/api-$NOW /var/www/alpha_towns_cz/current
 
 # replace test .env file with staging
 #sed -i 's/NODE_ENV=test/NODE_ENV=staging/g' $PWD/.env
