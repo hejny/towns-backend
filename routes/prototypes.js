@@ -7,7 +7,7 @@ var prototypesController = require('../controllers/api/prototypes');
  * GET /objects/prototypes
  * Return all prototypes
  */
-router.get('/', auth.check, prototypesController.getAll);
+router.get('/', prototypesController.getAll);
 
 /**
  * POST /objects/prototypes

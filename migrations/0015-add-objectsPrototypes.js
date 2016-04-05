@@ -16,7 +16,7 @@ exports.up = function (db, next) {
 
         var reportError = function (err, savedProto) {
             if (err) return console.log(err);
-            // saved!
+            // console.log(savedProto);
         };
 
         var buildingsPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/buildings/main");
@@ -28,17 +28,21 @@ exports.up = function (db, next) {
 
         var storiesPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/stories");
         require("fs").readdirSync(storiesPath).forEach(function (file) {
-            prototypesJson = require("towns5shared/objects/stories/" + file);
-            for (var i; i<prototypesJson.length; ++i) {
-                ObjectsPrototype.create(prototypeJson[i], reportError);
+            prototypeJson = require("towns5shared/objects/stories/" + file);
+            for (var i = 0; i<prototypeJson.length; i++) {
+                var importThis = prototypeJson[i];
+                importThis.owner = user._id;
+                ObjectsPrototype.create(importThis, reportError);
             }
         });
 
         var terrainsPath = require("path").join(__dirname, "../node_modules/towns5shared/objects/terrains");
         require("fs").readdirSync(terrainsPath).forEach(function (file) {
-            prototypesJson = require("towns5shared/objects/terrains/" + file);
-            for (var i; i<prototypeJson.length; ++i) {
-                ObjectsPrototype.create(prototypeJson[i], reportError);
+            prototypeJson = require("towns5shared/objects/terrains/" + file);
+            for (var i = 0; i<prototypeJson.length; i++) {
+                var importThis = prototypeJson[i];
+                importThis.owner = user._id;
+                ObjectsPrototype.create(importThis, reportError);
             }
         });
 
