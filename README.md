@@ -71,9 +71,6 @@ We will assume that you already have installed **globally node and npm**.
 
 2. copy .env.example to .env file and fill in the required details
 
-3. Create directory or symlink with project towns-shared in root
-
-
 
 ## Launching
 

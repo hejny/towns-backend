@@ -48,11 +48,11 @@ describe('Prototypes', function () {
                 });
         });
         
-        it('should return unauthorized without authorization token', function (done) {
+        it('should proceed even without authorization token', function (done) {
 
             request(url)
                 .get('/objects/prototypes')
-                .expect(401)
+                .expect(200)
                 .end(function (err, res) {
                     if (err) {
                         throw err;
