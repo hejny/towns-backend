@@ -27,6 +27,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 var indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
 
+// route for actions
+var actionRoutes = require('./routes/actions');
+app.use('/actions', actionRoutes);
+
 // route for objects API
 var prototypesRoutes = require('./routes/prototypes');
 app.use('/objects/prototypes', prototypesRoutes);
