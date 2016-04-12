@@ -1,5 +1,5 @@
-var db = require('./services/db');
-var is = require('./services/validation');
+var db = require('./../services/db');
+var is = require('./../services/validation');
 
 var resourcesSchema = new db.Schema({
     version: {

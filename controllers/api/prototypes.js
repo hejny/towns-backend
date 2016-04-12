@@ -1,5 +1,5 @@
-var ObjectsPrototypesHistory = require('../../models/objectsPrototypesHistory.js');
-var ObjectsPrototype = require('../../models/objectsPrototype');
+var ObjectsPrototypesHistory = require('../../database/models/objectsPrototypesHistory.js');
+var ObjectsPrototype = require('../../database/models/objectsPrototype');
 
 /**
  * Handler for work with ObjectPrototypes Collection

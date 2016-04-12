@@ -1,28 +1,23 @@
 
-var db = require('./services/db');
-var is = require('./services/validation');
+var db = require('./../services/db');
+var is = require('./../services/validation');
 
 /*
  Changes in this db.Schema should be applied in all object schema files!
 
- ObjectsPrototypesHistory - current
+ ObjectsPrototypesHistory
  ←
- ObjectsPrototypes
+ ObjectsPrototypes - current
  →
  Objects
  →
  ObjectsHistory
 
  */
-var prototypesHistorySchema = new db.Schema({
-    _prototypeId: {
-        type: String,
-        required:true,
-        trim: true,
-        validate: is.validObjectId
-    },
+var prototypeSchema = new db.Schema({
     name: {
         type: String,
+        required: true,
         minlength: 1,
         maxlength: 64,
         trim: true,
@@ -36,7 +31,9 @@ var prototypesHistorySchema = new db.Schema({
     },
     subtype: {
         type: String,
-        trim: true
+        trim: true,
+        default: "",
+        validate: is.validObjectSubType
     },
     locale: {
         type: String,
@@ -66,9 +63,9 @@ var prototypesHistorySchema = new db.Schema({
         validate: is.validOwnerId
     }
 }, {
-    collection: 'objectsPrototypesHistory',
+    collection: 'objectsPrototypes',
     versionKey: "_version"
 });
 
-var objectsPrototypesHistory = db.model('objectsPrototypesHistory', prototypesHistorySchema, 'objectsPrototypesHistory');
-module.exports = objectsPrototypesHistory;
+var objectsPrototype = db.model('objectsPrototypes', prototypeSchema, 'objectsPrototypes');
+module.exports = objectsPrototype;

@@ -1,5 +1,5 @@
 var server = require('../../config/server');
-var ResourcesModel = require('../../models/resources');
+var ResourcesModel = require('../../database/models/resources');
 var userEvents = require('../../events/user');
 
 /**
