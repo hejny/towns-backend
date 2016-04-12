@@ -1,23 +1,28 @@
 
-var db = require('./services/db');
-var is = require('./services/validation');
+var mongoose = require('./../services/mongoose');
+var is = require('./../services/validation');
 
 /*
  Changes in this db.Schema should be applied in all object schema files!
 
- ObjectsPrototypesHistory
+ ObjectsPrototypesHistory - current
  ←
- ObjectsPrototypes - current
+ ObjectsPrototypes
  →
  Objects
  →
  ObjectsHistory
 
  */
-var prototypeSchema = new db.Schema({
+var prototypesHistorySchema = new mongoose.Schema({
+    _prototypeId: {
+        type: String,
+        required:true,
+        trim: true,
+        validate: is.validObjectId
+    },
     name: {
         type: String,
-        required: true,
         minlength: 1,
         maxlength: 64,
         trim: true,
@@ -31,9 +36,7 @@ var prototypeSchema = new db.Schema({
     },
     subtype: {
         type: String,
-        trim: true,
-        default: "",
-        validate: is.validObjectSubType
+        trim: true
     },
     locale: {
         type: String,
@@ -44,7 +47,7 @@ var prototypeSchema = new db.Schema({
     },
     design: {
         type: {type: String, default: "model", trim: true},
-        data: db.Schema.Types.Mixed
+        data: mongoose.Schema.Types.Mixed
     },
     content: {
         type: {type: String, default: "markdown", trim: true},
@@ -63,9 +66,9 @@ var prototypeSchema = new db.Schema({
         validate: is.validOwnerId
     }
 }, {
-    collection: 'objectsPrototypes',
+    collection: 'objectsPrototypesHistory',
     versionKey: "_version"
 });
 
-var objectsPrototype = db.model('objectsPrototypes', prototypeSchema, 'objectsPrototypes');
-module.exports = objectsPrototype;
+var objectsPrototypesHistory = mongoose.model('objectsPrototypesHistory', prototypesHistorySchema, 'objectsPrototypesHistory');
+module.exports = objectsPrototypesHistory;

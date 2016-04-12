@@ -1,4 +1,4 @@
-var UserModel = require('../../models/user');
+var UserModel = require('../../database/models/user');
 var jwt = require('jwt-simple');
 var bcrypt = require('bcrypt');
 var server = require('../../config/server');

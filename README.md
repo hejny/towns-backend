@@ -17,8 +17,8 @@ https://trello.com/b/beAsHIkG/backend
 
 ## Folder Structure
 
-    [towns5]/                   <- root adresár
-	├── [bin]/
+    [towns5]/                       <- root folder
+	├── [bin]/                      <- all shell scripts for app
 	|   └── www                     <- shell starter for node server
 	├── [config]/                   <- central folder with all configurations
 	|   ├── db.js                   <- settings for mongoDb connection
@@ -30,16 +30,20 @@ https://trello.com/b/beAsHIkG/backend
 	|   |   └── index.js     	         
 	|   └── [middleware]/           <- middlewares
 	|       └── *.js            
-	├── [layouts]/                  <- view templates for pages
-	├── [migrations]/               <- schemas and seeds for mongoDB collections    
-	|   └── 000x-*.js     
-	├── [models]/                   <- collection models for mongoose
+	├── [database]/                 <- data related classes
+	|   ├── [backup]/               <- DB backups and backup script
+	|   ├── [migrations]/           <- schemas and seeds for mongoDB collections    
+    |	|   └── 00xy-*.js     
+	|   ├── [models]/               <- collection models for mongoose
+	|   |   └── *.js                <- all models sits here
 	|   ├── [schemas]/              <- Schemas are partials of collections 
 	|   |   └── *.js                
-	|   ├── [services]/             <- model helpers
-	|   |   ├── db.js               <- connection to DB 
-	|   |   └── validation.js       <- validations of models are here
-	|   ├── *.js                    <- all models sits here
+	|   ├── [seeds]/                
+	|   |   └── *.js                <- seeded data
+	|   └── [services]/             <- model helpers
+	|       ├── mongoose.js         <- mongoose wrapper around DB 
+	|       └── validation.js       <- validations of models are here
+	├── [layouts]/                  <- view templates for pages
 	├── [public]/                   <- publicly accessible folder for node server 
 	|   └── [css]/
 	|       └── style.css
@@ -103,12 +107,15 @@ Tip: Consider using [pm2](https://www.npmjs.com/package/pm2) for running node se
 
 ## Migrations
 
-The code has also some default objects, which should be migrated into new mongoDB. This will show you the structure
-of DB tables and adds you some objects to use with API.
+The code has some default objects and schemes, which should be migrated into applications mongoDB.
 
-Run changes in mongoDB schemas and seed new migrations (if necessary) by: 
+Run new changes in mongoDB schemas and seed new migrations (if necessary) by running: 
 
     npm run mongo-migrate
+    
+You can easily backup current DB (using current the .env). It will be saved in folder like this: `/database/backup/db-20160412-1649.tar` by running:
+ 
+    npm run mongo-backup
     
 DEVELOPERS ONLY: In case you want to drop all collections and create them again from migration collection use:
     
@@ -120,14 +127,14 @@ Node loads automatically environment variables from .env file, therefore it have
     
     npm run start
     
-### 1. Linter
+### with Linter
 
 You can run tests for javascript syntax errors with linter, just run
 
 	gulp test
 
 
-### 2. Mocha
+### with Mocha
  
 Test files are in `test` directory. You can run [Mocha](https://mochajs.org) testing framework with BDD style
 [should.js](https://github.com/shouldjs/should.js) assertion library. Basically any assertion which throws error

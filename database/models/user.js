@@ -1,6 +1,6 @@
-var db = require('./services/db');
-var is = require('./services/validation');
-var profileSchema = require('./schemas/profile');
+var mongoose = require('./../services/mongoose');
+var is = require('./../services/validation');
+var profileSchema = require('./../schemas/profile');
 
 /*
  Changes in this db.Schema should be applied in all object schema files!
@@ -13,25 +13,14 @@ var profileSchema = require('./schemas/profile');
 
  */
 
-var usersHistorySchema = new db.Schema({
+var userSchema = new mongoose.Schema({
     version: {
         type: Number,
         required: true,
         default: 0,
         validate: is.validObjectVersion
     },
-    _current_id: {
-        type: String,
-        required:true,
-        trim: true,
-        validate: is.validObjectId
-    },
     start_time: {
-        type: Date,
-        required: true,
-        validate: is.validDate
-    },
-    stop_time: {
         type: Date,
         required: true,
         default: Date.now,
@@ -65,9 +54,8 @@ var usersHistorySchema = new db.Schema({
         validate: is.validLocale
     }
 }, {
-    collection: 'usersHistory',
     versionKey: "_version"
 });
 
-var usersHistory = db.model('usersHistory', usersHistorySchema, 'usersHistory');
-module.exports = usersHistory;
+var users = mongoose.model('users', userSchema);
+module.exports = users;

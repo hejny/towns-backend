@@ -11,3 +11,5 @@ towns-shared/
 
 .env
 .env.test
+
+database/backup/*.tar
