@@ -1,5 +1,5 @@
 
-var db = require('./../services/db');
+var mongoose = require('./../services/mongoose');
 var is = require('./../services/validation');
 
 /*
@@ -14,7 +14,7 @@ var is = require('./../services/validation');
  ObjectsHistory
 
  */
-var prototypesHistorySchema = new db.Schema({
+var prototypesHistorySchema = new mongoose.Schema({
     _prototypeId: {
         type: String,
         required:true,
@@ -47,7 +47,7 @@ var prototypesHistorySchema = new db.Schema({
     },
     design: {
         type: {type: String, default: "model", trim: true},
-        data: db.Schema.Types.Mixed
+        data: mongoose.Schema.Types.Mixed
     },
     content: {
         type: {type: String, default: "markdown", trim: true},
@@ -70,5 +70,5 @@ var prototypesHistorySchema = new db.Schema({
     versionKey: "_version"
 });
 
-var objectsPrototypesHistory = db.model('objectsPrototypesHistory', prototypesHistorySchema, 'objectsPrototypesHistory');
+var objectsPrototypesHistory = mongoose.model('objectsPrototypesHistory', prototypesHistorySchema, 'objectsPrototypesHistory');
 module.exports = objectsPrototypesHistory;

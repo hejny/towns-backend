@@ -1,10 +1,10 @@
-var db = require('./../services/db');
+var mongoose = require('./../services/mongoose');
 var is = require('./../services/validation');
 
 // profile schema is used in following models:
 // - user
 
-var profileSchema = new db.Schema({
+var profileSchema = new mongoose.Schema({
     username: {
         type: String,
         trim: true,

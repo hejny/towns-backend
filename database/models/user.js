@@ -1,4 +1,4 @@
-var db = require('./../services/db');
+var mongoose = require('./../services/mongoose');
 var is = require('./../services/validation');
 var profileSchema = require('./../schemas/profile');
 
@@ -13,7 +13,7 @@ var profileSchema = require('./../schemas/profile');
 
  */
 
-var userSchema = new db.Schema({
+var userSchema = new mongoose.Schema({
     version: {
         type: Number,
         required: true,
@@ -57,5 +57,5 @@ var userSchema = new db.Schema({
     versionKey: "_version"
 });
 
-var users = db.model('users', userSchema);
+var users = mongoose.model('users', userSchema);
 module.exports = users;
