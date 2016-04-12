@@ -3,8 +3,9 @@ require('mongoose-double')(mongoose);
 var mongo = require('../../config/db').mongoDb;
 
 var credentials = (mongo.username !== "" && mongo.password !== "") ? mongo.username + ':' + mongo.password : "";
+var uri = mongo.protocol + '//' + credentials + '@' + mongo.host + ':' + mongo.port + '/' + mongo.db;
 try {
-    mongoose.connect(mongo.protocol + '//' + credentials + '@' + mongo.host + ':' + mongo.port + '/' + mongo.db, function () {
+    mongoose.connect(uri, function () {
         console.log("Connected to " + mongo.db + " @ " + mongo.host);
     });
 } catch (e) {
