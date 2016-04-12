@@ -2,8 +2,8 @@ var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
 var config = require('../config/server').server;
-var UserModel = require('../models/user');
-var UserHistoryModel = require('../models/userHistory');
+var UserModel = require('../database/models/user');
+var UserHistoryModel = require('../database/models/userHistory');
 var bcrypt = require('bcrypt');
 
 describe('Users', function () {

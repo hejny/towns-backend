@@ -1,6 +1,6 @@
-var db = require('./services/db');
-var is = require('./services/validation');
-var profileSchema = require('./schemas/profile');
+var db = require('./../services/db');
+var is = require('./../services/validation');
+var profileSchema = require('./../schemas/profile');
 
 /*
  Changes in this db.Schema should be applied in all object schema files!

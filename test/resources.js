@@ -2,9 +2,9 @@ var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
 var config = require('../config/server').server;
-var is = require('../models/services/validation');
-var ResourcesModel = require('../models/resources');
-var UserModel = require('../models/user');
+var is = require('../database/services/validation');
+var ResourcesModel = require('../database/models/resources');
+var UserModel = require('../database/models/user');
 
 describe('Resources', function () {
 

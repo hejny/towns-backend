@@ -1,26 +1,20 @@
-var db = require('./services/db');
-var is = require('./services/validation');
+var db = require('./../services/db');
+var is = require('./../services/validation');
 
 /*
- Changes in this db.Schema should be applied in all object schema files!
+Changes in this db.Schema should be applied in all object schema files!
 
- ObjectsPrototypesHistory
- ←
- ObjectsPrototypes
- →
- Objects
- →
- ObjectsHistory - current
+ObjectsPrototypesHistory
+←
+ObjectsPrototypes
+→
+Objects - current
+→
+ObjectsHistory
 
- */
-var historySchema = new db.Schema({
+*/
+var schema = new db.Schema({
     _prototypeId: {
-        type: String,
-        required:true,
-        trim: true,
-        validate: is.validObjectId
-    },
-    _currentId: {
         type: String,
         required:true,
         trim: true,
@@ -62,11 +56,6 @@ var historySchema = new db.Schema({
     start_time: {
         type: Date,
         required: true,
-        validate: is.validDate
-    },
-    stop_time: {
-        type: Date,
-        required:true,
         default: Date.now,
         validate: is.validCurrentDate
     },
@@ -80,6 +69,11 @@ var historySchema = new db.Schema({
     design: {
         type: {type: String, default: "model", trim: true},
         data: db.Schema.Types.Mixed
+        /*{//[PH] This is specification for only one type of data - model. In future there will be other types with different specifications.
+            particles: Array,
+            rotation: {type: Number, default: 0},
+            size: {type: Number, default: 1}
+        }*/
     },
     content: {
         type: {type: String, default: "markdown", trim: true},
@@ -98,9 +92,8 @@ var historySchema = new db.Schema({
         validate: is.validOwnerId
     }
 }, {
-    collection: 'objectsHistory', 
     versionKey: "_version"
 });
 
-var objectsHistory = db.model('objectsHistory', historySchema, 'objectsHistory');
-module.exports = objectsHistory;
+var object = db.model('objects', schema);
+module.exports = object;

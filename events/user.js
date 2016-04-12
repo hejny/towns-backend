@@ -1,6 +1,6 @@
 const util = require('util');
 const EventEmitter = require('events').EventEmitter;
-var ResourcesModel = require('../models/resources');
+var ResourcesModel = require('../database/models/resources');
 
 /**
  * Event Handler

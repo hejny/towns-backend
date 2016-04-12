@@ -1,8 +1,8 @@
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
 var server = require('../../config/server');
-var UserModel = require('../../models/user');
-var UsersHistoryModel = require('../../models/userHistory');
+var UserModel = require('../../database/models/user');
+var UsersHistoryModel = require('../../database/models/userHistory');
 var userEvents = require('../../events/user');
 /**
  * Controller for handling users

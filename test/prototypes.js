@@ -2,9 +2,9 @@ var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
 var config = require('../config/server').server;
-var ObjectsPrototype = require('../models/objectsPrototype');
-var ObjectsPrototypesHistory = require('../models/objectsPrototypesHistory');
-var UserModel = require('../models/user');
+var ObjectsPrototype = require('../database/models/objectsPrototype');
+var ObjectsPrototypesHistory = require('../database/models/objectsPrototypesHistory');
+var UserModel = require('../database/models/user');
 
 describe('Prototypes', function () {
 
