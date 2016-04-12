@@ -1,6 +1,6 @@
 {
   "name": "towns5api",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "API SERVER for Towns 5",
   "private": true,
   "scripts": {
