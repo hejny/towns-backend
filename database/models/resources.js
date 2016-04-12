@@ -1,7 +1,7 @@
-var db = require('./../services/db');
+var mongoose = require('./../services/mongoose');
 var is = require('./../services/validation');
 
-var resourcesSchema = new db.Schema({
+var resourcesSchema = new mongoose.Schema({
     version: {
         type: Number,
         required: true,
@@ -54,5 +54,5 @@ var resourcesSchema = new db.Schema({
     versionKey: "_version"
 });
 
-var resources = db.model('resources', resourcesSchema, 'resources');
+var resources = mongoose.model('resources', resourcesSchema, 'resources');
 module.exports = resources;

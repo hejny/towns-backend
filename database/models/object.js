@@ -1,4 +1,4 @@
-var db = require('./../services/db');
+var mongoose = require('./../services/mongoose');
 var is = require('./../services/validation');
 
 /*
@@ -13,7 +13,7 @@ Objects - current
 ObjectsHistory
 
 */
-var schema = new db.Schema({
+var schema = new mongoose.Schema({
     _prototypeId: {
         type: String,
         required:true,
@@ -44,12 +44,12 @@ var schema = new db.Schema({
         trim: true
     },
     x: {
-        type: db.Schema.Types.Double,
+        type: mongoose.Schema.Types.Double,
         required: true,
         validate: is.validObjectCoordinate
     },
     y: {
-        type: db.Schema.Types.Double,
+        type: mongoose.Schema.Types.Double,
         required: true,
         validate: is.validObjectCoordinate
     },
@@ -68,7 +68,7 @@ var schema = new db.Schema({
     },
     design: {
         type: {type: String, default: "model", trim: true},
-        data: db.Schema.Types.Mixed
+        data: mongoose.Schema.Types.Mixed
         /*{//[PH] This is specification for only one type of data - model. In future there will be other types with different specifications.
             particles: Array,
             rotation: {type: Number, default: 0},
@@ -95,5 +95,5 @@ var schema = new db.Schema({
     versionKey: "_version"
 });
 
-var object = db.model('objects', schema);
+var object = mongoose.model('objects', schema);
 module.exports = object;
