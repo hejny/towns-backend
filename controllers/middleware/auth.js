@@ -1,6 +1,6 @@
 var jwt = require('jwt-simple');
 var server = require('../../config/server');
-var UserModel = require('../../models/user');
+var UserModel = require('../../database/models/user');
 
 /**
  * Middleware for authentications 

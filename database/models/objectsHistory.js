@@ -1,25 +1,36 @@
-
-var db = require('./services/db');
-var is = require('./services/validation');
+var mongoose = require('./../services/mongoose');
+var is = require('./../services/validation');
 
 /*
  Changes in this db.Schema should be applied in all object schema files!
 
- ObjectsPrototypesHistory - current
+ ObjectsPrototypesHistory
  ←
  ObjectsPrototypes
  →
  Objects
  →
- ObjectsHistory
+ ObjectsHistory - current
 
  */
-var prototypesHistorySchema = new db.Schema({
+var historySchema = new mongoose.Schema({
     _prototypeId: {
         type: String,
         required:true,
         trim: true,
         validate: is.validObjectId
+    },
+    _currentId: {
+        type: String,
+        required:true,
+        trim: true,
+        validate: is.validObjectId
+    },
+    version: {
+        type: Number,
+        required: true,
+        default: 0,
+        validate: is.validObjectVersion
     },
     name: {
         type: String,
@@ -38,6 +49,27 @@ var prototypesHistorySchema = new db.Schema({
         type: String,
         trim: true
     },
+    x: {
+        type: mongoose.Schema.Types.Double,
+        required: true,
+        validate: is.validObjectCoordinate
+    },
+    y: {
+        type: mongoose.Schema.Types.Double,
+        required: true,
+        validate: is.validObjectCoordinate
+    },
+    start_time: {
+        type: Date,
+        required: true,
+        validate: is.validDate
+    },
+    stop_time: {
+        type: Date,
+        required:true,
+        default: Date.now,
+        validate: is.validCurrentDate
+    },
     locale: {
         type: String,
         trim: true,
@@ -47,11 +79,11 @@ var prototypesHistorySchema = new db.Schema({
     },
     design: {
         type: {type: String, default: "model", trim: true},
-        data: db.Schema.Types.Mixed
+        data: mongoose.Schema.Types.Mixed
     },
     content: {
         type: {type: String, default: "markdown", trim: true},
-        data: {type: String}
+        data: {type: String, trim: true}
     },
     properties: {
         strength: {type: Number},
@@ -66,9 +98,9 @@ var prototypesHistorySchema = new db.Schema({
         validate: is.validOwnerId
     }
 }, {
-    collection: 'objectsPrototypesHistory',
+    collection: 'objectsHistory', 
     versionKey: "_version"
 });
 
-var objectsPrototypesHistory = db.model('objectsPrototypesHistory', prototypesHistorySchema, 'objectsPrototypesHistory');
-module.exports = objectsPrototypesHistory;
+var objectsHistory = mongoose.model('objectsHistory', historySchema, 'objectsHistory');
+module.exports = objectsHistory;

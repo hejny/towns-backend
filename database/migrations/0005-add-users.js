@@ -1,6 +1,6 @@
 var mongodb = require('mongodb');
 var userModel = require("./../models/user");
-var userEvents = require('../events/user');
+var userEvents = require('../../events/user');
 
 exports.up = function(db, next){
 

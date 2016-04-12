@@ -4,7 +4,7 @@ var request = require('supertest');
 var config = require('../config/server').server;
 var jwt = require('jwt-simple');
 var server = require('../config/server');
-var UserModel = require('../models/user');
+var UserModel = require('../database/models/user');
 
 describe('Authentication', function () {
 

@@ -1,6 +1,6 @@
-var ObjectModel = require('../../models/object');
-var ObjectsPrototype = require('../../models/objectsPrototype');
-var ObjectsHistory = require('../../models/objectsHistory');
+var ObjectModel = require('../../database/models/object');
+var ObjectsPrototype = require('../../database/models/objectsPrototype');
+var ObjectsHistory = require('../../database/models/objectsHistory');
 var check = require('validator');
 
 /**

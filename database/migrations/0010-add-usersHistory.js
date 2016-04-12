@@ -1,4 +1,3 @@
-
 var mongodb = require('mongodb');
 
 exports.up = function(db, next){
