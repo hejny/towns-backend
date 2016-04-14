@@ -1,11 +1,13 @@
 var buildings = [
+
     {
         name: "Katapult",
         type: "building",
         subtype: "main",
+
         design: {
             type: "model",
-            data: {
+            data:  {
                 "name": "root",
                 "particles": [
                     {
@@ -264,25 +266,28 @@ var buildings = [
                 "size": 1
             }
         },
+
+
+
         actions: [
             /**/{
                 "type": "defense",
-                "params": {
+                "params":{
                     "defense": 1//[lifes / round]
                 }
-            }, /**/
+            },/**/
             /**/{
                 "type": "regenerate",
-                "params": {
+                "params":{
                     "regenerate": 3600//[s]
                 }
-            }, /**/
+            },/**/
             /**/{
                 "type": "repair",
-                "params": {
+                "params":{
                     "repair": 100//[%]
                 }
-            }, /**/
+            },/**/
             /*/{
              "type": "mine",
              "params":{
@@ -292,29 +297,36 @@ var buildings = [
              },/**/
             /**/{
                 "type": "attack",
-                "params": {
+                "params":{
                     "distance": 5,//[fields]
                     "strength": 1,//[lifes / round]
                     "rounds": 5,//[rounds]
                     "cooldown": 600//[s]
                 }
-            }, /**/
+            },/**/
             /**/{
                 "type": "move",
-                "params": {
+                "params":{
                     "speed": 1//[fields / s]
 
                 }
-            }, /**/
+            },/**/
             /**/{
                 "type": "throughput",
-                "params": {
+                "params":{
                     "throughput": 20//[%]
                 }
             }
         ]
+
+
     }
     ,
+
+
+
+
+
     {
         name: "Beranidlo",
         type: "building",
@@ -322,7 +334,7 @@ var buildings = [
 
         design: {
             type: "model",
-            data: {
+            data:  {
                 "name": "root",
                 "particles": [
                     {
@@ -633,22 +645,22 @@ var buildings = [
         actions: [
             /**/{
                 "type": "defense",
-                "params": {
+                "params":{
                     "defense": 2//[lifes / round]
                 }
-            }, /**/
+            },/**/
             /**/{
                 "type": "regenerate",
-                "params": {
+                "params":{
                     "regenerate": 3600//[s]
                 }
-            }, /**/
+            },/**/
             /**/{
                 "type": "repair",
-                "params": {
+                "params":{
                     "repair": 50//[%]
                 }
-            }, /**/
+            },/**/
             /*/{
              "type": "mine",
              "params":{
@@ -658,23 +670,23 @@ var buildings = [
              },/**/
             /**/{
                 "type": "attack",
-                "params": {
+                "params":{
                     "distance": 1,//[fields]
                     "strength": 5,//[lifes / round]
                     "rounds": 1,//[rounds]
                     "cooldown": 2//[s]
                 }
-            }, /**/
+            },/**/
             /**/{
                 "type": "move",
-                "params": {
+                "params":{
                     "speed": 1//[fields / s]
 
                 }
-            }, /**/
+            },/**/
             /**/{
                 "type": "throughput",
-                "params": {
+                "params":{
                     "throughput": 20//[%]
                 }
             }
@@ -682,6 +694,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Těžba hlíny",
         type: "building",
@@ -892,6 +909,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Těžba železa",
         type: "building",
@@ -899,32 +921,140 @@ var buildings = [
 
         design: {
             type: "model",
-            data: {
-                name:'root',
-                particles: [
+            data:  {
+                "name": "root",
+                "particles": [
                     {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
+                        "name": "",
+                        "particles": [
+                            {
+                                "name": "",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 6,
+                                    "top": 0.25,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "stone_bricks",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": {
+                                    "x": 20,
+                                    "y": 20,
+                                    "z": 30
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            },
+                            {
+                                "name": "",
+                                "particles": [
+                                    {
+                                        "name": "u",
+                                        "particles": [
+                                            {
+                                                "name": "",
+                                                "shape": {
+                                                    "type": "prism",
+                                                    "n": 6,
+                                                    "top": 0.3,
+                                                    "bottom": 1,
+                                                    "rotated": false
+                                                },
+                                                "material": "stone_plain",
+                                                "position": {
+                                                    "x": 10,
+                                                    "y": 0,
+                                                    "z": 0
+                                                },
+                                                "size": {
+                                                    "x": 15,
+                                                    "y": 15,
+                                                    "z": 20
+                                                },
+                                                "rotation": 0,
+                                                "skew": {
+                                                    "z": {
+                                                        "x": 0,
+                                                        "y": 0
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "x": 0,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "size": 1,
+                                        "rotation": 0,
+                                        "skew": {
+                                            "z": {
+                                                "x": 0,
+                                                "y": 0
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "link": "u",
+                                        "position": {
+                                            "x": 0,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "rotation": 120
+                                    },
+                                    {
+                                        "link": "u",
+                                        "position": {
+                                            "x": 0,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "rotation": 240
+                                    }
+                                ],
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": 1,
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            }
+                        ],
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
                         },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
+                        "size": 1,
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
                     }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
+                ],
+                "rotation": 0,
+                "size": 1.3
             }
         },
 
@@ -980,6 +1110,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Kamenolom",
         type: "building",
@@ -1048,6 +1183,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Dřevorubec",
         type: "building",
@@ -1055,32 +1195,279 @@ var buildings = [
 
         design: {
             type: "model",
-            data: {
-                name:'root',
-                particles: [
+            data:  {
+                "name": "root",
+                "particles": [
                     {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
+                        "name": "",
+                        "particles": [
+                            {
+                                "name": "woods",
+                                "particles": [
+                                    {
+                                        "name": "wood",
+                                        "shape": {
+                                            "type": "prism",
+                                            "n": 4,
+                                            "top": 1,
+                                            "bottom": 1,
+                                            "rotated": false
+                                        },
+                                        "material": "wood_fence",
+                                        "position": {
+                                            "x": -10,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "size": {
+                                            "x": 5,
+                                            "y": 50,
+                                            "z": 5
+                                        },
+                                        "rotation": 0,
+                                        "skew": {
+                                            "z": {
+                                                "x": 0,
+                                                "y": 0
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "link": "wood",
+                                        "position": {
+                                            "x": 0,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "rotation": 0
+                                    },
+                                    {
+                                        "link": "wood",
+                                        "position": {
+                                            "x": 10,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "rotation": 0
+                                    }
+                                ],
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": 1,
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            },
+                            {
+                                "link": "woods",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 5
+                                },
+                                "rotation": 90
+                            },
+                            {
+                                "link": "woods",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 10
+                                },
+                                "rotation": 30
+                            }
+                        ],
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
                         },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
+                        "size": 1,
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
+                    },
+                    {
+                        "name": "t",
+                        "particles": [
+                            {
+                                "name": "",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "top": 1,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "wood_raw",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": {
+                                    "x": 7,
+                                    "y": 7,
+                                    "z": 50
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            },
+                            {
+                                "name": "",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "top": 1,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "wood_raw",
+                                "position": {
+                                    "x": 0,
+                                    "y": 7,
+                                    "z": 50
+                                },
+                                "size": {
+                                    "x": 7,
+                                    "y": 40,
+                                    "z": 7
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            },
+                            {
+                                "name": "",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "top": 1,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "iron_plates",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": {
+                                    "x": 20,
+                                    "y": 20,
+                                    "z": 10
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            },
+                            {
+                                "name": "",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "top": 1,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "wood_boards",
+                                "position": {
+                                    "x": 0,
+                                    "y": 20,
+                                    "z": 4
+                                },
+                                "size": {
+                                    "x": 2,
+                                    "y": 2,
+                                    "z": 50
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            }
+                        ],
+                        "position": {
+                            "x": 20,
+                            "y": -25,
+                            "z": 0
+                        },
+                        "size": 1,
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
+                    },
+                    {
+                        "link": "t",
+                        "position": {
+                            "x": -20,
+                            "y": -25,
+                            "z": 0
+                        },
+                        "rotation": 0
+                    },
+                    {
+                        "name": "",
+                        "shape": {
+                            "type": "prism",
+                            "n": 4,
+                            "top": 1,
+                            "bottom": 1,
+                            "rotated": false
+                        },
+                        "material": "wood_boards",
+                        "position": {
+                            "x": 0,
+                            "y": -4,
+                            "z": 4
+                        },
+                        "size": {
+                            "x": 60,
+                            "y": 2,
+                            "z": 2
+                        },
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
                     }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
+                ],
+                "rotation": 0,
+                "size": 0.6
             }
         },
 
@@ -1136,127 +1523,46 @@ var buildings = [
 
     }
     ,
-    {
-        name: "Kamenná cesta",
-        type: "building",
-        subtype: "main",
 
-        design: {
-            type: "model",
-            data: {
-                name:'root',
-                particles: [
-                    {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
-                        },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
-                    }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
-            }
-        },
 
-        actions: [
-            /*/{
-             "type": "defense",
-             "params":{
-             "defense": 1//[lifes / round]
-             }
-             },/**/
-            /*/{
-             "type": "regenerate",
-             "params":{
-             "regenerate": 3600//[s]
-             }
-             },/**/
-            /**/{
-                "type": "repair",
-                "params":{
-                    "repair": 100//[%]
-                }
-            },/**/
-            /*/{
-             "type": "mine",
-             "params":{
-             "resource": "wood",//[resource]
-             "amount": 1//[resources / s]
-             }
-             },/**/
-            /*/{
-             "type": "attack",
-             "params":{
-             "distance": 1,//[fields]
-             "strength": 1,//[lifes / round]
-             "rounds": 1,//[rounds]
-             "cooldown": 600//[s]
-             }
-             },/**/
-            /*/{
-             "type": "move",
-             "params":{
-             "speed": 1//[fields / s]
 
-             }
-             },/**/
-            /**/{
-                "type": "throughput",
-                "params":{
-                    "throughput": 150//[%]
-                }
-            }
-        ]
 
-    }
-    ,
+
     {
         name: "Hliněná cesta",
         type: "building",
-        subtype: "main",
+        subtype: "path",
 
         design: {
             type: "model",
-            data: {
-                name:'root',
-                particles: [
+            data:  {
+                "name": "root",
+                "particles": [
                     {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
+                        "name": "",
+                        "shape": {
+                            "type": "prism",
+                            "n": 4,
+                            "rotated": false,
+                            "top": 1,
+                            "bottom": 1
                         },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
+                        "material": "clay_bricks",
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "size": {
+                            "x": 50,
+                            "y": 35,
+                            "z": 4
+                        },
+                        "rotation": 0
                     }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
+                ],
+                "rotation": 0,
+                "size": 1
             }
         },
 
@@ -1312,39 +1618,46 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Dřevěná cesta",
         type: "building",
-        subtype: "main",
+        subtype: "path",
 
         design: {
             type: "model",
-            data: {
-                name:'root',
-                particles: [
+            data:  {
+                "name": "root",
+                "particles": [
                     {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
+                        "name": "",
+                        "shape": {
+                            "type": "prism",
+                            "n": 4,
+                            "rotated": false,
+                            "top": 1,
+                            "bottom": 1
                         },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
+                        "material": "wood_boards",
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "size": {
+                            "x": 50,
+                            "y": 35,
+                            "z": 4
+                        },
+                        "rotation": 0
                     }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
+                ],
+                "rotation": 0,
+                "size": 1
             }
         },
 
@@ -1400,6 +1713,106 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
+    {
+        name: "Kamenná cesta",
+        type: "building",
+        subtype: "path",
+
+        design: {
+            type: "model",
+            data:  {
+                "name": "root",
+                "particles": [
+                    {
+                        "name": "",
+                        "shape": {
+                            "type": "prism",
+                            "n": 4,
+                            "rotated": false,
+                            "top": 1,
+                            "bottom": 1
+                        },
+                        "material": "stone_bricks",
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "size": {
+                            "x": 50,
+                            "y": 35,
+                            "z": 4
+                        },
+                        "rotation": 0
+                    }
+                ],
+                "rotation": 0,
+                "size": 1
+            }
+        },
+
+        actions: [
+            /*/{
+             "type": "defense",
+             "params":{
+             "defense": 1//[lifes / round]
+             }
+             },/**/
+            /*/{
+             "type": "regenerate",
+             "params":{
+             "regenerate": 3600//[s]
+             }
+             },/**/
+            /**/{
+                "type": "repair",
+                "params":{
+                    "repair": 100//[%]
+                }
+            },/**/
+            /*/{
+             "type": "mine",
+             "params":{
+             "resource": "wood",//[resource]
+             "amount": 1//[resources / s]
+             }
+             },/**/
+            /*/{
+             "type": "attack",
+             "params":{
+             "distance": 1,//[fields]
+             "strength": 1,//[lifes / round]
+             "rounds": 1,//[rounds]
+             "cooldown": 600//[s]
+             }
+             },/**/
+            /*/{
+             "type": "move",
+             "params":{
+             "speed": 1//[fields / s]
+
+             }
+             },/**/
+            /**/{
+                "type": "throughput",
+                "params":{
+                    "throughput": 150//[%]
+                }
+            }
+        ]
+
+    }
+    ,
+
+
+
+
+
     {
         name: "Kamenná věž",
         type: "building",
@@ -1652,6 +2065,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Dřevěná věž",
         type: "building",
@@ -2175,6 +2593,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Velká zeď",
         type: "building",
@@ -2182,32 +2605,98 @@ var buildings = [
 
         design: {
             type: "model",
-            data: {
-                name:'root',
-                particles: [
+            data:  {
+                "name": "root",
+                "particles": [
                     {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
+                        "name": "",
+                        "shape": {
+                            "type": "prism",
+                            "n": 4,
+                            "rotated": false,
+                            "top": 1,
+                            "bottom": 1
                         },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
+                        "material": "clay_bricks",
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "size": {
+                            "x": 50,
+                            "y": 10,
+                            "z": 35
+                        },
+                        "rotation": 0
+                    },
+                    {
+                        "name": "",
+                        "particles": [
+                            {
+                                "name": "o",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "top": 1,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "clay_bricks",
+                                "position": {
+                                    "x": 11,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": {
+                                    "x": 10,
+                                    "y": 10,
+                                    "z": 7
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            },
+                            {
+                                "link": "o",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "rotation": 0
+                            },
+                            {
+                                "link": "o",
+                                "position": {
+                                    "x": -11,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "rotation": 0
+                            }
+                        ],
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 35
+                        },
+                        "size": 1,
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
                     }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
+                ],
+                "rotation": 0,
+                "size": 1
             }
         },
 
@@ -2263,6 +2752,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Malá zeď",
         type: "building",
@@ -2270,32 +2764,98 @@ var buildings = [
 
         design: {
             type: "model",
-            data: {
-                name:'root',
-                particles: [
+            data:  {
+                "name": "root",
+                "particles": [
                     {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
+                        "name": "",
+                        "shape": {
+                            "type": "prism",
+                            "n": 4,
+                            "rotated": false,
+                            "top": 1,
+                            "bottom": 1
                         },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
+                        "material": "clay_bricks",
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "size": {
+                            "x": 50,
+                            "y": 10,
+                            "z": 25
+                        },
+                        "rotation": 0
+                    },
+                    {
+                        "name": "",
+                        "particles": [
+                            {
+                                "name": "o",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "top": 1,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "clay_bricks",
+                                "position": {
+                                    "x": 11,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": {
+                                    "x": 10,
+                                    "y": 10,
+                                    "z": 7
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            },
+                            {
+                                "link": "o",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "rotation": 0
+                            },
+                            {
+                                "link": "o",
+                                "position": {
+                                    "x": -11,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "rotation": 0
+                            }
+                        ],
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 25
+                        },
+                        "size": 1,
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
                     }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
+                ],
+                "rotation": 0,
+                "size": 1
             }
         },
 
@@ -2351,6 +2911,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Velká hradba",
         type: "building",
@@ -2358,32 +2923,246 @@ var buildings = [
 
         design: {
             type: "model",
-            data: {
-                name:'root',
-                particles: [
+            data:  {
+                "name": "",
+                "particles": [
                     {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
+                        "name": "bottom",
+                        "particles": [
+                            {
+                                "name": "w",
+                                "particles": [
+                                    {
+                                        "name": "",
+                                        "shape": {
+                                            "type": "prism",
+                                            "n": 4,
+                                            "rotated": false,
+                                            "top": 1,
+                                            "bottom": 1
+                                        },
+                                        "material": "stone_bricks",
+                                        "position": {
+                                            "x": 0,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "size": {
+                                            "x": 50,
+                                            "y": 10,
+                                            "z": 35
+                                        },
+                                        "rotation": 0
+                                    },
+                                    {
+                                        "name": "",
+                                        "particles": [
+                                            {
+                                                "name": "o",
+                                                "shape": {
+                                                    "type": "prism",
+                                                    "n": 4,
+                                                    "top": 1,
+                                                    "bottom": 1,
+                                                    "rotated": false
+                                                },
+                                                "material": "stone_bricks",
+                                                "position": {
+                                                    "x": 11,
+                                                    "y": 0,
+                                                    "z": 0
+                                                },
+                                                "size": {
+                                                    "x": 10,
+                                                    "y": 10,
+                                                    "z": 7
+                                                },
+                                                "rotation": 0,
+                                                "skew": {
+                                                    "z": {
+                                                        "x": 0,
+                                                        "y": 0
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "link": "o",
+                                                "position": {
+                                                    "x": 0,
+                                                    "y": 0,
+                                                    "z": 0
+                                                },
+                                                "rotation": 0
+                                            },
+                                            {
+                                                "link": "o",
+                                                "position": {
+                                                    "x": -11,
+                                                    "y": 0,
+                                                    "z": 0
+                                                },
+                                                "rotation": 0
+                                            }
+                                        ],
+                                        "position": {
+                                            "x": 0,
+                                            "y": 0,
+                                            "z": 35
+                                        },
+                                        "size": 1,
+                                        "rotation": 0,
+                                        "skew": {
+                                            "z": {
+                                                "x": 0,
+                                                "y": 0
+                                            }
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "x": 0,
+                                    "y": -20,
+                                    "z": 0
+                                },
+                                "size": 1,
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            },
+                            {
+                                "link": "w",
+                                "position": {
+                                    "x": 0,
+                                    "y": 20,
+                                    "z": 0
+                                },
+                                "rotation": 0
+                            },
+                            {
+                                "name": "",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "top": 1,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "stone_bricks",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": {
+                                    "x": 50,
+                                    "y": 50,
+                                    "z": 30
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            }
+                        ],
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
                         },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
+                        "size": 1,
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
+                    },
+                    {
+                        "name": "",
+                        "particles": [
+                            {
+                                "link": "w",
+                                "position": {
+                                    "x": 0,
+                                    "y": 7,
+                                    "z": 0
+                                },
+                                "rotation": 0
+                            },
+                            {
+                                "link": "w",
+                                "position": {
+                                    "x": 0,
+                                    "y": -7,
+                                    "z": 0
+                                },
+                                "rotation": 0
+                            },
+                            {
+                                "name": "",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "top": 1,
+                                    "bottom": 1,
+                                    "rotated": false
+                                },
+                                "material": "stone_bricks",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": {
+                                    "x": 50,
+                                    "y": 10,
+                                    "z": 30
+                                },
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            }
+                        ],
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 30
+                        },
+                        "size": 1,
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
                     }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
+                ],
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": 1,
+                "rotation": 0,
+                "skew": {
+                    "z": {
+                        "x": 0,
+                        "y": 0
+                    }
+                }
             }
         },
 
@@ -2439,6 +3218,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Malá hrádba",
         type: "building",
@@ -2446,32 +3230,164 @@ var buildings = [
 
         design: {
             type: "model",
-            data: {
-                name:'root',
-                particles: [
+            data:  {
+                "name": "",
+                "particles": [
                     {
-                        name: '',
-                        shape: {
-                            type: 'prism',
-                            n:4,
-                            rotated:false,
-                            top: 1,
-                            bottom: 1
+                        "name": "w",
+                        "particles": [
+                            {
+                                "name": "",
+                                "shape": {
+                                    "type": "prism",
+                                    "n": 4,
+                                    "rotated": false,
+                                    "top": 1,
+                                    "bottom": 1
+                                },
+                                "material": "stone_bricks",
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 0
+                                },
+                                "size": {
+                                    "x": 50,
+                                    "y": 10,
+                                    "z": 35
+                                },
+                                "rotation": 0
+                            },
+                            {
+                                "name": "",
+                                "particles": [
+                                    {
+                                        "name": "o",
+                                        "shape": {
+                                            "type": "prism",
+                                            "n": 4,
+                                            "top": 1,
+                                            "bottom": 1,
+                                            "rotated": false
+                                        },
+                                        "material": "stone_bricks",
+                                        "position": {
+                                            "x": 11,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "size": {
+                                            "x": 10,
+                                            "y": 10,
+                                            "z": 7
+                                        },
+                                        "rotation": 0,
+                                        "skew": {
+                                            "z": {
+                                                "x": 0,
+                                                "y": 0
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "link": "o",
+                                        "position": {
+                                            "x": 0,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "rotation": 0
+                                    },
+                                    {
+                                        "link": "o",
+                                        "position": {
+                                            "x": -11,
+                                            "y": 0,
+                                            "z": 0
+                                        },
+                                        "rotation": 0
+                                    }
+                                ],
+                                "position": {
+                                    "x": 0,
+                                    "y": 0,
+                                    "z": 35
+                                },
+                                "size": 1,
+                                "rotation": 0,
+                                "skew": {
+                                    "z": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            }
+                        ],
+                        "position": {
+                            "x": 0,
+                            "y": -10,
+                            "z": 0
                         },
-                        material: 'clay_bricks',
-                        position: {x:0,y:0,z:0},
-                        size: {x:40,y:40,z:40},
-                        rotation: 0
+                        "size": 1,
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
+                    },
+                    {
+                        "link": "w",
+                        "position": {
+                            "x": 0,
+                            "y": 10,
+                            "z": 0
+                        },
+                        "rotation": 0
+                    },
+                    {
+                        "name": "",
+                        "shape": {
+                            "type": "prism",
+                            "n": 4,
+                            "top": 1,
+                            "bottom": 1,
+                            "rotated": false
+                        },
+                        "material": "stone_bricks",
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "size": {
+                            "x": 50,
+                            "y": 20,
+                            "z": 30
+                        },
+                        "rotation": 0,
+                        "skew": {
+                            "z": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        }
                     }
-                    /*
-                     ,{
-                     link: Locale.get('shape cube'),
-                     position: {x:0,y:0,z:40},
-                     size: 0.7,
-                     rotation: 45
-                     }
-                     */
-                ]
+                ],
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": 1,
+                "rotation": 0,
+                "skew": {
+                    "z": {
+                        "x": 0,
+                        "y": 0
+                    }
+                }
             }
         },
 
@@ -2527,6 +3443,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Velká palisáda",
         type: "building",
@@ -2534,7 +3455,7 @@ var buildings = [
 
         design: {
             type: "model",
-            data:  {
+            data:   {
                 "name": "root",
                 "particles": [
                     {
@@ -2629,7 +3550,7 @@ var buildings = [
                                     }
                                 ],
                                 "position": {
-                                    "x": -25,
+                                    "x": -14,
                                     "y": 0,
                                     "z": 0
                                 },
@@ -2641,24 +3562,6 @@ var buildings = [
                                         "y": 0
                                     }
                                 }
-                            },
-                            {
-                                "link": "pillar",
-                                "position": {
-                                    "x": -20,
-                                    "y": 0,
-                                    "z": 0
-                                },
-                                "rotation": 0
-                            },
-                            {
-                                "link": "pillar",
-                                "position": {
-                                    "x": -15,
-                                    "y": 0,
-                                    "z": 0
-                                },
-                                "rotation": 0
                             },
                             {
                                 "link": "pillar",
@@ -2708,25 +3611,7 @@ var buildings = [
                             {
                                 "link": "pillar",
                                 "position": {
-                                    "x": 15,
-                                    "y": 0,
-                                    "z": 0
-                                },
-                                "rotation": 0
-                            },
-                            {
-                                "link": "pillar",
-                                "position": {
-                                    "x": 20,
-                                    "y": 0,
-                                    "z": 0
-                                },
-                                "rotation": 0
-                            },
-                            {
-                                "link": "pillar",
-                                "position": {
-                                    "x": 25,
+                                    "x": 14,
                                     "y": 0,
                                     "z": 0
                                 },
@@ -2805,6 +3690,11 @@ var buildings = [
 
     }
     ,
+
+
+
+
+
     {
         name: "Malá palisáda",
         type: "building",
@@ -2812,7 +3702,7 @@ var buildings = [
 
         design: {
             type: "model",
-            data:  {
+            data:   {
                 "name": "root",
                 "particles": [
                     {
@@ -2879,7 +3769,7 @@ var buildings = [
                                     }
                                 ],
                                 "position": {
-                                    "x": -25,
+                                    "x": -14,
                                     "y": 0,
                                     "z": 0
                                 },
@@ -2891,24 +3781,6 @@ var buildings = [
                                         "y": 0
                                     }
                                 }
-                            },
-                            {
-                                "link": "pillar",
-                                "position": {
-                                    "x": -20,
-                                    "y": 0,
-                                    "z": 0
-                                },
-                                "rotation": 0
-                            },
-                            {
-                                "link": "pillar",
-                                "position": {
-                                    "x": -15,
-                                    "y": 0,
-                                    "z": 0
-                                },
-                                "rotation": 0
                             },
                             {
                                 "link": "pillar",
@@ -2958,25 +3830,7 @@ var buildings = [
                             {
                                 "link": "pillar",
                                 "position": {
-                                    "x": 15,
-                                    "y": 0,
-                                    "z": 0
-                                },
-                                "rotation": 0
-                            },
-                            {
-                                "link": "pillar",
-                                "position": {
-                                    "x": 20,
-                                    "y": 0,
-                                    "z": 0
-                                },
-                                "rotation": 0
-                            },
-                            {
-                                "link": "pillar",
-                                "position": {
-                                    "x": 25,
+                                    "x": 14,
                                     "y": 0,
                                     "z": 0
                                 },
@@ -3053,6 +3907,9 @@ var buildings = [
             }
         ]
     }
+
+
+
 ];
 
 
