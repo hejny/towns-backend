@@ -51,6 +51,10 @@ app.use('/auth', authRoutes);
 var resourcesRoutes = require('./routes/resources');
 app.use('/resources', resourcesRoutes);
 
+// routes for stories
+var storiesRoutes = require('./routes/stories');
+app.use('/stories', storiesRoutes);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
