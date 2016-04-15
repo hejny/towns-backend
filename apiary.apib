@@ -60,7 +60,7 @@ The example URL is not displayed correctly by APIARY and should look like this:
             Location: /objects
 
     + Attributes
-        - objects (array[Object Full])
+        - objects (array[fullObject])
 
 ### POST
 
@@ -117,7 +117,8 @@ Get the details of the object by its Id. There will be optional query parameter 
             x-auth: {access_token}
  + Response 200 (application/json)
     + Attributes
-        - object (Object Full)
+        + status: ok
+        + object (fullObject)
 
 
 ### POST
@@ -131,7 +132,7 @@ This method should update the object. Users can't update the object directly, in
             x-auth: {access_token}
 
     + Attributes
-        - object (Object Create)
+        - object (createObject)
 
 
 
@@ -175,39 +176,6 @@ This method deletes object. User can't delete objects directly, instead they can
                 }
 
 
-
-# Data Structures
-
-## Object Create (object)
-
-- name: `Veza` (string, required) - The name of the object.
-- type (enum[string])
-    - building - The building type object.
-    - terrain - The terrain type of object.
-    - story - The Story object.
-- subtype: `` (string)
-- x: `12.10` (number, required)
-- y: `-55.55` (number, required)
-- locale: `cs` (string)
-- design: {} (object, required)
-    - type: `model` (string)
-    - data: `12,3453,654,234,...` (string)
-- content: {} (object, required)
-    - type: `markdown` (string)
-    - data: `Veza je obranna budova`
-- properties: {} (object)
-    - strength: `1` (number)
-    - defense: `10` (number)
-    - speed: `1` (number)
-- actions: `defense`, `dismantle` (array, required)
-
-## Object Full (object)
-
-- _id: `5666b8259297ffe7c16c1212` (string, required) - The unique ID of the object.
-- version: `0` (number, required) - The version of the object.
-- Include Object Create
-- start_time: `2016-02-23T17:24:24.872Z` (string, required) - ISO8601 date and time of when the object was created.
-- owner: `5126bc054aed4daf9e2ab772` (string, required)
 
 
 ## /objects/{object_id}/{action}
@@ -562,7 +530,215 @@ Delete requested object prototype. The object prototype will be moved to objects
                 }
 
 
+
+# Group Stories
+
+## stories [/stories{?owner,limit,date,locale,latest}]
+
+### GET
+
+Retrieve the stories. If you need to search stories by x,y coordinates, please use GET /objects endpoint. All of parameters are optional, each of them has default value
+The example URL is not displayed correctly by APIARY and should look like this:
+/stories?owner[]=5666b8259297ffe7c16c4697&limit=45&date[]=12-05-2016&locale[]=cz&latest=true
+
++ Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
++ Parameters
+
+   + owner: `5666b8259297ffe7c16c4696`, `5666b8259297ffe7c16c4697`, `5666b8259297ffe7c16c4698` (optional, array) - List of owner IDs, whos stories will be returned. Default is returning stories of all owners.
+   + limit: `45` (optional, number) - The limit of returning stories. Default 500. Accepted values from 1 to 500.
+   + date: `12-05-2016` (optional, array) - array of update dates in dd-mm-yyyy format which stories should be returned. If no date is specified, stories of all dates are returned.
+   + locale: `cz` (optional, array) - List of locales to return. Default is all object locales.
+   + latest: `true` (optional, boolean) - the stories returned are ordered as they are stored = oldest first (default). Set this parameter to return them ordered from latest.
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /stories
+
+    + Attributes
+        + status: ok
+        + objects (array[fullStory])
+
+### POST
+
+You may create new stories using this action. It takes a JSON object in body.
+To create a new story, the client have to send:
+- the x and y coordinates where the new object will be built
+- name of story
+
+Everything else of new object will be calculated based on user and story prototype.
+
++ Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Body
+
+            {
+                "x": "12,435",
+                "y": "43.123",
+                "name": "Pribeh o mne",
+                "locale": "en",
+                "content": {
+                    "type": "markdown",
+                    "data": "Kde bolo tam bolo"
+                }
+            }
+
+
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /stories
+
+    + Body
+
+            {
+                "status": "ok",
+                "objectId": "asd123454hg4536yhsd4"
+            }
+
+
+## /stories/{object_id}
+
+### GET
+
+Get the details of the story by its Id.
+
+ + Parameters
+    + object_id: `5666b8259297ffe7c16c1212` - The unique ID of the story object.
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+ + Response 200 (application/json)
+    + Attributes
+        + status: ok
+        + object (fullStory)
+
+
+### POST
+
+This method should update the story object. Users don't have to call action to update the object, instead they can update story directly.
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Attributes
+        + object (newStory)
+
+
+
+ + Response 201 (application/json)
+
+    + Headers
+
+            Location: /stories/5666b8259297ffe7c16c6456
+
+    + Body
+
+            {
+                "status": "ok",
+                "objectId": "5666b8259297ffe7c16c6456"
+            }
+
+
+
+### DELETE
+
+This method deletes story object.
+
++ Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /stories/5666b8259297ffe7c16c6785
+
+    + Body
+
+                {
+                    "status": "ok",
+                    "objectId": "5666b8259297ffe7c16c6456",
+                    "version": "2"
+                }
+
+
+
+
 # Group Actions
+
+## /actions/build
+
+### POST
+
+Request will build the given prototype on the selected x,y coordinates on map. The api will perform credit check to find out if the user has enough resources,
+recalculate the price and deduct funds. In case of problem 400 code error message will be returned. In case of success the new object will be returned.
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Attributes
+        + object (createObject)
+
+ + Response 201 (application/hal+json)
+
+    + Attributes
+        + status: ok
+        + object (fullObject)
+
+## /actions/mine
+
+### POST
+
+Call when mining resources (active ability)
+
+ + Request (application/json)
+
+    + Headers
+
+            x-auth: {access_token}
+
+    + Attributes
+        + objectId: ssakjhg32hj4ghjkg23k423fd23
+
+
+ + Response 200 (application/json)
+
+    + Headers
+
+            Location: /actions/mine
+
+    + Body
+
+            {
+                "status": "ok"
+            }
 
 ## /actions/attack
 
@@ -589,70 +765,6 @@ Call when attacking (active ability)
     + Headers
 
             Location: /actions/attack
-
-    + Body
-
-            {
-                "status": "ok"
-            }
-
-## /actions/defense
-
-### POST
-
-Call when defending (passive ability)
-
- + Request (application/json)
-
-    + Headers
-
-            x-auth: {access_token}
-
-    + Body
-
-            {
-                "action": "defense"
-            }
-
-
-
- + Response 200 (application/json)
-
-    + Headers
-
-            Location: /actions/defense
-
-    + Body
-
-            {
-                "status": "ok"
-            }
-
-## /actions/regenerate
-
-### POST
-
-Passive regeneration
-
- + Request (application/json)
-
-    + Headers
-
-            x-auth: {access_token}
-
-    + Body
-
-            {
-                "action": "regenerate"
-            }
-
-
-
- + Response 200 (application/json)
-
-    + Headers
-
-            Location: /actions/regenerate
 
     + Body
 
@@ -693,37 +805,6 @@ Call when repairing object (active ability)
                 "status": "ok"
             }
 
-## /actions/mine
-
-### POST
-
-Call when mining resources (active ability)
-
- + Request (application/json)
-
-    + Headers
-
-            x-auth: {access_token}
-
-    + Body
-
-            {
-                "action": "mine"
-            }
-
-
-
- + Response 200 (application/json)
-
-    + Headers
-
-            Location: /actions/mine
-
-    + Body
-
-            {
-                "status": "ok"
-            }
 
 ## /actions/move
 
@@ -757,37 +838,6 @@ Call when moving object from one place to another place (active ability)
                 "status": "ok"
             }
 
-## /actions/throughput
-
-### POST
-
-Speed - throughputing through object (passive ability)
-
- + Request (application/json)
-
-    + Headers
-
-            x-auth: {access_token}
-
-    + Body
-
-            {
-                "action": "throughput"
-            }
-
-
-
- + Response 200 (application/json)
-
-    + Headers
-
-            Location: /actions/throughput
-
-    + Body
-
-            {
-                "status": "ok"
-            }
 
 # Group Users
 
@@ -1745,4 +1795,65 @@ Delete the permalink resource
 
 
  + Response 204 (application/json)
+
+
+
+
+# Data Structures
+
+## createObject (object)
+
+- name: `Veza` (string, required) - The name of the object.
+- type (enum[string])
+    - building - The building type object.
+    - terrain - The terrain type of object.
+    - story - The Story object.
+- subtype: `` (string)
+- x: `12.10` (number, required)
+- y: `-55.55` (number, required)
+- locale: `cs` (string)
+- design: {} (object, required)
+    - type: `model` (string)
+    - data: `12,3453,654,234,...` (string)
+- content: {} (object, required)
+    - type: `markdown` (string)
+    - data: `Veza je obranna budova`
+- properties: {} (object)
+    - strength: `1` (number)
+    - defense: `10` (number)
+    - speed: `1` (number)
+- actions: `defense`, `dismantle` (array, required)
+
+## fullObject (object)
+
+- _id: `5666b8259297ffe7c16c1212` (string, required) - The unique ID of the object.
+- version: `0` (number, required) - The version of the object.
+- Include createObject
+- start_time: `2016-02-23T17:24:24.872Z` (string, required) - ISO8601 date and time of when the object was created.
+- owner: `5126bc054aed4daf9e2ab772` (string, required)
+
+## newStory (object)
+
+- name: `Pribeh o mne` (string, required) - The name of the story.
+- type `story` (string) - The only story type for Story.
+- subtype: `` (string)
+- x: `12.10` (number, required)
+- y: `-55.55` (number, required)
+- locale: `cs` (string)
+- design: {} (object)
+    - type: `model` (string)
+    - data: `12,3453,654,234,...` (string)
+- content: {} (object, required)
+    - type: `markdown` (string)
+    - data: `Toto je pribeh o mne`
+- properties: {} (object)
+- actions: `defense`, `dismantle` (array)
+
+## fullStory (object)
+
+- _id: `5666b8259297ffe7c16c1212` (string, required) - The unique ID of the story.
+- version: `0` (number, required) - The version of the story.
+- Include newStory
+- start_time: `2016-02-23T17:24:24.872Z` (string, required) - ISO8601 date and time of when the story version was created.
+- owner: `5126bc054aed4daf9e2ab772` (string, required)
 
