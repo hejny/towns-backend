@@ -19,41 +19,38 @@ var storiesController = {};
 
 storiesController.getAll = function (req, res) {
 
+    // example
+    // /stories?owner[]=5666b8259297ffe7c16c4697&limit=45&date[]=12-05-2016&locale[]=cs&latest=true
     // default values
+    // limit (1, 500) 0 is max.
     var values = {
-        'x': 0,
-        'y': 0,
-        'radius': 10,
-        'not': [],
-        'type': [],
-        'subtype': [],
-        'keys': []
+        'owner': [],
+        'limit': 0,
+        'date': [],
+        'locale': ['cs'],
+        'latest': true
     };
 
     // update default values with values from query
     var q = req.query;
-    if(typeof q.x !== 'undefined' && q.x && check.isInt(q.x)) {
-        values.x = q.x;
+    if(typeof q.owner !== 'undefined' && q.owner && q.owner.constructor === Array) {
+        values.owner = q.owner;
     }
-    if(typeof q.y !== 'undefined' && q.y && check.isInt(q.y)) {
-        values.y = q.y;
+    if(typeof q.limit !== 'undefined' && q.limit && check.isInt(q.limit, {min:1, max:500})) {
+        values.limit = q.limit;
     }
-    if(typeof q.radius !== 'undefined' && q.radius && check.isInt(q.radius, {min:1, max:200})) {
-        values.radius = q.radius;
+    if(typeof q.date !== 'undefined' && q.date && q.date.constructor === Array) {
+        values.date = q.date;
     }
-    if(typeof q.not !== 'undefined' && q.not && q.not.constructor === Array) {
-        values.not = q.not;
+    if(typeof q.locale !== 'undefined' && q.locale && q.locale.constructor === Array) {
+        values.locale = q.locale;
     }
-    if(typeof q.type !== 'undefined' && q.type && q.type.constructor === Array) {
-        values.type = q.type;
-    }
-    if(typeof q.subtype !== 'undefined' && q.subtype && q.subtype.constructor === Array) {
-        values.subtype = q.subtype;
-    }
-    if(typeof q.keys !== 'undefined' && q.keys && q.keys.constructor === Array) {
-        values.keys = q.keys;
+    if(typeof q.latest !== 'undefined' && q.latest && check.isBoolean(q.latest)) {
+        values.latest = q.latest;
     }
 
+
+    // TODO: continute from here
     //build `query` from values
     var query = {
         x: {$gt: (values.x - values.radius), $lt: ((+values.x) + (+values.radius))},
