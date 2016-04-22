@@ -9,11 +9,12 @@ var UserModel = require('../database/models/user');
 
 describe('Stories', function () {
 
+    this.timeout(15000);
+    var url = config.protocol + '//' + config.hostname + (config.port ? ':' + config.port : '');
+    
     // within before() you can run all the operations that are needed to setup your tests (eg. create DB connection)
     before(function (done) {
         // do something before done
-        this.timeout(15000);
-        var url = config.protocol + '//' + config.hostname + (config.port ? ':' + config.port : '');
         done();
     });
 
