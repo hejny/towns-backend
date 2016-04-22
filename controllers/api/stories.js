@@ -37,7 +37,7 @@ storiesController.getAll = function (req, res) {
         values.owner = q.owner;
     }
     if(typeof q.limit !== 'undefined' && q.limit && check.isInt(q.limit, {min:1, max:500})) {
-        values.limit = q.limit;
+        values.limit = parseInt(q.limit);
     }
     if(typeof q.date !== 'undefined' && q.date && q.date.constructor === Array) {
         values.date = q.date;
@@ -48,31 +48,57 @@ storiesController.getAll = function (req, res) {
     if(typeof q.latest !== 'undefined' && q.latest && check.isBoolean(q.latest)) {
         values.latest = q.latest;
     }
-
-
-    // TODO: continute from here
+    
     //build `query` from values
     var query = {
-        x: {$gt: (values.x - values.radius), $lt: ((+values.x) + (+values.radius))},
-        y: {$gt: (values.y - values.radius), $lt: ((+values.y) + (+values.radius))}
+        type: "story"
     };
-    if(values.not.length > 0 ) {
-        query._id = {$nin: values.not};
+    if(values.owner.length > 0 ) {
+        query.owner = {$in: values.owner};
     }
-    if(values.type.length > 0 ) {
-        query.type = {$in: values.type};
+
+    values.date.forEach(function (element, index, array) {
+        var date = element.split("-");
+        if(date.length == 3 ) {
+            var timezone = new Date().getTimezoneOffset();
+            var from = new Date(parseInt(date[2]), parseInt(date[1])-1, parseInt(date[0]), 0, 0-timezone, 0, 0).toISOString();
+            var to = new Date(parseInt(date[2]), parseInt(date[1])-1, parseInt(date[0]), 23, 59-timezone, 59, 999).toISOString();
+            array[index] = { start_time: {$gte: from, $lt: to}};
+        }
+        
+    });
+
+    if(values.date.length > 0 ) {
+        query.$or = values.date;
     }
-    if(values.subtype.length > 0 ) {
-        query.subtype = {$in: values.subtype};
+
+    if(values.locale.length > 0 ) {
+        query.locale = {$in: values.locale};
     }
-    console.log(query);
+
+    // list fields to return
+    var fields = {};
+
+    // define options like limit of returned stories and ordering
+    var options = {};
+    if (values.limit > 0) {
+        options.limit = values.limit;
+    }
+    if (values.latest === "true") {
+        options.sort = {start_time: -1};
+    }
+
+    //console.log(query);
+    //console.log(fields);
+    //console.log(options);
 
     // run the query against mongoDB
-    ObjectModel.find(query, values.keys.join(' '), function (err, objects) {
+    ObjectModel.find(query, fields, options, function (err, objects) {
         if (err) {
+            console.log(err);
             return res.status(500).json({
                 "status": "error",
-                "message": "Problem getting your objects"
+                "message": "Problem getting your stories"
             });
         }
 
@@ -80,7 +106,7 @@ storiesController.getAll = function (req, res) {
         if (objects === null) {
             return res.status(500).json({
                 "status": "error",
-                "message": "There are no objects"
+                "message": "There are no stories"
             });
         }
         res.json(objects);
