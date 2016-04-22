@@ -7,14 +7,14 @@ var auth = require('../controllers/middleware/auth');
  * GET /stories
  * Returns list of all stories
  */
-router.get('/', auth.check, storiesController.getAll);
+router.get('/', storiesController.getAll);
 
 /**
  * POST /stories
  * TODO
  * Create new story
  */
-//router.post('/', auth.check, storiesController.createUser);
+//router.post('/', auth.check, storiesController.createOne);
 
 /**
  * GET /stories/:id
