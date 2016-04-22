@@ -2,12 +2,12 @@ var ObjectModel = require('../../database/models/object');
 var ObjectsPrototype = require('../../database/models/objectsPrototype');
 var ObjectsHistory = require('../../database/models/objectsHistory');
 var check = require('validator');
-
+var BaseController = require('../baseController');
 /**
  * Handler for working with Objects
- * @type {{}}
+ * @type {baseController}
  */
-var objectsController =  {};
+var objectsController =  new BaseController();
 
 /**
  * Gets all objects from object collection
