@@ -96,7 +96,9 @@ var is = {
     validOwnerId: [isMongoId, '{VALUE} is not a valid Owner Id'],
     validObjectId: [isObjectId, '{VALUE} is not a valid Object Id'],
     validBcryptHash: [isBcryptHash, '{VALUE} is not a bcrypt hash'],
-    validUsername: [isValidUsername, '{VALUE} is not valid username'],
+    validUsername: [
+        { 'validator': isValidUsername, msg: '{VALUE} is not valid username', type: "invalid username" }
+    ],
     validPassword: [isValidPassword, '{VALUE} is not valid password'],
     validResource: [isValidResource, '{VALUE} is not valid resource']
 };

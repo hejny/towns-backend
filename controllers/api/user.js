@@ -65,86 +65,91 @@ userController.createUser = function (req, res) {
         });
     }
 
-    // check if user exist and if not then create it.
-    UserModel.findOne({"profile.username": req.body.profile.username}, function (err, user) {
-        if (err) {
+    bcrypt.hash(req.body.login_methods.password, 10, function (bcryptError, hash) {
+        if (bcryptError) {
             return res.status(400).json({
                 "status": "error",
                 "message": [{
-                    param: "profile.username",
-                    msg: "Problem creating new users",
-                    val: "" + req.body.profile.username
+                    param: "login_methods.password",
+                    msg: "Problem saving password",
+                    val: "" + req.body.login_methods.password
                 }]
             });
         }
-        if (user == null) {
-            bcrypt.hash(req.body.login_methods.password, 10, function (bcryptError, hash) {
-                if (bcryptError) {
-                    return res.status(400).json({
-                        "status": "error",
-                        "message": [{
-                            param: "login_methods.password",
-                            msg: "Problem saving password",
-                            val: "" + req.body.login_methods.password
-                        }]
-                    });
-                }
 
-                var newUserJson = {
-                    "profile": {
-                        "username": req.body.profile.username,
-                        "name": (req.body.profile.hasOwnProperty('name') ? req.body.profile.name : ""),
-                        "surname": (req.body.profile.hasOwnProperty('surname') ? req.body.profile.surname : ""),
-                        "birthday": (req.body.profile.hasOwnProperty('birthday') ? req.body.profile.birthday : Date.now()),
-                        "description": (req.body.profile.hasOwnProperty('description') ? req.body.profile.description : ""),
-                        "image": (req.body.profile.hasOwnProperty('image') ? req.body.profile.image : ""),
-                        "email": (req.body.profile.hasOwnProperty('email') ? req.body.profile.email : "")
-                    },
-                    "login_methods": {
-                        "password": hash
-                    }
-                };
-                if (req.body.hasOwnProperty('language')) {
-                    newUserJson.language = req.body.language;
-                }
+        var newUserJson = {
+            "profile": {
+                "username": req.body.profile.username,
+                "name": (req.body.profile.hasOwnProperty('name') ? req.body.profile.name : ""),
+                "surname": (req.body.profile.hasOwnProperty('surname') ? req.body.profile.surname : ""),
+                "birthday": (req.body.profile.hasOwnProperty('birthday') ? req.body.profile.birthday : Date.now()),
+                "description": (req.body.profile.hasOwnProperty('description') ? req.body.profile.description : ""),
+                "image": (req.body.profile.hasOwnProperty('image') ? req.body.profile.image : ""),
+                "email": (req.body.profile.hasOwnProperty('email') ? req.body.profile.email : "")
+            },
+            "login_methods": {
+                "password": hash
+            }
+        };
+        if (req.body.hasOwnProperty('language')) {
+            newUserJson.language = req.body.language;
+        }
 
-                newUser = new UserModel(newUserJson);
-                newUser.save(function (saveError, savedUser) {
-                    if (saveError) {
-                        var errMessage = [];
-                        //console.log(saveError);
-                        for (var errName in saveError.errors) {
+        // check if user exist and if not then create it.
+        UserModel.findOne({"profile.username": req.body.profile.username}, function (err, user) {
+
+            if (err) {
+                return res.status(400).json({
+                    "status": "error",
+                    "message": [{
+                        param: "profile.username",
+                        msg: "Problem creating new users",
+                        val: "" + req.body.profile.username
+                    }]
+                });
+            }
+
+            if (user != null) {
+                return res.status(400).json({
+                    "status": "error",
+                    "message": [{
+                        param: "profile.username",
+                        msg: "taken",
+                        val: "" + req.body.profile.username
+                    }]
+                });
+            }
+
+            UserModel.create(newUserJson, function (saveError, savedUser) {
+                if (saveError) {
+                    var errMessage = [];
+                    //console.log(saveError);
+                    for (var errName in saveError.errors) {
+                        if (saveError.errors.hasOwnProperty(errName)) {
                             errMessage.push({
                                 param: saveError.errors[errName].path,
                                 msg: saveError.errors[errName].kind,
                                 val: "" + saveError.errors[errName].value
                             });
                         }
-                        return res.status(400).json({
-                            "status": "error",
-                            "message": errMessage
-                        });
                     }
-                    //triggering events after user has registered
-                    userEvents.hasRegistered(savedUser);
 
-                    return res.status(201).json({
-                        "status": "ok",
-                        "userId": savedUser._id
+                    return res.status(400).json({
+                        "status": "error",
+                        "message": errMessage
                     });
-                })
-            })
-        } else {
-            return res.status(400).json({
-                "status": "error",
-                "message": [{
-                    param: "profile.username",
-                    msg: "taken",
-                    val: "" + req.body.profile.username
-                }]
-            });
-        }
+                }
+                //triggering events after user has registered
+                userEvents.hasRegistered(savedUser);
 
+                return res.status(201).json({
+                    "status": "ok",
+                    "userId": savedUser._id
+                });
+            });
+
+
+        });
     });
 
 };
@@ -351,7 +356,7 @@ userController.deleteOne = function (req, res) {
     var userId = req.params.id,
         history = {};
 
-    UserModel.findOne({"_id": userId}).select('+login_methods.password').exec( function (err, user) {
+    UserModel.findOne({"_id": userId}).select('+login_methods.password').exec(function (err, user) {
         if (err) {
             return res.status(400).json({
                 "status": "error",
