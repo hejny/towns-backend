@@ -109,7 +109,7 @@ describe('Users', function () {
                     res.body.status.should.equal('error');
                     res.body.should.have.property('message');
                     res.body.message[0].param.should.equal('username');
-                    res.body.message[0].msg.should.equal('user defined');
+                    res.body.message[0].msg.should.equal('invalid username');
                     res.body.message[0].val.should.equal('1234567890123456789012345678901234567890123456789012345678901234567890');
                     done();
                 });
