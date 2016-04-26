@@ -1,14 +1,11 @@
 var ObjectModel = require('../../database/models/object');
-var ObjectsPrototype = require('../../database/models/objectsPrototype');
-var ObjectsHistory = require('../../database/models/objectsHistory');
 var check = require('validator');
-var userEvents = require('../../events/user');
-
+var BaseController = require('../baseController');
 /**
  * Controller for handling stories
  * @type {{}}
  */
-var storiesController = {};
+var storiesController = new BaseController();
 
 
 /**
@@ -59,11 +56,13 @@ storiesController.getAll = function (req, res) {
 
     values.date.forEach(function (element, index, array) {
         var date = element.split("-");
-        if(date.length == 3 ) {
+        if(date.length == 3 && check.isInt(date[0]) && check.isInt(date[1]) && check.isInt(date[2])) {
             var timezone = new Date().getTimezoneOffset();
             var from = new Date(parseInt(date[2]), parseInt(date[1])-1, parseInt(date[0]), 0, 0-timezone, 0, 0).toISOString();
             var to = new Date(parseInt(date[2]), parseInt(date[1])-1, parseInt(date[0]), 23, 59-timezone, 59, 999).toISOString();
             array[index] = { start_time: {$gte: from, $lt: to}};
+        } else {
+            array.splice(index, 1);
         }
         
     });
@@ -88,9 +87,9 @@ storiesController.getAll = function (req, res) {
         options.sort = {start_time: -1};
     }
 
-    //console.log(query);
-    //console.log(fields);
-    //console.log(options);
+    console.log(query);
+    console.log(fields);
+    console.log(options);
 
     // run the query against mongoDB
     ObjectModel.find(query, fields, options, function (err, objects) {
@@ -104,10 +103,7 @@ storiesController.getAll = function (req, res) {
 
         //console.log(objects);
         if (objects === null) {
-            return res.status(500).json({
-                "status": "error",
-                "message": "There are no stories"
-            });
+            return res.json([]);
         }
         res.json(objects);
     });
