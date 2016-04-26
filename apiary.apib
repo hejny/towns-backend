@@ -539,7 +539,7 @@ Delete requested object prototype. The object prototype will be moved to objects
 
 Retrieve the stories. If you need to search stories by x,y coordinates, please use GET /objects endpoint. All of parameters are optional, each of them has default value
 The example URL is not displayed correctly by APIARY and should look like this:
-/stories?owner[]=5666b8259297ffe7c16c4697&limit=45&date[]=12-05-2016&locale[]=cz&latest=true
+/stories?owner[]=5666b8259297ffe7c16c4697&limit=45&date[]=12-05-2016&locale[]=cs&latest=true
 
 + Request (application/json)
 
@@ -552,7 +552,7 @@ The example URL is not displayed correctly by APIARY and should look like this:
    + owner: `5666b8259297ffe7c16c4696`, `5666b8259297ffe7c16c4697`, `5666b8259297ffe7c16c4698` (optional, array) - List of owner IDs, whos stories will be returned. Default is returning stories of all owners.
    + limit: `45` (optional, number) - The limit of returning stories. Default 500. Accepted values from 1 to 500.
    + date: `12-05-2016` (optional, array) - array of update dates in dd-mm-yyyy format which stories should be returned. If no date is specified, stories of all dates are returned.
-   + locale: `cz` (optional, array) - List of locales to return. Default is all object locales.
+   + locale: `cs` (optional, array) - List of locales to return. Default is all object locales.
    + latest: `true` (optional, boolean) - the stories returned are ordered as they are stored = oldest first (default). Set this parameter to return them ordered from latest.
 
 
@@ -567,6 +567,8 @@ The example URL is not displayed correctly by APIARY and should look like this:
         + objects (array[fullStory])
 
 ### POST
+
+TODO: Not implemented yet.
 
 You may create new stories using this action. It takes a JSON object in body.
 To create a new story, the client have to send:
@@ -614,6 +616,8 @@ Everything else of new object will be calculated based on user and story prototy
 
 ### GET
 
+TODO: not implemented yet
+
 Get the details of the story by its Id.
 
  + Parameters
@@ -632,6 +636,8 @@ Get the details of the story by its Id.
 
 
 ### POST
+
+TODO: not implemented yet
 
 This method should update the story object. Users don't have to call action to update the object, instead they can update story directly.
 
@@ -662,6 +668,8 @@ This method should update the story object. Users don't have to call action to u
 
 
 ### DELETE
+
+TODO: Not implemented yet
 
 This method deletes story object.
 

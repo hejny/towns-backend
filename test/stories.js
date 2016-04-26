@@ -46,6 +46,22 @@ describe('Stories', function () {
                 });
         });
 
+        it('should proceed even without authorization token', function (done) {
+
+            request(url)
+                .get('/stories')
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    done();
+                });
+        });
+
+
+        
     });
 
+    
 });
