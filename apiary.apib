@@ -711,10 +711,19 @@ recalculate the price and deduct funds. In case of problem 400 code error messag
 
             x-auth: {access_token}
 
-    + Attributes
-        + object (createObject)
+    + Body
+
+            {
+                "prototypeId": "asd123454hg4536yhsd4",
+                "x": "12,435",
+                "y": "43.123"
+            }
 
  + Response 201 (application/hal+json)
+
+    + Headers
+
+            Location: /actions/build
 
     + Attributes
         + status: ok
