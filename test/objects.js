@@ -267,11 +267,16 @@ describe('Objects', function () {
     describe('Getting of One object from API', function () {
         this.timeout(15000);
 
-        it('should fail when user is not authorised', function (done) {
+        it('should pass when user is not authorised', function (done) {
             request(url)
                 .get('/objects/56f82aca3f9285b667df03ca')
                 .send({})
-                .expect(401)
+                .expect(
+                    function(res)
+                    {
+                        return res.status != 401;
+                    }
+                )
                 .end(function (err, res) {
                     if (err) {
                         throw err;
