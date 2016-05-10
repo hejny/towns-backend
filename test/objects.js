@@ -274,7 +274,7 @@ describe('Objects', function () {
                 .expect(
                     function(res)
                     {
-                        return res.status != 401
+                        return res.status != 401;
                     }
                 )
                 .end(function (err, res) {
