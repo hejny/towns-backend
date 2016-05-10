@@ -25,7 +25,7 @@ router.get('/me', auth.check, userController.getUser);
  * GET /users/:id
  * Returns user with given id
  */
-router.get('/:id', auth.check, userController.getOne);
+router.get('/:id', userController.getOne);
 
 /**
  * POST /users/:id

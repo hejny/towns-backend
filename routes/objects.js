@@ -19,7 +19,7 @@ router.post('/', auth.check, objectsController.createOne);
  * GET /objects/:id
  * Returns object with given id
  */
-router.get('/:id', auth.check, objectsController.getOne);
+router.get('/:id', objectsController.getOne);
 
 /**
  * POST /objects/:id
