@@ -84,6 +84,7 @@ userController.createUser = function (req, res) {
                 "surname": (req.body.profile.hasOwnProperty('surname') ? req.body.profile.surname : ""),
                 "birthday": (req.body.profile.hasOwnProperty('birthday') ? req.body.profile.birthday : Date.now()),
                 "description": (req.body.profile.hasOwnProperty('description') ? req.body.profile.description : ""),
+                "signature": (req.body.profile.hasOwnProperty('signature') ? req.body.profile.signature : ""),
                 "image": (req.body.profile.hasOwnProperty('image') ? req.body.profile.image : ""),
                 "email": (req.body.profile.hasOwnProperty('email') ? req.body.profile.email : "")
             },
