@@ -21,6 +21,7 @@ var profileSchema = new mongoose.Schema({
         validate: is.validDate
     },
     description: {type: String},
+    signature: {type: String},
     image: {type: String},
     email: {type: String}
 });
