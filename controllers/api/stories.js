@@ -25,7 +25,8 @@ storiesController.getAll = function (req, res) {
         'limit': 0,
         'date': [],
         'locale': ['cs'],
-        'latest': true
+        'latest': true,
+        'name': null
     };
 
     // update default values with values from query
@@ -44,6 +45,9 @@ storiesController.getAll = function (req, res) {
     }
     if(typeof q.latest !== 'undefined' && q.latest && check.isBoolean(q.latest)) {
         values.latest = q.latest;
+    }
+    if(typeof q.name !== 'undefined' && q.name && (q.name === check.escape(q.name)) ) {
+        values.name = q.name;
     }
     
     //build `query` from values
@@ -85,6 +89,11 @@ storiesController.getAll = function (req, res) {
     }
     if (values.latest === "true") {
         options.sort = {start_time: -1};
+    }
+    
+    // if name is defined, then return only stories starting with defined name
+    if (values.name !== null) {
+        query.name = new RegExp('^'+values.name+'(.*)$', "i");
     }
 
     console.log(query);
