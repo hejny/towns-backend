@@ -387,11 +387,16 @@ describe('Users', function () {
 
     describe('Getting user with given id', function () {
 
-        it('should return unauthorized without authorization token', function (done) {
+        it('should return user even without authorization token', function (done) {
 
             request(url)
                 .get('/users/56eaa0ada7a2956d16b1d1fa')
-                .expect(401)
+                .expect( 
+                    function(res) 
+                    {
+                        return res.status != 401;
+                    }
+                )
                 .end(function (err, res) {
                     if (err) {
                         throw err;
