@@ -81,7 +81,7 @@ Everything else of new object will be calculated based on user and prototype.
 
             {
                 "prototypeId": "asd123454hg4536yhsd4",
-                "x": "12,435",
+                "x": "12.435",
                 "y": "43.123"
             }
 
@@ -114,7 +114,8 @@ Get the details of the object by its Id. There will be optional query parameter 
 
     + Headers
 
-            x-auth: {access_token}
+            Location: /objects/5666b8259297ffe7c16c6456
+
  + Response 200 (application/json)
     + Attributes
         + status: ok
@@ -533,19 +534,19 @@ Delete requested object prototype. The object prototype will be moved to objects
 
 # Group Stories
 
-## stories [/stories{?owner,limit,date,locale,latest}]
+## stories [/stories{?owner,limit,date,locale,latest,name}]
 
 ### GET
 
 Retrieve the stories. If you need to search stories by x,y coordinates, please use GET /objects endpoint. All of parameters are optional, each of them has default value
 The example URL is not displayed correctly by APIARY and should look like this:
-/stories?owner[]=5666b8259297ffe7c16c4697&limit=45&date[]=12-05-2016&locale[]=cs&latest=true
+/stories?owner[]=5666b8259297ffe7c16c4697&limit=45&date[]=12-05-2016&locale[]=cs&latest=true&name=Veza
 
 + Request (application/json)
 
     + Headers
 
-            x-auth: {access_token}
+            Location: /stories
 
 + Parameters
 
@@ -554,6 +555,7 @@ The example URL is not displayed correctly by APIARY and should look like this:
    + date: `12-05-2016` (optional, array) - array of update dates in dd-mm-yyyy format which stories should be returned. If no date is specified, stories of all dates are returned.
    + locale: `cs` (optional, array) - List of locales to return. Default is all object locales.
    + latest: `true` (optional, boolean) - the stories returned are ordered as they are stored = oldest first (default). Set this parameter to return them ordered from latest.
+   + name: `Veza` (optional, string) - return only stories that start with this. If not set, API returns all names.
 
 
 + Response 200 (application/json)
@@ -586,7 +588,7 @@ Everything else of new object will be calculated based on user and story prototy
     + Body
 
             {
-                "x": "12,435",
+                "x": "12.435",
                 "y": "43.123",
                 "name": "Pribeh o mne",
                 "locale": "en",
@@ -711,10 +713,19 @@ recalculate the price and deduct funds. In case of problem 400 code error messag
 
             x-auth: {access_token}
 
-    + Attributes
-        + object (createObject)
+    + Body
+
+            {
+                "prototypeId": "asd123454hg4536yhsd4",
+                "x": "12.435",
+                "y": "43.123"
+            }
 
  + Response 201 (application/hal+json)
+
+    + Headers
+
+            Location: /actions/build
 
     + Attributes
         + status: ok
@@ -873,6 +884,7 @@ Get all users
                     "surname": "Mrkvicka",
                     "birthday": "11.11.1911",
                     "description": "Som Janko a mam rad mrkvicku",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                     "email": "jano@mrkvicka.cz"
                 },
@@ -889,6 +901,7 @@ Get all users
                     "surname": "Janik",
                     "birthday": "12.12.1912",
                     "description": "Som Janik a mam rad hrusku",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/janik.jpg",
                     "email": "janik@hruska.cz"
                 },
@@ -917,6 +930,7 @@ Register a new user.
                     "surname": "Mrkvicka",
                     "birthday": "11.11.1911",
                     "description": "Som Janko a mam rad mrkvicku",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                     "email": "jano@mrkvicka.cz"
                 },
@@ -957,7 +971,7 @@ Get requested user
 
     + Headers
 
-            x-auth: {access_token}
+            Location: /users/5666b8259297ffe7c16c6785
 
  + Response 200 (application/json)
 
@@ -975,6 +989,7 @@ Get requested user
                     "real_name": "Jano Mrkvicka",
                     "birth_date": "11.11.1911",
                     "description": "Som Janko a mam rad mrkvicku",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                     "email": "jano@mrkvicka.cz"
                 },
@@ -1004,6 +1019,7 @@ Update requested user
                     "real_name": "Jano Mrkvicka",
                     "birth_date": "11.11.1911",
                     "description": "Som Janko a mam rad mrkvicku",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                     "email": "jano@mrkvicka.cz"
                 },
@@ -1228,6 +1244,7 @@ Get all groups
                     "name": "Skupina",
                     "real_name": "Machri",
                     "description": "My sme ti, Pa a Pi z macacej planety",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/machri.jpg",
                 },
                 "admins" : [
@@ -1236,6 +1253,7 @@ Get all groups
                         "real_name": "Jano Mrkvicka",
                         "birth_date": "11.11.1911",
                         "description": "Som Janko a mam rad mrkvicku",
+                        "signature": "Dzanko12",
                         "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                         "email": "jano@mrkvicka.cz"
                     }, {
@@ -1243,6 +1261,7 @@ Get all groups
                         "real_name": "Janik Hruska",
                         "birth_date": "12.12.1912",
                         "description": "Som Janko a mam rad hrusku",
+                        "signature": "Dzanko12",
                         "image": "cdn.towns.cz/users/profileimages/janik.jpg",
                         "email": "janik@hruska.cz"
                     }
@@ -1268,6 +1287,7 @@ Create new User Group. The owner will become admin and also first member.
                     "name": "Skupina",
                     "real_name": "Machri",
                     "description": "My sme ti, Pa a Pi z macacej planety",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/machri.jpg",
                 },
 
@@ -1322,6 +1342,7 @@ Get details of given group
                     "name": "Skupina",
                     "real_name": "Machri",
                     "description": "My sme ti, Pa a Pi z macacej planety",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/machri.jpg",
                 },
                 "admins" : [
@@ -1330,6 +1351,7 @@ Get details of given group
                         "real_name": "Jano Mrkvicka",
                         "birth_date": "11.11.1911",
                         "description": "Som Janko a mam rad mrkvicku",
+                        "signature": "Dzanko12",
                         "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                         "email": "jano@mrkvicka.cz"
                     }, {
@@ -1337,6 +1359,7 @@ Get details of given group
                         "real_name": "Janik Hruska",
                         "birth_date": "12.12.1912",
                         "description": "Som Janko a mam rad hrusku",
+                        "signature": "Dzanko12",
                         "image": "cdn.towns.cz/users/profileimages/janik.jpg",
                         "email": "janik@hruska.cz"
                     }
@@ -1367,6 +1390,7 @@ Update given group
                     "name": "Skupina",
                     "real_name": "Machri",
                     "description": "My sme ti, Pa a Pi z macacej planety",
+                    "signature": "Dzanko12",
                     "image": "cdn.towns.cz/users/profileimages/machri.jpg",
                 },
                 "admins" : [
@@ -1375,6 +1399,7 @@ Update given group
                         "real_name": "Jano Mrkvicka",
                         "birth_date": "11.11.1911",
                         "description": "Som Janko a mam rad mrkvicku",
+                        "signature": "Dzanko12",
                         "image": "cdn.towns.cz/users/profileimages/janko.jpg",
                         "email": "jano@mrkvicka.cz"
                     }, {
@@ -1382,6 +1407,7 @@ Update given group
                         "real_name": "Janik Hruska",
                         "birth_date": "12.12.1912",
                         "description": "Som Janko a mam rad hrusku",
+                        "signature": "Dzanko12",
                         "image": "cdn.towns.cz/users/profileimages/janik.jpg",
                         "email": "janik@hruska.cz"
                     }
