@@ -1,7 +1,7 @@
 var server = require('../../config/server');
 var shared = require('../../node_modules/towns5shared/build/towns-shared');
-var Promise = require('promise');
 var objectsPrototype = require('../../services/objectsPrototype');
+var resources = require('../../services/resources');
 var object =  require('../../services/object');
 // var ResourcesModel = require('../../models/resources');
 // var userEvents = require('../../events/user');
@@ -21,25 +21,32 @@ actionsController.build = function (request, response) {
 
     //var owner = req.user.profile.username;
     var owner = "Otto, the Builder";
-    var id = "5732178e7623e64f21d567d5";
+    var prototypeId = request.body.prototypeId;
 
-    objectsPrototype.findOne(id)
+    resources.allocateFundsForPrototype()
+        .then(objectsPrototype.findOne(prototypeId))
         .then(function(prototype) {
-            object.buildPrototype(prototype)
+            object.buildPrototype(prototype, request.body)
         })
-        .catch(function(res) {
-            console.log(res);
+        .then(function(object) {
+            resources.payForObject(object)
+        })
+        .then(function (object) {
+
+            return response.status(200).json({
+                "status": "ok",
+                "message": [{
+                    param: "build",
+                    msg: owner+" is building something",
+                    val: object?object:""
+                }]
+            });
+
+        })
+        .catch(function(err) {
+            console.log(err);
         });
 
-    
-    return response.status(200).json({
-        "status": "ok",
-        "message": [{
-            param: "build",
-            msg: owner+" is building something",
-            val: ""
-        }]
-    });
 };
 
 

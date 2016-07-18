@@ -1,5 +1,6 @@
 var ObjectsPrototypesHistory = require('../../database/models/objectsPrototypesHistory.js');
 var ObjectsPrototype = require('../../database/models/objectsPrototype');
+var objectsPrototype = require('../../services/objectsPrototype');
 
 /**
  * Handler for work with ObjectPrototypes Collection
@@ -103,25 +104,19 @@ prototypesController.createOne = function (req, res) {
  * @param res
  */
 prototypesController.getOne = function (req, res) {
-    var parameters = req.params;
-    ObjectsPrototype.findOne({"_id": parameters.id}, function (err, prototype) {
-        if (err) {
+    var id = req.params.id;
+
+    objectsPrototype.findOne(id)
+        .then(function(prototype) {
+            res.json(prototype);
+        })
+        .catch(function(err) {
             return res.status(500).json({
                 "status": "error",
-                "message": "Problem getting your prototype"
+                "message": err
             });
-        }
+        });
 
-        //console.log(object);
-        if (prototype === null) {
-            return res.status(500).json({
-                "status": "error",
-                "message": "There is no such prototype"
-            });
-        }
-
-        res.json(prototype);
-    });
 };
 
 /**

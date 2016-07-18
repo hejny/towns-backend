@@ -8,7 +8,7 @@ objectsPrototypeServices.findOne = function (id) {
         console.log("finding prototype: " + id);
         objectsPrototype.findOne({"_id": id}, function (err, prototype) {
             if (err) {
-                return reject(err);
+                return reject("Problem getting your prototype");
             }
             if (prototype === null) {
                 return reject("There is no such prototype");
