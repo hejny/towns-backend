@@ -23,8 +23,10 @@ actionsController.build = function (request, response) {
     var owner = "Otto, the Builder";
     var prototypeId = request.body.prototypeId;
 
-    resources.allocateFundsForPrototype()
-        .then(objectsPrototype.findOne(prototypeId))
+    objectsPrototype.findOne(prototypeId)
+        .then(function(prototype) {
+            resources.allocateFundsForPrototype(prototype);
+        })
         .then(function(prototype) {
             object.buildPrototype(prototype, request.body)
         })
