@@ -28,7 +28,10 @@ actionsController.build = function (request, response) {
             resources.allocateFundsForPrototype(prototype);
         })
         .then(function(prototype) {
-            object.buildPrototype(prototype, request.body)
+            //TODO: this is undefined. FIX IT!
+            console.log(prototype);
+
+            object.buildPrototype(prototype, request)
         })
         .then(function(object) {
             resources.payForObject(object)

@@ -5,16 +5,17 @@ var T = require('towns5shared/build/towns-shared.js');
 
 resourcesServices.allocateFundsForPrototype = function(prototype) {
     return new Promise(function (resolve, reject) {
+        console.log("Checking if user has enough money to build the prototype");
 
 
 
 
 
 
-        console.log(prototype.actions);
+        //console.log(prototype.actions);
         try {
             var price_bases = T.World.game.getObjectPriceBases(prototype);
-            var max_life = T.World.game.getObjectMaxLife(prototype);
+            //var max_life = T.World.game.getObjectMaxLife(prototype);
             //var prices = T.World.game.getObjectPrices(prototype);
             //var price = T.World.game.getObjectPrice(prototype);
             // var design_price = T.World.game.getObjectDesignPrice(prototype);
@@ -23,14 +24,13 @@ resourcesServices.allocateFundsForPrototype = function(prototype) {
         catch(err) {
             console.log(err.message);
         }
-        console.log(max_life);
+        console.log("Max life: " + max_life);
 
 
 
 
 
 
-        console.log("Checking if user has enough money to build the prototype");
         if (false) {
             return reject("Not enough money for this prototype");
         }
