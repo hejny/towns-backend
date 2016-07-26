@@ -4,7 +4,7 @@ var objectServices = {};
 
 objectServices.buildPrototype = function(objectsPrototype, request){
     return new Promise(function(resolve, reject){
-        console.log("Building object from prototype id: " + prototype._id);
+        console.log("Building object from prototype id: " + objectsPrototype._id);
 
 
 
@@ -63,10 +63,10 @@ objectServices.buildPrototype = function(objectsPrototype, request){
                 for (var errName in err.errors) {
                     errMessage.push({param: err.errors[errName].path, msg: err.errors[errName].kind, value: err.errors[errName].value});
                 }
-                return reject(errMessage);
+                reject(errMessage);
             }
 
-            return resolve(object);
+            resolve(object);
         });
 
 

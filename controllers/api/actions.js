@@ -25,16 +25,13 @@ actionsController.build = function (request, response) {
 
     objectsPrototype.findOne(prototypeId)
         .then(function(prototype) {
-            resources.allocateFundsForPrototype(prototype);
+            return resources.allocateFundsForPrototype(prototype);
         })
         .then(function(prototype) {
-            //TODO: this is undefined. FIX IT!
-            console.log(prototype);
-
-            object.buildPrototype(prototype, request)
+            return object.buildPrototype(prototype, request)
         })
         .then(function(object) {
-            resources.payForObject(object)
+            return resources.payForObject(object)
         })
         .then(function (object) {
 
